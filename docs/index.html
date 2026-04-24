@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 预言家日报 · 星露谷传说</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
+    <title>预言家日报 · 魔法互动版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -12,20 +12,20 @@
             --paper: #f4eddf;
             --ink: #1a1510;
             --ink-light: #4a4035;
-            --accent: #2d5a27;
-            --energy: #3498db;
-            --danger: #e74c3c;
-            --gold: #f1c40f;
+            --magic-blue: #3498db;
+            --magic-purple: #9b59b6;
+            --magic-gold: #f1c40f;
+            --magic-red: #e74c3c;
+        }
+
+        @keyframes magicGlow {
+            0%, 100% { box-shadow: 0 0 5px var(--magic-blue), 0 0 10px var(--magic-purple); }
+            50% { box-shadow: 0 0 20px var(--magic-blue), 0 0 30px var(--magic-purple); }
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: translateY(-10px); }
         }
 
         @keyframes shake {
@@ -34,1265 +34,1453 @@
             75% { transform: translateX(5px); }
         }
 
-        @keyframes sparkle {
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes sparkleAnim {
             0% { opacity: 0; transform: scale(0) rotate(0deg); }
             50% { opacity: 1; transform: scale(1) rotate(180deg); }
             100% { opacity: 0; transform: scale(0) rotate(360deg); }
         }
 
         html {
-            background: linear-gradient(135deg, #2d5a27 0%, #1a3d18 50%, #0f2810 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
         }
 
         body {
-            font-family: 'VT323', monospace;
+            font-family: 'Noto Serif SC', Georgia, serif;
             color: var(--ink);
-            font-size: 18px;
-            padding: 15px 0;
+            line-height: 1.65;
+            font-size: 16px;
+            padding: 20px 0;
         }
 
-        /* 游戏容器 */
-        .game-container {
-            max-width: 1000px;
+        .container {
+            max-width: 900px;
             margin: 0 auto;
-            background: var(--paper);
-            border-radius: 8px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            overflow: hidden;
+            position: relative;
         }
 
-        /* 顶部状态栏 */
-        .status-bar {
-            background: linear-gradient(135deg, var(--accent), #1a4d15);
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+        /* 魔法粒子背景 */
+        .magic-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
-        .stat-group {
+        .particle {
+            position: absolute;
+            font-size: 1rem;
+            animation: sparkleAnim 3s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        /* 报纸 */
+        .newspaper {
+            background: var(--paper);
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 100px rgba(139,115,85,0.15);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f5efe6' surfaceScale='1.5'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        /* 刊头 */
+        .masthead {
+            border-bottom: 3px double var(--ink);
+            padding: 25px 20px 18px;
+            text-align: center;
+            position: relative;
+        }
+        .paper-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8em;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            background: linear-gradient(135deg, var(--ink), #4a3f35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 6s ease-in-out infinite;
+        }
+        .paper-subtitle {
+            font-size: 0.7em;
+            color: var(--ink-light);
+            letter-spacing: 0.3em;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        .paper-edition {
             display: flex;
+            justify-content: center;
             gap: 20px;
-            align-items: center;
+            border-top: 1px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 5px 0;
+            font-size: 0.8em;
+            flex-wrap: wrap;
+        }
+        .prophecy-badge {
+            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
+            color: white;
+            padding: 4px 15px;
+            border-radius: 2px;
+            font-weight: 600;
+            animation: magicGlow 2s ease-in-out infinite;
+        }
+
+        /* 魔法能量条 */
+        .magic-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 15px 20px;
+            background: linear-gradient(180deg, rgba(155,89,182,0.1), transparent);
+            border-bottom: 1px solid rgba(139,115,85,0.2);
         }
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(255,255,255,0.15);
-            padding: 5px 12px;
-            border-radius: 4px;
-        }
-        .energy-bar {
-            width: 100px;
-            height: 12px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .energy-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--energy), #5dade2);
-            transition: width 0.3s;
-            border-radius: 6px;
-        }
-        .day-display {
-            font-size: 1.1em;
-            font-weight: 700;
-        }
-
-        /* 游戏主界面 */
-        .game-main {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            min-height: 550px;
-        }
-
-        /* 侧边栏菜单 */
-        .sidebar-menu {
-            background: linear-gradient(180deg, #e8dfd0, #d4c8b5);
-            padding: 15px;
-            border-right: 2px solid rgba(139,115,85,0.3);
-        }
-        .menu-btn {
-            width: 100%;
-            background: linear-gradient(135deg, var(--accent), #3d7a35);
-            color: white;
-            border: none;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-            font-size: 1em;
-            transition: all 0.2s;
-            text-align: left;
-        }
-        .menu-btn:hover {
-            transform: translateX(5px);
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
-        }
-        .menu-btn.active {
-            background: linear-gradient(135deg, #1a4d15, #0f3310);
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
-        }
-        .player-info {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 6px;
-            text-align: center;
-        }
-        .player-avatar {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-        .player-name {
-            font-weight: 700;
-            font-size: 1.1em;
-        }
-        .player-level {
-            color: var(--accent);
-        }
-
-        /* 主游戏区域 */
-        .game-area {
-            padding: 20px;
-            position: relative;
-        }
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: block;
-        }
-        .screen-title {
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--accent);
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 8px;
-        }
-
-        /* 农场界面 */
-        .farm-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
             gap: 8px;
-            max-width: 500px;
-            margin: 0 auto;
+            font-weight: 600;
         }
-        .farm-plot {
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #8B4513, #654321);
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5em;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        .farm-plot:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .farm-plot.watered {
-            background: linear-gradient(135deg, #654321, #4a3520);
-        }
-        .farm-plot.ready {
-            animation: pulse 1s ease-in-out infinite;
-        }
-        .growth-bar {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            right: 5px;
-            height: 5px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .growth-fill {
-            height: 100%;
-            background: #2ecc71;
-            transition: width 0.5s;
-        }
-        .farm-tools {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .farm-tool {
-            background: linear-gradient(135deg, #8B4513, #654321);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-            font-size: 1em;
-            transition: all 0.2s;
-        }
-        .farm-tool:hover { transform: translateY(-2px); }
-        .farm-tool.active {
-            background: linear-gradient(135deg, var(--accent), #1a4d15);
-            box-shadow: 0 5px 15px rgba(45,90,39,0.4);
+        .stat-icon { font-size: 1.3em; }
+        .stat-value { color: var(--magic-purple); }
+
+        /* 主内容区 */
+        .content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            padding: 25px 20px;
         }
 
-        /* 钓鱼界面 */
-        .fishing-screen {
-            text-align: center;
+        /* 头条区域 */
+        .main-news {
+            border-right: 1px solid rgba(139,115,85,0.2);
+            padding-right: 25px;
         }
-        .fishing-pond {
-            width: 100%;
-            max-width: 500px;
-            height: 350px;
-            margin: 0 auto;
-            background: linear-gradient(180deg, #87CEEB 0%, #4a90c2 30%, #2d5a87 70%, #1a3a5c 100%);
-            border-radius: 12px;
+        .headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 10px;
+            border-radius: 5px;
             position: relative;
-            overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
         }
-        .water-surface {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+        .headline:hover {
+            background: linear-gradient(135deg, rgba(52,152,219,0.1), rgba(155,89,182,0.1));
+            animation: magicGlow 1s ease-in-out infinite;
         }
-        .fishing-bar-container {
+        .headline::after {
+            content: '✨ 点击参与';
             position: absolute;
-            right: 30px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 200px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            overflow: hidden;
+            font-size: 0.6em;
+            color: var(--magic-purple);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        .fishing-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, #2ecc71, #27ae60);
-            transition: height 0.1s;
-        }
-        .fish-indicator {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
-            font-size: 1.5em;
-            transition: top 0.3s;
-        }
-        .fish-caught-particle {
-            position: absolute;
-            animation: sparkle 0.5s ease-out forwards;
-            font-size: 1.5em;
-        }
-        .fishing-controls {
-            margin-top: 20px;
-        }
-        .cast-btn {
-            background: linear-gradient(135deg, var(--accent), #1a4d15);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-            font-size: 1.2em;
-            transition: all 0.2s;
-        }
-        .cast-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .cast-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .reel-btn {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-            font-size: 1.2em;
-            transition: all 0.1s;
-        }
-        .reel-btn:active { transform: scale(0.95); }
-        .fishing-status {
-            margin-top: 15px;
-            font-size: 1.1em;
-            color: var(--ink-light);
-        }
+        .headline:hover::after { opacity: 1; }
+        .byline { font-size: 0.8em; color: var(--ink-light); font-style: italic; margin-bottom: 10px; }
+        .news-body { font-size: 0.95em; line-height: 1.7; margin-bottom: 25px; }
+        .news-body strong { color: var(--magic-purple); }
 
-        /* 采矿界面 */
-        .mining-mine {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .mine-rock {
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #6b5b4f, #4a3f35);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5em;
+        /* 新闻列表 */
+        .news-item {
+            padding: 15px 10px;
+            border-bottom: 1px dotted rgba(139,115,85,0.2);
             cursor: pointer;
-            transition: all 0.1s;
-            box-shadow: inset -4px -4px 8px rgba(0,0,0,0.3), inset 4px 4px 8px rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            border-radius: 5px;
             position: relative;
         }
-        .mine-rock:hover { transform: scale(1.05); }
-        .mine-rock:active { animation: shake 0.1s; }
-        .mine-rock.mined {
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s;
+        .news-item:hover {
+            background: linear-gradient(135deg, rgba(52,152,219,0.08), rgba(155,89,182,0.08));
         }
-        .rock-hp {
+        .news-item.completed {
+            background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(39,174,96,0.1));
+        }
+        .news-item.completed::before {
+            content: '✅';
             position: absolute;
-            bottom: 5px;
-            left: 5px;
-            right: 5px;
-            height: 6px;
-            background: rgba(0,0,0,0.4);
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .news-title { font-size: 1.05em; font-weight: 600; margin-bottom: 5px; }
+        .news-summary { font-size: 0.85em; color: var(--ink-light); }
+        .news-difficulty {
+            display: inline-block;
+            padding: 2px 8px;
             border-radius: 3px;
-            overflow: hidden;
+            font-size: 0.7em;
+            margin-top: 5px;
         }
-        .rock-hp-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #e74c3c, #f39c12);
-            transition: width 0.2s;
+        .difficulty-easy { background: #2ecc71; color: white; }
+        .difficulty-medium { background: #f39c12; color: white; }
+        .difficulty-hard { background: #e74c3c; color: white; }
+        .difficulty-legendary { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; }
+
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        .mining-info {
+        .sidebar-box {
+            border: 2px solid rgba(139,115,85,0.3);
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(255,250,240,0.6), transparent);
+            border-radius: 5px;
+        }
+        .sidebar-title {
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 12px;
             text-align: center;
-            margin-top: 20px;
-            font-size: 1.1em;
+            border-bottom: 1px solid rgba(139,115,85,0.2);
+            padding-bottom: 8px;
+            color: var(--magic-purple);
+        }
+        .achievement-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.85em;
+            border-bottom: 1px dashed rgba(139,115,85,0.15);
+        }
+        .achievement-item.unlocked { color: var(--magic-gold); font-weight: 600; }
+        .today-prophecy {
+            text-align: center;
+            font-style: italic;
+            color: var(--magic-purple);
+            padding: 10px;
+            background: rgba(155,89,182,0.1);
+            border-radius: 5px;
+            margin-top: 10px;
         }
 
-        /* 商店界面 */
-        .shop-items {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-        }
-        .shop-item {
-            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
-            border: 2px solid rgba(139,115,85,0.2);
-            border-radius: 8px;
-            padding: 15px;
+        /* 页脚 */
+        .footer {
+            padding: 25px 20px;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
+            border-top: 3px double var(--ink);
+            font-size: 0.75em;
+            color: var(--ink-light);
         }
-        .shop-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            border-color: var(--accent);
-        }
-        .item-icon {
-            font-size: 2.5em;
+        .version-info {
+            background: linear-gradient(135deg, var(--magic-blue), var(--magic-purple));
+            color: white;
+            padding: 6px 15px;
+            border-radius: 3px;
+            display: inline-block;
             margin-bottom: 8px;
         }
-        .item-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        .item-price {
-            color: var(--gold);
-            font-weight: 700;
-        }
-        .item-owned {
-            font-size: 0.8em;
-            color: var(--ink-light);
-        }
 
-        /* 背包界面 */
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            max-width: 400px;
-        }
-        .inv-slot {
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, rgba(139,115,85,0.1), rgba(139,115,85,0.2));
-            border: 2px solid rgba(139,115,85,0.3);
-            border-radius: 6px;
-            display: flex;
+        /* 游戏模态框 - 报纸中弹出 */
+        .game-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            display: none;
             justify-content: center;
             align-items: center;
-            font-size: 2em;
-            position: relative;
+            backdrop-filter: blur(5px);
         }
-        .inv-count {
-            position: absolute;
-            bottom: 2px;
-            right: 5px;
-            font-size: 0.4em;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 1px 5px;
-            border-radius: 3px;
+        .game-modal.active { display: flex; }
+        .game-container {
+            background: var(--paper);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 650px;
+            width: 90%;
+            box-shadow: 0 0 50px var(--magic-blue), 0 0 100px var(--magic-purple);
+            animation: magicGlow 2s ease-in-out infinite;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-
-        /* 任务界面 */
-        .quest-list {
-            max-width: 500px;
-        }
-        .quest-item {
-            background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.3));
-            border: 2px solid rgba(139,115,85,0.2);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
+        .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(139,115,85,0.3);
+            padding-bottom: 15px;
         }
-        .quest-item.completed {
-            background: linear-gradient(135deg, rgba(46,204,113,0.2), rgba(46,204,113,0.1));
-            border-color: #2ecc71;
-        }
-        .quest-info h4 {
-            margin-bottom: 5px;
-            color: var(--accent);
-        }
-        .quest-reward {
-            color: var(--gold);
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5em;
             font-weight: 700;
+            color: var(--magic-purple);
         }
-        .quest-progress {
+        .close-btn {
+            background: var(--magic-red);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: transform 0.2s;
+        }
+        .close-btn:hover { transform: scale(1.1); }
+        .game-instruction {
+            background: linear-gradient(135deg, rgba(52,152,219,0.1), rgba(155,89,182,0.1));
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
             font-size: 0.9em;
-            color: var(--ink-light);
+            border-left: 4px solid var(--magic-purple);
         }
 
-        /* 通知系统 */
-        .notification {
+        /* ==================== 游戏样式 ==================== */
+
+        /* 🧙 魁地奇游戏 */
+        .quidditch-area {
+            height: 350px;
+            background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 50%, #52B788 100%);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .snitch {
+            position: absolute;
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.1s;
+            animation: float 0.5s ease-in-out infinite;
+            text-shadow: 0 0 10px var(--magic-gold);
+        }
+        .bludger {
+            position: absolute;
+            font-size: 1.8em;
+            animation: float 0.8s ease-in-out infinite;
+        }
+        .player {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5em;
+            transition: left 0.1s;
+        }
+        .quidditch-score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+        .quidditch-timer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+        .quidditch-controls {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .quidditch-start {
+            background: linear-gradient(135deg, var(--magic-gold), #f39c12);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .quidditch-start:hover { transform: scale(1.05); }
+
+        /* ⚡ 咒语决斗 */
+        .duel-arena {
+            height: 350px;
+            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .wizard {
+            position: absolute;
+            bottom: 30px;
+            font-size: 3em;
+        }
+        .wizard.player { left: 80px; }
+        .wizard.enemy { right: 80px; transform: scaleX(-1); }
+        .spell {
+            position: absolute;
+            bottom: 80px;
+            font-size: 2em;
+            animation: pulse 0.3s ease-in-out infinite;
+        }
+        .spell-effect {
+            position: absolute;
+            width: 100px;
+            height: 10px;
+            background: linear-gradient(90deg, var(--magic-blue), transparent);
+            top: 50%;
+            border-radius: 5px;
+            animation: magicGlow 0.5s ease-in-out infinite;
+        }
+        .health-bar {
+            position: absolute;
+            bottom: 10px;
+            width: 150px;
+            height: 15px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .health-bar.player { left: 50px; }
+        .health-bar.enemy { right: 50px; }
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            transition: width 0.3s;
+        }
+        .health-fill.enemy { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+        .spell-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .spell-btn {
+            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+        .spell-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(155,89,182,0.4); }
+        .spell-btn:active { transform: scale(0.95); }
+
+        /* 🧩 魔法解谜 */
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        .puzzle-cell {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .puzzle-cell:hover { transform: scale(1.05); }
+        .puzzle-cell.selected {
+            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
+            animation: magicGlow 1s ease-in-out infinite;
+        }
+        .puzzle-cell.matched {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .puzzle-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        /* 📊 结果显示 */
+        .result-screen {
+            text-align: center;
+            padding: 30px;
+        }
+        .result-icon { font-size: 4em; margin-bottom: 15px; }
+        .result-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .result-title.success { color: #2ecc71; }
+        .result-title.fail { color: #e74c3c; }
+        .result-score {
+            font-size: 1.2em;
+            color: var(--magic-gold);
+            margin-bottom: 20px;
+        }
+        .result-btn {
+            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+        }
+
+        /* 成就通知 */
+        .achievement-popup {
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
-            background: linear-gradient(135deg, var(--accent), #1a4d15);
+            background: linear-gradient(135deg, var(--magic-gold), #f39c12);
             color: white;
-            padding: 12px 25px;
+            padding: 15px 30px;
             border-radius: 8px;
-            z-index: 5000;
-            transition: transform 0.3s;
+            font-weight: 700;
+            z-index: 2000;
+            transition: transform 0.5s;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            font-size: 1em;
         }
-        .notification.show { transform: translateX(-50%) translateY(0); }
-
-        /* 新的一天 */
-        .new-day-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            z-index: 6000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: white;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s;
-        }
-        .new-day-overlay.show { opacity: 1; pointer-events: all; }
-        .new-day-text {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        /* 底部按钮 */
-        .bottom-actions {
-            padding: 15px;
-            background: linear-gradient(180deg, #e8dfd0, #d4c8b5);
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        .action-btn {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-            font-size: 1em;
-            transition: all 0.2s;
-        }
-        .action-btn:hover { transform: translateY(-2px); }
-        .action-btn.sleep {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
-        }
+        .achievement-popup.show { transform: translateX(-50%) translateY(0); }
 
         @media (max-width: 768px) {
-            .game-main { grid-template-columns: 1fr; }
-            .sidebar-menu { display: flex; gap: 5px; flex-wrap: wrap; border-right: none; border-bottom: 2px solid rgba(139,115,85,0.3); }
-            .menu-btn { width: auto; padding: 8px 15px; margin-bottom: 0; }
-            .player-info { display: none; }
-            .farm-grid { grid-template-columns: repeat(4, 1fr); }
-            .mining-mine { grid-template-columns: repeat(4, 1fr); }
-            .inventory-grid { grid-template-columns: repeat(4, 1fr); }
+            .paper-title { font-size: 1.8em; }
+            .content { grid-template-columns: 1fr; }
+            .main-news { border-right: none; padding-right: 0; }
+            .news-item.completed::before { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- 通知 -->
-    <div class="notification" id="notification">消息</div>
+    <!-- 魔法粒子 -->
+    <div class="magic-particles" id="particles"></div>
 
-    <!-- 新的一天 -->
-    <div class="new-day-overlay" id="new-day">
-        <div class="new-day-text">🌅 第 <span id="day-number">1</span> 天</div>
-        <div>春季 · 星露谷</div>
+    <!-- 成就通知 -->
+    <div class="achievement-popup" id="achievement">🏆 预言实现！</div>
+
+    <div class="container">
+    <div class="newspaper">
+        <!-- 刊头 -->
+        <header class="masthead">
+            <h1 class="paper-title">预言家日报</h1>
+            <p class="paper-subtitle">THE DAILY PROPHET · THE TRUTH BEHIND THE MAGIC</p>
+            <div class="paper-edition">
+                <span class="prophecy-badge">✨ 魔法互动预言版</span>
+                <span>📅 第 <span id="day-number">1</span> 天</span>
+                <span>🔮 预言完成: <span id="prophecies-completed">0</span>/8</span>
+            </div>
+        </header>
+
+        <!-- 魔法状态 -->
+        <div class="magic-stats">
+            <div class="stat-item">
+                <span class="stat-icon">⚡</span>
+                <span>魔力: <span class="stat-value" id="magic-power">100</span></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🏆</span>
+                <span>积分: <span class="stat-value" id="score">0</span></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">⭐</span>
+                <span>等级: <span class="stat-value" id="level">见习巫师</span></span>
+            </div>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="content">
+            <div class="main-news" id="main-news">
+                <!-- 头条新闻 - 根据游戏进度动态改变 -->
+                <h2 class="headline" onclick="startGame('quidditch')">🏆 格兰芬多与斯莱特林魁地奇杯决赛今日开战！</h2>
+                <p class="byline">丽塔·斯基特 特约撰稿 · 霍格沃茨球场</p>
+                <p class="news-body">据魔法体育司消息，年度最重要的魁地奇比赛将于今日下午在霍格沃茨球场举行。格兰芬多找球手<strong>哈利·波特</strong>能否抓住金色飞贼？斯莱特林击球手的<strong>游走球</strong>能否阻止他的进攻？<br><br>
+                <em>预言家日报独家预测：点击参与比赛，你就是格兰芬多的找球手！</em> ✨</p>
+
+                <div class="news-item" id="news-duel" onclick="startGame('duel')">
+                    <div class="news-title">⚡ 霍格沃茨决斗俱乐部招募新成员！黑魔法防御术实战演练</div>
+                    <div class="news-summary">斯内普教授将亲自指导决斗技巧。参与决斗，证明你的魔法实力！</div>
+                    <span class="news-difficulty difficulty-medium">中等难度</span>
+                </div>
+
+                <div class="news-item" id="news-puzzle" onclick="startGame('puzzle')">
+                    <div class="news-title">🧩 古灵阁金库出现神秘符文！解开水晶之谜获得宝藏</div>
+                    <div class="news-summary">妖精们邀请智慧的巫师来破解这个千年谜题，宝藏等你来拿！</div>
+                    <span class="news-difficulty difficulty-hard">高难度</span>
+                </div>
+
+                <div class="news-item" id="news-potions" onclick="startGame('potions')">
+                    <div class="news-title">🧪 斯拉格霍恩教授的魔药课挑战！配制福灵剂</div>
+                    <div class="news-summary">精确配比各种原料，调配出传说中的幸运药水！</div>
+                    <span class="news-difficulty difficulty-hard">高难度</span>
+                </div>
+
+                <div class="news-item" id="news-patronus" onclick="startGame('patronus')">
+                    <div class="news-title">🦌 守护神咒特训！抵御摄魂怪的进攻</div>
+                    <div class="news-summary">在卢平教授指导下，学习释放强大的守护神咒！</div>
+                    <span class="news-difficulty difficulty-legendary">传说级</span>
+                </div>
+
+                <div class="news-item" id="news-quidditch2" onclick="startGame('quidditch2')">
+                    <div class="news-title">🔮 魁地奇世界杯决赛！保加利亚 vs 爱尔兰</div>
+                    <div class="news-summary">克鲁姆 vs 林奇，世纪对决！你能抓住传说中的金色飞贼吗？</div>
+                    <span class="news-difficulty difficulty-legendary">传说级</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-box">
+                    <div class="sidebar-title">🏆 预言成就</div>
+                    <div class="achievement-item" id="ach-1">
+                        <span>魁地奇冠军</span>
+                        <span>🔒</span>
+                    </div>
+                    <div class="achievement-item" id="ach-2">
+                        <span>决斗大师</span>
+                        <span>🔒</span>
+                    </div>
+                    <div class="achievement-item" id="ach-3">
+                        <span>符文破解者</span>
+                        <span>🔒</span>
+                    </div>
+                    <div class="achievement-item" id="ach-4">
+                        <span>魔药专家</span>
+                        <span>🔒</span>
+                    </div>
+                    <div class="achievement-item" id="ach-5">
+                        <span>守护神骑士</span>
+                        <span>🔒</span>
+                    </div>
+                    <div class="achievement-item" id="ach-6">
+                        <span>世界冠军</span>
+                        <span>🔒</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-box">
+                    <div class="sidebar-title">🔮 今日预言</div>
+                    <div class="today-prophecy" id="today-prophecy">
+                        "那个活下来的男孩，今天将改变魔法世界的命运..."
+                    </div>
+                </div>
+
+                <div class="sidebar-box">
+                    <div class="sidebar-title">💡 魔法提示</div>
+                    <p style="font-size: 0.85em; line-height: 1.7">
+                        • 点击带 ✨ 的新闻进入小游戏<br>
+                        • 完成预言可以获得积分和魔力<br>
+                        • 完成所有预言解锁隐藏结局<br>
+                        • 高难度预言奖励更多积分！
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="version-info">🔮 v9.0 魔法互动预言版 · 游戏改变报纸</div>
+            <p>魔法部出版署批准 · 凤凰社认证正版</p>
+            <p style="margin-top: 8px; font-style: italic">"你就是预言中的那个人..." — 西比尔·特里劳妮教授</p>
+        </footer>
+    </div>
     </div>
 
-    <div class="game-container">
-        <!-- 状态栏 -->
-        <div class="status-bar">
-            <div class="stat-group">
-                <div class="stat-item">💰 <span id="gold">500</span></div>
-                <div class="stat-item">
-                    💪
-                    <div class="energy-bar">
-                        <div class="energy-fill" id="energy-fill" style="width: 100%"></div>
-                    </div>
-                    <span id="energy">270</span>/270
-                </div>
-            </div>
-            <div class="day-display">🌅 第 <span id="day-display">1</span> 天 · 春季</div>
-        </div>
-
-        <!-- 主游戏区 -->
-        <div class="game-main">
-            <!-- 侧边菜单 -->
-            <div class="sidebar-menu">
-                <button class="menu-btn active" onclick="switchScreen('farm')">🌾 农场</button>
-                <button class="menu-btn" onclick="switchScreen('fishing')">🎣 钓鱼</button>
-                <button class="menu-btn" onclick="switchScreen('mining')">⛏️ 采矿</button>
-                <button class="menu-btn" onclick="switchScreen('shop')">🏪 商店</button>
-                <button class="menu-btn" onclick="switchScreen('inventory')">🎒 背包</button>
-                <button class="menu-btn" onclick="switchScreen('quests')">📋 任务</button>
-                
-                <div class="player-info">
-                    <div class="player-avatar">👨‍🌾</div>
-                    <div class="player-name">农场主</div>
-                    <div class="player-level">等级 1 新手</div>
-                </div>
-            </div>
-
-            <!-- 游戏区域 -->
-            <div class="game-area">
-                <!-- 农场 -->
-                <div class="screen active" id="farm-screen">
-                    <h2 class="screen-title">🌾 我的农场</h2>
-                    <div class="farm-grid" id="farm-grid"></div>
-                    <div class="farm-tools">
-                        <button class="farm-tool active" onclick="selectFarmTool('hoe')">🔨 锄头</button>
-                        <button class="farm-tool" onclick="selectFarmTool('seed')">🌱 播种</button>
-                        <button class="farm-tool" onclick="selectFarmTool('water')">💧 浇水</button>
-                        <button class="farm-tool" onclick="selectFarmTool('harvest')">✂️ 收获</button>
-                    </div>
-                </div>
-
-                <!-- 钓鱼 -->
-                <div class="screen" id="fishing-screen">
-                    <h2 class="screen-title">🎣 星露谷海滩</h2>
-                    <div class="fishing-screen">
-                        <div class="fishing-pond" id="fishing-pond">
-                            <div class="water-surface"></div>
-                            <div class="fishing-bar-container" id="fishing-bar-container" style="display: none">
-                                <div class="fishing-bar" id="fishing-bar" style="height: 30%"></div>
-                                <div class="fish-indicator" id="fish-indicator" style="top: 50%">🐟</div>
-                            </div>
-                        </div>
-                        <div class="fishing-controls">
-                            <button class="cast-btn" id="cast-btn" onclick="castLine()">🎣 抛竿钓鱼</button>
-                            <button class="reel-btn" id="reel-btn" style="display: none" onmousedown="startReeling()" onmouseup="stopReeling()" ontouchstart="startReeling()" ontouchend="stopReeling()">👆 收线（按住）</button>
-                        </div>
-                        <div class="fishing-status" id="fishing-status">点击"抛竿钓鱼"开始～消耗 8 能量</div>
-                    </div>
-                </div>
-
-                <!-- 采矿 -->
-                <div class="screen" id="mining-screen">
-                    <h2 class="screen-title">⛏️ 矿洞第 1 层</h2>
-                    <div class="mining-mine" id="mining-mine"></div>
-                    <div class="mining-info">
-                        <p>点击岩石来开采（每次消耗 3 能量）</p>
-                        <p>提示：不同矿石需要不同次数的敲击</p>
-                    </div>
-                </div>
-
-                <!-- 商店 -->
-                <div class="screen" id="shop-screen">
-                    <h2 class="screen-title">🏪 皮埃尔杂货店</h2>
-                    <div class="shop-items" id="shop-items"></div>
-                </div>
-
-                <!-- 背包 -->
-                <div class="screen" id="inventory-screen">
-                    <h2 class="screen-title">🎒 背包</h2>
-                    <div class="inventory-grid" id="inventory-grid"></div>
-                    <div style="margin-top: 20px; color: var(--ink-light)">
-                        <p>💡 提示：在商店购买种子和升级工具</p>
-                    </div>
-                </div>
-
-                <!-- 任务 -->
-                <div class="screen" id="quests-screen">
-                    <h2 class="screen-title">📋 任务列表</h2>
-                    <div class="quest-list" id="quest-list"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 底部操作 -->
-        <div class="bottom-actions">
-            <button class="action-btn" onclick="showStats()">📊 统计</button>
-            <button class="action-btn sleep" onclick="sleep()">😴 睡觉</button>
-            <button class="action-btn" onclick="saveGame()">💾 保存</button>
+    <!-- 游戏模态框 -->
+    <div class="game-modal" id="game-modal">
+        <div class="game-container" id="game-content">
+            <!-- 游戏内容动态填充 -->
         </div>
     </div>
 
     <script>
         // ==========================================
-        // 🎮 星露谷传说 - 完整游戏系统
+        // 🔮 预言家日报 - 魔法互动系统
         // ==========================================
 
-        const Game = {
+        const GameState = {
             day: 1,
-            gold: 500,
-            energy: 270,
-            maxEnergy: 270,
-            currentTool: 'hoe',
-            
-            // 工具等级
-            tools: { pickaxe: 1, hoe: 1, wateringCan: 1, fishingRod: 1 },
-            
-            // 背包物品
-            inventory: {
-                parsnip_seed: 15,
-                cauliflower_seed: 5
-            },
-            
-            // 农场数据
-            farmPlots: Array(18).fill(null).map(() => ({
-                tilled: false, seed: null, growth: 0, watered: false, ready: false
-            })),
-            
-            // 钓鱼状态
-            fishing: {
-                active: false, barHeight: 30, fishPosition: 50, fishVelocity: 0,
-                progress: 0, reeling: false, currentFish: null
-            },
-            
-            // 矿洞数据
-            mineLevel: 1,
-            rocks: [],
-            
-            // 任务系统
-            quests: [
-                { id: 1, name: '新手农场主', desc: '收获 5 个防风草', target: 5, progress: 0, reward: 100, completed: false },
-                { id: 2, name: '钓鱼新手', desc: '钓到 3 条鱼', target: 3, progress: 0, reward: 150, completed: false },
-                { id: 3, name: '矿工之路', desc: '开采 10 块矿石', target: 10, progress: 0, reward: 200, completed: false },
-                { id: 4, name: '第一桶金', desc: '赚取 1000 金币', target: 1000, progress: 500, reward: 300, completed: false }
-            ],
-            
-            // 统计
-            stats: {
-                totalFish: 0, totalOre: 0, totalCrops: 0, totalGoldEarned: 500
-            }
+            magicPower: 100,
+            score: 0,
+            level: '见习巫师',
+            completed: [],
+            currentGame: null
         };
 
-        // 物品定义
-        const Items = {
-            parsnip_seed: { name: '防风草种子', icon: '🌱', price: 20, type: 'seed', growTime: 4, crop: 'parsnip' },
-            cauliflower_seed: { name: '花椰菜种子', icon: '🌿', price: 80, type: 'seed', growTime: 12, crop: 'cauliflower' },
-            potato_seed: { name: '土豆种子', icon: '🥔', price: 50, type: 'seed', growTime: 6, crop: 'potato' },
-            strawberry_seed: { name: '草莓种子', icon: '🍓', price: 100, type: 'seed', growTime: 8, crop: 'strawberry' },
-            parsnip: { name: '防风草', icon: '🥕', price: 35, type: 'crop' },
-            cauliflower: { name: '花椰菜', icon: '🥦', price: 175, type: 'crop' },
-            potato: { name: '土豆', icon: '🥔', price: 80, type: 'crop' },
-            strawberry: { name: '草莓', icon: '🍓', price: 120, type: 'crop' },
-            fish_basic: { name: '沙丁鱼', icon: '🐟', price: 40, type: 'fish' },
-            fish_medium: { name: '鲈鱼', icon: '🐠', price: 100, type: 'fish' },
-            fish_rare: { name: '传说之鱼', icon: '🐡', price: 500, type: 'fish' },
-            stone: { name: '石头', icon: '🪨', price: 2, type: 'ore' },
-            copper: { name: '铜矿', icon: '🟤', price: 15, type: 'ore' },
-            iron: { name: '铁矿', icon: '⬜', price: 35, type: 'ore' },
-            gold_ore: { name: '金矿', icon: '🟡', price: 75, type: 'ore' },
-            diamond: { name: '钻石', icon: '💎', price: 300, type: 'ore' }
+        const Achievements = {
+            quidditch: { name: '魁地奇冠军', reward: 150, power: 20, headline: '🏆 格兰芬多获胜！哈利·波特抓住金色飞贼！' },
+            duel: { name: '决斗大师', reward: 200, power: 25, headline: '⚡ 决斗俱乐部新星诞生！无人能敌的决斗高手！' },
+            puzzle: { name: '符文破解者', reward: 250, power: 30, headline: '🧩 古灵阁千年之谜已破解！神秘宝藏重见天日！' },
+            potions: { name: '魔药专家', reward: 250, power: 30, headline: '🧪 魔药奇才诞生！成功配制传说中的福灵剂！' },
+            patronus: { name: '守护神骑士', reward: 500, power: 50, headline: '🦌 强大的守护神出现！摄魂怪被彻底击退！' },
+            quidditch2: { name: '世界冠军', reward: 800, power: 80, headline: '🏆 魁地奇世界杯冠军！你是世界上最伟大的找球手！' }
         };
 
-        // 商店物品
-        const ShopItems = [
-            'parsnip_seed', 'cauliflower_seed', 'potato_seed', 'strawberry_seed'
+        const Prophecies = [
+            "那个活下来的男孩，今天将改变魔法世界的命运...",
+            "金色的翅膀将飞过球场，带来格兰芬多的荣耀...",
+            "两道光束交汇之处，真正的巫师将诞生...",
+            "古老的符文之下，隐藏着改变世界的力量...",
+            "幸运药水将带来前所未有的机遇...",
+            "银色的守护神将驱散所有的黑暗...",
+            "世界之巅，只有最强者才能站立..."
         ];
 
-        // ==========================================
-        // 🎯 核心游戏函数
-        // ==========================================
-
         function init() {
+            createParticles();
             loadGame();
-            renderFarm();
-            renderShop();
-            renderInventory();
-            renderQuests();
-            generateRocks();
             updateUI();
-            
-            document.getElementById('new-day').classList.add('show');
-            setTimeout(() => document.getElementById('new-day').classList.remove('show'), 2000);
-            
-            setInterval(gameLoop, 50);
-            
-            console.log('🎮 星露谷传说已启动！');
-            console.log('💡 提示：游戏会自动保存，刷新页面不会丢失进度');
+            console.log('🔮 预言家日报已启动！');
+            console.log('✨ 点击新闻开始你的魔法冒险！');
         }
 
-        function gameLoop() {
-            if (Game.fishing.active && Game.fishing.reeling) {
-                Game.fishing.barHeight = Math.min(100, Game.fishing.barHeight + 1.5);
-                document.getElementById('fishing-bar').style.height = Game.fishing.barHeight + '%';
-            } else if (Game.fishing.active) {
-                Game.fishing.barHeight = Math.max(0, Game.fishing.barHeight - 0.8);
-                document.getElementById('fishing-bar').style.height = Game.fishing.barHeight + '%';
-            }
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particles = ['✨', '⭐', '💫', '🔮', '⚡', '💎'];
             
-            if (Game.fishing.active) {
-                const fishEl = document.getElementById('fish-indicator');
-                const barTop = 100 - Game.fishing.barHeight;
-                const fishY = Game.fishing.fishPosition;
-                
-                if (fishY >= barTop && fishY <= barTop + Game.fishing.barHeight) {
-                    Game.fishing.progress = Math.min(100, Game.fishing.progress + 0.8);
-                } else {
-                    Game.fishing.progress = Math.max(0, Game.fishing.progress - 0.5);
-                }
-                
-                Game.fishing.fishVelocity += (Math.random() - 0.5) * 3 - (Game.fishing.fishPosition - 50) * 0.02;
-                Game.fishing.fishVelocity *= 0.95;
-                Game.fishing.fishPosition = Math.max(5, Math.min(95, Game.fishing.fishPosition + Game.fishing.fishVelocity));
-                
-                fishEl.style.top = Game.fishing.fishPosition + '%';
-                
-                if (Game.fishing.progress >= 100) {
-                    catchFishSuccess();
-                } else if (Game.fishing.progress <= 0) {
-                    fishEscaped();
-                }
-            }
-        }
-
-        function switchScreen(screen) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(screen + '-screen').classList.add('active');
-            event.target.classList.add('active');
-            
-            if (screen === 'mining' && Game.rocks.length === 0) {
-                generateRocks();
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.textContent = particles[Math.floor(Math.random() * particles.length)];
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(p);
             }
         }
 
         function updateUI() {
-            document.getElementById('gold').textContent = Game.gold;
-            document.getElementById('energy').textContent = Game.energy;
-            document.getElementById('energy-fill').style.width = (Game.energy / Game.maxEnergy * 100) + '%';
-            document.getElementById('day-display').textContent = Game.day;
-            document.getElementById('day-number').textContent = Game.day;
+            document.getElementById('magic-power').textContent = GameState.magicPower;
+            document.getElementById('score').textContent = GameState.score;
+            document.getElementById('day-number').textContent = GameState.day;
+            document.getElementById('prophecies-completed').textContent = GameState.completed.length;
+            
+            if (GameState.score >= 2000) GameState.level = '传奇巫师';
+            else if (GameState.score >= 1000) GameState.level = '高级巫师';
+            else if (GameState.score >= 500) GameState.level = '正式巫师';
+            document.getElementById('level').textContent = GameState.level;
+            
+            GameState.completed.forEach(id => {
+                const newsEl = document.getElementById('news-' + id);
+                if (newsEl) newsEl.classList.add('completed');
+                const achEl = document.getElementById('ach-' + (Object.keys(Achievements).indexOf(id) + 1));
+                if (achEl) {
+                    achEl.classList.add('unlocked');
+                    achEl.innerHTML = '<span>' + Achievements[id].name + '</span><span>✅</span>';
+                }
+            });
+            
+            const prophecyIdx = Math.min(GameState.completed.length, Prophecies.length - 1);
+            document.getElementById('today-prophecy').textContent = '"' + Prophecies[prophecyIdx] + '"';
+            
+            if (GameState.completed.includes('quidditch')) {
+                const headline = document.querySelector('.headline');
+                headline.textContent = Achievements.quidditch.headline;
+                headline.onclick = null;
+                headline.style.cursor = 'default';
+                headline.classList.add('completed');
+            }
         }
 
-        function showNotification(msg) {
-            const el = document.getElementById('notification');
+        function showAchievement(msg) {
+            const el = document.getElementById('achievement');
             el.textContent = msg;
             el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 2500);
+            setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        function useEnergy(amount) {
-            if (Game.energy < amount) {
-                showNotification('😫 能量不足！去睡觉恢复吧～');
-                return false;
-            }
-            Game.energy -= amount;
-            updateUI();
-            return true;
+        function closeGame() {
+            document.getElementById('game-modal').classList.remove('active');
+            GameState.currentGame = null;
         }
 
         // ==========================================
-        // 🌾 农场系统
+        // 🎮 游戏启动器
         // ==========================================
 
-        function selectFarmTool(tool) {
-            if (!Game.currentTool) Game.currentTool = '';
-            Game.currentTool = tool;
-            document.querySelectorAll('.farm-tool').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function renderFarm() {
-            const grid = document.getElementById('farm-grid');
-            grid.innerHTML = '';
-            
-            Game.farmPlots.forEach((plot, idx) => {
-                const el = document.createElement('div');
-                el.className = 'farm-plot';
-                
-                if (plot.tilled) el.classList.add('tilled');
-                if (plot.watered) el.classList.add('watered');
-                if (plot.ready) el.classList.add('ready');
-                
-                if (plot.seed) {
-                    const item = Items[plot.seed];
-                    const stages = ['🌱', '🌿', '🪴'];
-                    const stage = Math.min(2, Math.floor(plot.growth / item.growTime * 3));
-                    el.textContent = plot.ready ? Items[item.crop].icon : stages[stage];
-                    
-                    const growthBar = document.createElement('div');
-                    growthBar.className = 'growth-bar';
-                    growthBar.innerHTML = `<div class="growth-fill" style="width: ${plot.growth / item.growTime * 100}%"></div>`;
-                    el.appendChild(growthBar);
-                }
-                
-                el.onclick = () => interactPlot(idx);
-                grid.appendChild(el);
-            });
-        }
-
-        function interactPlot(idx) {
-            const plot = Game.farmPlots[idx];
-            const tool = Game.currentTool || 'hoe';
-            
-            if (tool === 'hoe' && !plot.tilled && !plot.seed) {
-                if (!useEnergy(2)) return;
-                plot.tilled = true;
-                showNotification('🔨 土地已开垦！');
-            }
-            else if (tool === 'seed' && plot.tilled && !plot.seed) {
-                const seeds = Object.keys(Game.inventory).filter(k => k.includes('_seed') && Game.inventory[k] > 0);
-                if (seeds.length === 0) {
-                    showNotification('❌ 没有种子了！去商店购买吧～');
-                    return;
-                }
-                if (!useEnergy(2)) return;
-                Game.inventory[seeds[0]]--;
-                plot.seed = seeds[0];
-                plot.growth = 0;
-                showNotification('🌱 种下了 ' + Items[seeds[0]].name);
-                renderInventory();
-            }
-            else if (tool === 'water' && plot.seed && !plot.watered) {
-                if (!useEnergy(2)) return;
-                plot.watered = true;
-                showNotification('💧 浇水成功！');
-            }
-            else if (tool === 'harvest' && plot.ready) {
-                const item = Items[plot.seed];
-                const crop = item.crop;
-                Game.inventory[crop] = (Game.inventory[crop] || 0) + 1;
-                Game.stats.totalCrops++;
-                
-                const sellPrice = Items[crop].price;
-                Game.gold += sellPrice;
-                Game.stats.totalGoldEarned += sellPrice;
-                
-                updateQuestProgress('harvest', 1);
-                
-                plot.seed = null;
-                plot.ready = false;
-                plot.watered = false;
-                plot.growth = 0;
-                
-                showNotification('✂️ 收获了 ' + Items[crop].name + ' 并卖出！+' + sellPrice + '金币');
-                updateUI();
-                renderInventory();
-            }
-            
-            renderFarm();
-            saveGame();
-        }
-
-        // ==========================================
-        // 🎣 钓鱼系统（真实的星露谷机制！）
-        // ==========================================
-
-        function castLine() {
-            if (Game.fishing.active) return;
-            if (!useEnergy(8)) return;
-            
-            Game.fishing.active = true;
-            Game.fishing.barHeight = 30;
-            Game.fishing.fishPosition = 50 + (Math.random() - 0.5) * 40;
-            Game.fishing.fishVelocity = 0;
-            Game.fishing.progress = 30;
-            
-            const fishes = ['fish_basic', 'fish_basic', 'fish_basic', 'fish_medium', 'fish_medium', 'fish_rare'];
-            Game.fishing.currentFish = fishes[Math.floor(Math.random() * fishes.length)];
-            
-            document.getElementById('cast-btn').style.display = 'none';
-            document.getElementById('reel-btn').style.display = 'inline-block';
-            document.getElementById('fishing-bar-container').style.display = 'block';
-            document.getElementById('fishing-status').textContent = '🎣 上钩了！按住"收线"让绿色条覆盖住鱼！';
-        }
-
-        function startReeling() {
-            if (!Game.fishing.active) return;
-            Game.fishing.reeling = true;
-        }
-
-        function stopReeling() {
-            Game.fishing.reeling = false;
-        }
-
-        function catchFishSuccess() {
-            const fishId = Game.fishing.currentFish;
-            const fish = Items[fishId];
-            
-            Game.inventory[fishId] = (Game.inventory[fishId] || 0) + 1;
-            Game.stats.totalFish++;
-            
-            Game.gold += fish.price;
-            Game.stats.totalGoldEarned += fish.price;
-            
-            updateQuestProgress('fish', 1);
-            
-            showNotification('🎉 钓到了 ' + fish.name + '！+' + fish.price + ' 金币');
-            
-            resetFishing();
-            updateUI();
-            renderInventory();
-            saveGame();
-        }
-
-        function fishEscaped() {
-            showNotification('😢 鱼逃跑了...再试试吧！');
-            resetFishing();
-        }
-
-        function resetFishing() {
-            Game.fishing.active = false;
-            Game.fishing.reeling = false;
-            document.getElementById('cast-btn').style.display = 'inline-block';
-            document.getElementById('reel-btn').style.display = 'none';
-            document.getElementById('fishing-bar-container').style.display = 'none';
-            document.getElementById('fishing-status').textContent = '点击"抛竿钓鱼"开始～消耗 8 能量';
-        }
-
-        // ==========================================
-        // ⛏️ 采矿系统
-        // ==========================================
-
-        function generateRocks() {
-            const mine = document.getElementById('mining-mine');
-            mine.innerHTML = '';
-            Game.rocks = [];
-            
-            const rockTypes = [
-                { icon: '🪨', hp: 2, drops: 'stone', chance: 0.5 },
-                { icon: '🪨', hp: 3, drops: 'copper', chance: 0.3 },
-                { icon: '🪨', hp: 5, drops: 'iron', chance: 0.12 },
-                { icon: '💎', hp: 8, drops: 'diamond', chance: 0.03 },
-                { icon: '🟡', hp: 6, drops: 'gold_ore', chance: 0.05 }
-            ];
-            
-            for (let i = 0; i < 15; i++) {
-                const rand = Math.random();
-                let type;
-                if (rand < 0.5) type = rockTypes[0];
-                else if (rand < 0.8) type = rockTypes[1];
-                else if (rand < 0.92) type = rockTypes[2];
-                else if (rand < 0.97) type = rockTypes[4];
-                else type = rockTypes[3];
-                
-                const rock = {
-                    id: i,
-                    hp: type.hp,
-                    maxHp: type.hp,
-                    drops: type.drops,
-                    icon: type.icon
-                };
-                Game.rocks.push(rock);
-                
-                const el = document.createElement('div');
-                el.className = 'mine-rock';
-                el.id = 'rock-' + i;
-                el.innerHTML = `
-                    <span>${rock.icon}</span>
-                    <div class="rock-hp">
-                        <div class="rock-hp-fill" style="width: 100%" id="rock-hp-${i}"></div>
-                    </div>
-                `;
-                el.onclick = () => mineRock(i);
-                mine.appendChild(el);
-            }
-        }
-
-        function mineRock(idx) {
-            const rock = Game.rocks[idx];
-            if (!rock || rock.hp <= 0) return;
-            
-            if (!useEnergy(3)) return;
-            
-            const damage = Game.tools.pickaxe;
-            rock.hp -= damage;
-            
-            const el = document.getElementById('rock-' + idx);
-            const hpEl = document.getElementById('rock-hp-' + idx);
-            hpEl.style.width = (rock.hp / rock.maxHp * 100) + '%';
-            el.classList.add('mining');
-            setTimeout(() => el.classList.remove('mining'), 100);
-            
-            if (rock.hp <= 0) {
-                el.classList.add('mined');
-                const item = Items[rock.drops];
-                Game.inventory[rock.drops] = (Game.inventory[rock.drops] || 0) + 1;
-                Game.stats.totalOre++;
-                
-                Game.gold += item.price;
-                Game.stats.totalGoldEarned += item.price;
-                
-                updateQuestProgress('mine', 1);
-                
-                showNotification('⛏️ 获得 ' + item.name + '！+' + item.price + ' 金币');
-                updateUI();
-                renderInventory();
-                saveGame();
-                
-                setTimeout(() => {
-                    const emptyIdx = Game.rocks.findIndex(r => r && r.hp <= 0);
-                    if (emptyIdx !== -1) {
-                        const rockTypes = [
-                            { icon: '🪨', hp: 2, drops: 'stone', chance: 0.5 },
-                            { icon: '🪨', hp: 3, drops: 'copper', chance: 0.3 },
-                            { icon: '🪨', hp: 5, drops: 'iron', chance: 0.12 },
-                            { icon: '💎', hp: 8, drops: 'diamond', chance: 0.03 },
-                            { icon: '🟡', hp: 6, drops: 'gold_ore', chance: 0.05 }
-                        ];
-                        const rand = Math.random();
-                        let type;
-                        if (rand < 0.5) type = rockTypes[0];
-                        else if (rand < 0.8) type = rockTypes[1];
-                        else if (rand < 0.92) type = rockTypes[2];
-                        else if (rand < 0.97) type = rockTypes[4];
-                        else type = rockTypes[3];
-                        
-                        Game.rocks[emptyIdx] = { id: emptyIdx, hp: type.hp, maxHp: type.hp, drops: type.drops, icon: type.icon };
-                        const newEl = document.getElementById('rock-' + emptyIdx);
-                        newEl.innerHTML = `
-                            <span>${type.icon}</span>
-                            <div class="rock-hp">
-                                <div class="rock-hp-fill" style="width: 100%" id="rock-hp-${emptyIdx}"></div>
-                            </div>
-                        `;
-                        newEl.classList.remove('mined');
-                    }
-                }, 500);
-            }
-        }
-
-        // ==========================================
-        // 🏪 商店系统
-        // ==========================================
-
-        function renderShop() {
-            const container = document.getElementById('shop-items');
-            container.innerHTML = '';
-            
-            ShopItems.forEach(itemId => {
-                const item = Items[itemId];
-                const el = document.createElement('div');
-                el.className = 'shop-item';
-                el.innerHTML = `
-                    <div class="item-icon">${item.icon}</div>
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">💰 ${item.price}</div>
-                `;
-                el.onclick = () => buyItem(itemId);
-                container.appendChild(el);
-            });
-        }
-
-        function buyItem(itemId) {
-            const item = Items[itemId];
-            if (Game.gold < item.price) {
-                showNotification('💸 金币不足！');
+        function startGame(gameId) {
+            if (GameState.completed.includes(gameId)) {
+                showAchievement('✅ 这个预言你已经完成了！去挑战其他预言吧！');
                 return;
             }
             
-            Game.gold -= item.price;
-            Game.inventory[itemId] = (Game.inventory[itemId] || 0) + 5;
+            if (GameState.magicPower < 10) {
+                showAchievement('😫 魔力不足！休息一下恢复魔力吧～');
+                return;
+            }
             
-            showNotification('🛒 购买了 5个 ' + item.name);
+            GameState.magicPower -= 10;
+            GameState.currentGame = gameId;
             updateUI();
-            renderInventory();
+            
+            const container = document.getElementById('game-content');
+            
+            switch(gameId) {
+                case 'quidditch':
+                    container.innerHTML = getQuidditchHTML();
+                    document.getElementById('game-modal').classList.add('active');
+                    initQuidditch();
+                    break;
+                case 'duel':
+                    container.innerHTML = getDuelHTML();
+                    document.getElementById('game-modal').classList.add('active');
+                    initDuel();
+                    break;
+                case 'puzzle':
+                    container.innerHTML = getPuzzleHTML();
+                    document.getElementById('game-modal').classList.add('active');
+                    initPuzzle();
+                    break;
+                case 'potions':
+                    container.innerHTML = getPotionsHTML();
+                    document.getElementById('game-modal').classList.add('active');
+                    initPotions();
+                    break;
+                case 'patronus':
+                    container.innerHTML = getPatronusHTML();
+                    document.getElementById('game-modal').classList.add('active');
+                    initPatronus();
+                    break;
+                case 'quidditch2':
+                    container.innerHTML = getQuidditch2HTML();
+                    document.getElementById('game-modal').classList.add('active');
+                    initQuidditch2();
+                    break;
+            }
+        }
+
+        function winGame(bonusScore = 0) {
+            const gameId = GameState.currentGame;
+            const ach = Achievements[gameId];
+            
+            GameState.completed.push(gameId);
+            GameState.score += ach.reward + bonusScore;
+            GameState.magicPower += ach.power;
+            GameState.day++;
+            
             saveGame();
+            updateUI();
+            
+            const container = document.getElementById('game-content');
+            container.innerHTML = `
+                <div class="result-screen">
+                    <div class="result-icon">🎉</div>
+                    <h3 class="result-title success">预言实现！</h3>
+                    <p style="margin-bottom: 15px">${ach.headline}</p>
+                    <div class="result-score">
+                        +${ach.reward + bonusScore} 积分<br>
+                        +${ach.power} 魔力
+                    </div>
+                    <p>🏆 成就解锁：${ach.name}</p>
+                    <button class="result-btn" onclick="closeGame()">返回报纸</button>
+                </div>
+            `;
+            
+            showAchievement('🎉 ' + ach.name + '！预言已实现！');
+        }
+
+        function loseGame() {
+            const container = document.getElementById('game-content');
+            container.innerHTML = `
+                <div class="result-screen">
+                    <div class="result-icon">😢</div>
+                    <h3 class="result-title fail">预言失败...</h3>
+                    <p>不要气馁，真正的巫师永不放弃！</p>
+                    <p style="margin-top: 10px; color: var(--ink-light)">消耗 10 魔力，再试一次吧！</p>
+                    <button class="result-btn" onclick="startGame('${GameState.currentGame}')">再试一次</button>
+                    <button class="result-btn" onclick="closeGame()">返回报纸</button>
+                </div>
+            `;
         }
 
         // ==========================================
-        // 🎒 背包系统
+        // 🏆 游戏1：魁地奇比赛
         // ==========================================
 
-        function renderInventory() {
-            const grid = document.getElementById('inventory-grid');
-            grid.innerHTML = '';
+        function getQuidditchHTML() {
+            return `
+                <div class="game-header">
+                    <span class="game-title">🏆 格兰芬多 vs 斯莱特林</span>
+                    <button class="close-btn" onclick="closeGame()">×</button>
+                </div>
+                <div class="game-instruction">
+                    <strong>🎯 目标：</strong>抓住金色飞贼！用鼠标/手指控制你的位置，躲避游走球，在30秒内抓住飞贼5次！<br>
+                    <strong>⚡ 操作：</strong>移动鼠标/手指控制哈利，点击金色飞贼来抓住它！
+                </div>
+                <div class="quidditch-area" id="quidditch-area" onmousemove="movePlayer(event)" ontouchmove="movePlayer(event)">
+                    <div class="quidditch-score">抓住: <span id="q-score">0</span>/5</div>
+                    <div class="quidditch-timer">时间: <span id="q-timer">30</span>s</div>
+                    <div class="snitch" id="snitch" onclick="catchSnitch()">🪐</div>
+                    <div class="bludger" id="bludger1" style="top: 50px; left: 100px">⚫</div>
+                    <div class="bludger" id="bludger2" style="top: 150px; right: 100px">⚫</div>
+                    <div class="player" id="player">🧙</div>
+                </div>
+                <div class="quidditch-controls">
+                    <button class="quidditch-start" id="q-start" onclick="startQuidditch()">开始比赛！</button>
+                </div>
+            `;
+        }
+
+        let quidditchState = { active: false, score: 0, timer: 30, interval: null };
+
+        function initQuidditch() {
+            quidditchState = { active: false, score: 0, timer: 30, interval: null };
+        }
+
+        function startQuidditch() {
+            quidditchState.active = true;
+            document.getElementById('q-start').style.display = 'none';
             
-            const items = Object.entries(Game.inventory).filter(([k, v]) => v > 0);
-            
-            for (let i = 0; i < 24; i++) {
-                const slot = document.createElement('div');
-                slot.className = 'inv-slot';
+            quidditchState.interval = setInterval(() => {
+                quidditchState.timer--;
+                document.getElementById('q-timer').textContent = quidditchState.timer;
                 
-                if (items[i]) {
-                    const [itemId, count] = items[i];
-                    const item = Items[itemId];
-                    if (item) {
-                        slot.innerHTML = `
-                            ${item.icon}
-                            <span class="inv-count">${count}</span>
-                        `;
-                        slot.title = item.name;
+                moveBludgers();
+                
+                if (quidditchState.timer <= 0) {
+                    clearInterval(quidditchState.interval);
+                    if (quidditchState.score >= 5) {
+                        winGame();
+                    } else {
+                        loseGame();
                     }
                 }
-                grid.appendChild(slot);
+            }, 1000);
+            
+            moveSnitch();
+        }
+
+        function movePlayer(e) {
+            if (!quidditchState.active) return;
+            const area = document.getElementById('quidditch-area');
+            const rect = area.getBoundingClientRect();
+            const player = document.getElementById('player');
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            player.style.left = Math.max(30, Math.min(rect.width - 30, x)) + 'px';
+            player.style.transform = 'translateX(-50%)';
+        }
+
+        function moveSnitch() {
+            if (!quidditchState.active) return;
+            const snitch = document.getElementById('snitch');
+            const area = document.getElementById('quidditch-area');
+            snitch.style.left = (50 + Math.random() * (area.offsetWidth - 100)) + 'px';
+            snitch.style.top = (30 + Math.random() * (area.offsetHeight - 100)) + 'px';
+            setTimeout(moveSnitch, 800 + Math.random() * 500);
+        }
+
+        function moveBludgers() {
+            const b1 = document.getElementById('bludger1');
+            const b2 = document.getElementById('bludger2');
+            const area = document.getElementById('quidditch-area');
+            
+            b1.style.left = parseInt(b1.style.left) + (Math.random() - 0.4) * 60 + 'px';
+            b1.style.top = parseInt(b1.style.top) + (Math.random() - 0.5) * 40 + 'px';
+            b2.style.left = parseInt(b2.style.left) + (Math.random() - 0.6) * 60 + 'px';
+            b2.style.top = parseInt(b2.style.top) + (Math.random() - 0.5) * 40 + 'px';
+            
+            b1.style.left = Math.max(20, Math.min(area.offsetWidth - 50, parseInt(b1.style.left))) + 'px';
+            b1.style.top = Math.max(20, Math.min(area.offsetHeight - 50, parseInt(b1.style.top))) + 'px';
+            b2.style.left = Math.max(20, Math.min(area.offsetWidth - 50, parseInt(b2.style.left))) + 'px';
+            b2.style.top = Math.max(20, Math.min(area.offsetHeight - 50, parseInt(b2.style.top))) + 'px';
+        }
+
+        function catchSnitch() {
+            if (!quidditchState.active) return;
+            quidditchState.score++;
+            document.getElementById('q-score').textContent = quidditchState.score;
+            
+            if (quidditchState.score >= 5) {
+                clearInterval(quidditchState.interval);
+                winGame();
             }
         }
 
         // ==========================================
-        // 📋 任务系统
+        // ⚡ 游戏2：咒语决斗
         // ==========================================
 
-        function renderQuests() {
-            const list = document.getElementById('quest-list');
-            list.innerHTML = '';
-            
-            Game.quests.forEach(quest => {
-                const el = document.createElement('div');
-                el.className = 'quest-item' + (quest.completed ? ' completed' : '');
-                el.innerHTML = `
-                    <div class="quest-info">
-                        <h4>${quest.completed ? '✅ ' : ''}${quest.name}</h4>
-                        <p>${quest.desc}</p>
-                        <div class="quest-progress">${quest.progress} / ${quest.target}</div>
-                    </div>
-                    <div class="quest-reward">💰 ${quest.reward}</div>
-                `;
-                list.appendChild(el);
-            });
+        function getDuelHTML() {
+            return `
+                <div class="game-header">
+                    <span class="game-title">⚡ 决斗俱乐部 - 黑魔法防御术</span>
+                    <button class="close-btn" onclick="closeGame()">×</button>
+                </div>
+                <div class="game-instruction">
+                    <strong>🎯 目标：</strong>击败马尔福！选择正确的咒语反击！<br>
+                    <strong>⚡ 操作：</strong>敌人攻击时，点击对应颜色的护盾按钮防御！然后用咒语反击！
+                </div>
+                <div class="duel-arena">
+                    <div class="wizard player">🧙</div>
+                    <div class="wizard enemy">🧛</div>
+                    <div class="health-bar player"><div class="health-fill" id="p-health" style="width: 100%"></div></div>
+                    <div class="health-bar enemy"><div class="health-fill enemy" id="e-health" style="width: 100%"></div></div>
+                    <div class="spell" id="player-spell" style="left: -100px"></div>
+                    <div class="spell" id="enemy-spell" style="right: -100px"></div>
+                </div>
+                <div class="spell-buttons">
+                    <button class="spell-btn" onclick="castSpell('shield')">🛡️ 护盾</button>
+                    <button class="spell-btn" onclick="castSpell('expelliarmus')">⚡ 除你武器</button>
+                    <button class="spell-btn" onclick="castSpell('stupefy')">💫 昏昏倒地</button>
+                    <button class="spell-btn" onclick="castSpell('protego')">🔮 盔甲护身</button>
+                </div>
+                <p style="text-align: center; margin-top: 10px; color: var(--ink-light)" id="duel-status">准备开始...</p>
+            `;
         }
 
-        function updateQuestProgress(type, amount) {
-            Game.quests.forEach(quest => {
-                if (quest.completed) return;
-                
-                if (type === 'harvest' && quest.id === 1) {
-                    quest.progress += amount;
-                } else if (type === 'fish' && quest.id === 2) {
-                    quest.progress += amount;
-                } else if (type === 'mine' && quest.id === 3) {
-                    quest.progress += amount;
-                } else if (type === 'gold' && quest.id === 4) {
-                    quest.progress = Game.stats.totalGoldEarned;
-                }
-                
-                if (quest.progress >= quest.target && !quest.completed) {
-                    quest.completed = true;
-                    Game.gold += quest.reward;
-                    showNotification('🏆 任务完成：' + quest.name + '！+' + quest.reward + '金币');
-                    updateUI();
-                }
-            });
-            
-            renderQuests();
+        let duelState = { active: false, playerHP: 100, enemyHP: 100, shielded: false, interval: null };
+
+        function initDuel() {
+            duelState = { active: true, playerHP: 100, enemyHP: 100, shielded: false, interval: null };
+            setTimeout(enemyAttack, 1500);
         }
 
-        // ==========================================
-        // 😴 睡觉（新的一天）
-        // ==========================================
-
-        function sleep() {
-            const overlay = document.getElementById('new-day');
-            overlay.classList.add('show');
+        function castSpell(type) {
+            if (!duelState.active) return;
             
-            Game.day++;
-            Game.energy = Game.maxEnergy;
-            
-            Game.farmPlots.forEach(plot => {
-                if (plot.seed && plot.watered) {
-                    plot.growth++;
-                    const item = Items[plot.seed];
-                    if (plot.growth >= item.growTime) {
-                        plot.ready = true;
-                    }
+            if (type === 'shield' || type === 'protego') {
+                duelState.shielded = true;
+                showSpell('player', '🛡️');
+                setTimeout(() => duelState.shielded = false, 1200);
+                document.getElementById('duel-status').textContent = '护盾激活！';
+            } else {
+                const damage = type === 'expelliarmus' ? 15 : 20;
+                duelState.enemyHP -= damage;
+                document.getElementById('e-health').style.width = Math.max(0, duelState.enemyHP) + '%';
+                showSpell('player', '⚡');
+                document.getElementById('duel-status').textContent = '造成 ' + damage + ' 点伤害！';
+                
+                if (duelState.enemyHP <= 0) {
+                    duelState.active = false;
+                    winGame();
                 }
-                plot.watered = false;
-            });
+            }
+        }
+
+        function enemyAttack() {
+            if (!duelState.active) return;
             
-            Game.rocks = [];
+            showSpell('enemy', '💀');
             
             setTimeout(() => {
-                overlay.classList.remove('show');
-                updateUI();
-                renderFarm();
-                generateRocks();
-                showNotification('🌅 早上好！第 ' + Game.day + ' 天开始了！');
-                saveGame();
-            }, 2000);
+                if (!duelState.shielded) {
+                    const damage = 10 + Math.floor(Math.random() * 10);
+                    duelState.playerHP -= damage;
+                    document.getElementById('p-health').style.width = Math.max(0, duelState.playerHP) + '%';
+                    document.getElementById('duel-status').textContent = '受到 ' + damage + ' 点伤害！';
+                    
+                    if (duelState.playerHP <= 0) {
+                        duelState.active = false;
+                        loseGame();
+                        return;
+                    }
+                } else {
+                    document.getElementById('duel-status').textContent = '成功防御！';
+                }
+                
+                setTimeout(enemyAttack, 1500 + Math.random() * 1000);
+            }, 500);
+        }
+
+        function showSpell(who, icon) {
+            const el = document.getElementById(who + '-spell');
+            el.textContent = icon;
+            if (who === 'player') el.style.left = '150px';
+            else el.style.right = '150px';
+            
+            setTimeout(() => {
+                if (who === 'player') el.style.left = '-100px';
+                else el.style.right = '-100px';
+            }, 400);
         }
 
         // ==========================================
-        // 💾 存档系统
+        // 🧩 游戏3：古灵阁符文解谜（高级记忆翻牌）
         // ==========================================
 
+        function getPuzzleHTML() {
+            return `
+                <div class="game-header">
+                    <span class="game-title">🧩 古灵阁符文 - 记忆配对</span>
+                    <button class="close-btn" onclick="closeGame()">×</button>
+                </div>
+                <div class="game-instruction">
+                    <strong>🎯 目标：</strong>找出所有配对的符文！但要小心，每翻错3次会受到魔法反噬！<br>
+                    <strong>⚡ 难度：</strong>4×4 共8对符文，最多只能错3次！
+                </div>
+                <div class="puzzle-grid" id="puzzle-grid"></div>
+                <div class="puzzle-info">
+                    <div>配对: <span id="p-matches">0</span>/8</div>
+                    <div>错误: <span id="p-mistakes">0</span>/3</div>
+                </div>
+            `;
+        }
+
+        let puzzleState = { matches: 0, mistakes: 0, selected: null, locked: false, cards: [] };
+
+        function initPuzzle() {
+            puzzleState = { matches: 0, mistakes: 0, selected: null, locked: false, cards: [] };
+            
+            const symbols = ['🔮', '⚡', '💎', '🦉', '🐍', '🦌', '🦁', '🦅'];
+            const cards = [...symbols, ...symbols];
+            
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            
+            puzzleState.cards = cards;
+            
+            const grid = document.getElementById('puzzle-grid');
+            grid.innerHTML = '';
+            
+            cards.forEach((symbol, idx) => {
+                const card = document.createElement('div');
+                card.className = 'puzzle-cell';
+                card.innerHTML = '❓';
+                card.dataset.idx = idx;
+                card.dataset.symbol = symbol;
+                card.onclick = () => flipCard(idx);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(idx) {
+            if (puzzleState.locked) return;
+            
+            const cards = document.querySelectorAll('.puzzle-cell');
+            const card = cards[idx];
+            
+            if (card.classList.contains('matched') || card.classList.contains('selected')) return;
+            
+            card.textContent = card.dataset.symbol;
+            card.classList.add('selected');
+            
+            if (puzzleState.selected === null) {
+                puzzleState.selected = idx;
+            } else {
+                puzzleState.locked = true;
+                const firstIdx = puzzleState.selected;
+                const firstCard = cards[firstIdx];
+                
+                if (firstCard.dataset.symbol === card.dataset.symbol) {
+                    puzzleState.matches++;
+                    document.getElementById('p-matches').textContent = puzzleState.matches;
+                    
+                    setTimeout(() => {
+                        firstCard.classList.add('matched');
+                        card.classList.add('matched');
+                        firstCard.classList.remove('selected');
+                        card.classList.remove('selected');
+                        puzzleState.selected = null;
+                        puzzleState.locked = false;
+                        
+                        if (puzzleState.matches >= 8) {
+                            winGame();
+                        }
+                    }, 500);
+                } else {
+                    puzzleState.mistakes++;
+                    document.getElementById('p-mistakes').textContent = puzzleState.mistakes;
+                    
+                    setTimeout(() => {
+                        firstCard.textContent = '❓';
+                        card.textContent = '❓';
+                        firstCard.classList.remove('selected');
+                        card.classList.remove('selected');
+                        puzzleState.selected = null;
+                        puzzleState.locked = false;
+                        
+                        if (puzzleState.mistakes >= 3) {
+                            loseGame();
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        // ==========================================
+        // 🧪 游戏4：魔药配制
+        // ==========================================
+
+        function getPotionsHTML() {
+            return `
+                <div class="game-header">
+                    <span class="game-title">🧪 配制福灵剂 - 幸运药水</span>
+                    <button class="close-btn" onclick="closeGame()">×</button>
+                </div>
+                <div class="game-instruction">
+                    <strong>🎯 目标：</strong>按正确顺序加入原料！福灵剂需要精确的配比！<br>
+                    <strong>⚡ 配方：</strong>薰衣草 → 薄荷粉末 → 独角兽角 → 凤凰羽毛 → 月露。顺序错了就失败！
+                </div>
+                <div style="text-align: center; margin: 20px 0">
+                    <div style="font-size: 4em; margin-bottom: 15px">⚗️</div>
+                    <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap">
+                        <span id="ing-0" style="opacity: 0.3">🌸</span>
+                        <span id="ing-1" style="opacity: 0.3">🌿</span>
+                        <span id="ing-2" style="opacity: 0.3">🦄</span>
+                        <span id="ing-3" style="opacity: 0.3">🐦</span>
+                        <span id="ing-4" style="opacity: 0.3">🌙</span>
+                    </div>
+                </div>
+                <div class="spell-buttons">
+                    <button class="spell-btn" onclick="addIngredient('🌸', 0)">🌸 薰衣草</button>
+                    <button class="spell-btn" onclick="addIngredient('🌿', 1)">🌿 薄荷粉末</button>
+                    <button class="spell-btn" onclick="addIngredient('🦄', 2)">🦄 独角兽角</button>
+                    <button class="spell-btn" onclick="addIngredient('🐦', 3)">🐦 凤凰羽毛</button>
+                    <button class="spell-btn" onclick="addIngredient('🌙', 4)">🌙 月露</button>
+                </div>
+                <p style="text-align: center; margin-top: 15px" id="potion-status">按顺序加入原料...</p>
+            `;
+        }
+
+        let potionState = { step: 0 };
+
+        function initPotions() {
+            potionState = { step: 0 };
+        }
+
+        function addIngredient(icon, idx) {
+            if (idx === potionState.step) {
+                document.getElementById('ing-' + idx).style.opacity = '1';
+                document.getElementById('ing-' + idx).style.animation = 'pulse 0.5s';
+                potionState.step++;
+                
+                const messages = ['薰衣草加入...', '薄荷粉末撒入...', '独角兽角粉末化...', '凤凰羽毛飘入...', '月露滴落...'];
+                document.getElementById('potion-status').textContent = messages[idx];
+                
+                if (potionState.step >= 5) {
+                    document.getElementById('potion-status').textContent = '✨ 福灵剂配制成功！';
+                    setTimeout(() => winGame(), 1000);
+                }
+            } else {
+                document.getElementById('potion-status').textContent = '💥 失败！原料顺序错误！魔药爆炸了...';
+                setTimeout(loseGame, 1500);
+            }
+        }
+
+        // ==========================================
+        // 🦌 游戏5：守护神咒
+        // ==========================================
+
+        function getPatronusHTML() {
+            return `
+                <div class="game-header">
+                    <span class="game-title">🦌 守护神咒 - 抵御摄魂怪</span>
+                    <button class="close-btn" onclick="closeGame()">×</button>
+                </div>
+                <div class="game-instruction">
+                    <strong>🎯 目标：</strong>快速连按释放守护神！摄魂怪正在靠近，在它们到达前完成100次点击！<br>
+                    <strong>⚡ 传说级难度：</strong>你只有8秒时间！越快越好！呼神护卫！
+                </div>
+                <div style="text-align: center; margin: 30px 0">
+                    <div style="font-size: 5em; margin-bottom: 20px" id="patronus-icon">😰</div>
+                    <div style="width: 80%; height: 30px; background: rgba(0,0,0,0.2); margin: 0 auto; border-radius: 15px; overflow: hidden">
+                        <div id="patronus-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #3498db, #2ecc71); transition: width 0.1s"></div>
+                    </div>
+                    <p style="margin-top: 15px">进度: <span id="patronus-progress">0</span>/100</p>
+                    <p style="color: var(--magic-red)">剩余时间: <span id="patronus-timer">8</span>s</p>
+                </div>
+                <div style="text-align: center">
+                    <button class="quidditch-start" id="patronus-btn" onmousedown="chargePatronus()" ontouchstart="chargePatronus()">
+                        ⚡ 呼神护卫！（快速连点！）
+                    </button>
+                </div>
+            `;
+        }
+
+        let patronusState = { progress: 0, timer: 8, interval: null, active: false };
+
+        function initPatronus() {
+            patronusState = { progress: 0, timer: 8, interval: null, active: false };
+            
+            document.getElementById('patronus-btn').addEventListener('click', () => {
+                if (!patronusState.active) {
+                    patronusState.active = true;
+                    startPatronusTimer();
+                }
+                chargePatronus();
+            });
+        }
+
+        function startPatronusTimer() {
+            patronusState.interval = setInterval(() => {
+                patronusState.timer--;
+                document.getElementById('patronus-timer').textContent = patronusState.timer;
+                
+                if (patronusState.timer <= 0) {
+                    clearInterval(patronusState.interval);
+                    if (patronusState.progress >= 100) {
+                        winGame();
+                    } else {
+                        loseGame();
+                    }
+                }
+            }, 1000);
+        }
+
+        function chargePatronus() {
+            if (!patronusState.active) {
+                patronusState.active = true;
+                startPatronusTimer();
+            }
+            
+            patronusState.progress += 3;
+            if (patronusState.progress > 100) patronusState.progress = 100;
+            
+            document.getElementById('patronus-progress').textContent = patronusState.progress;
+            document.getElementById('patronus-bar').style.width = patronusState.progress + '%';
+            
+            if (patronusState.progress < 30) {
+                document.getElementById('patronus-icon').textContent = '😰';
+            } else if (patronusState.progress < 60) {
+                document.getElementById('patronus-icon').textContent = '💫';
+            } else if (patronusState.progress < 90) {
+                document.getElementById('patronus-icon').textContent = '✨';
+            } else {
+                document.getElementById('patronus-icon').textContent = '🦌';
+            }
+            
+            if (patronusState.progress >= 100) {
+                clearInterval(patronusState.interval);
+                winGame();
+            }
+        }
+
+        // ==========================================
+        // 🏆 游戏6：魁地奇世界杯（终极难度）
+        // ==========================================
+
+        function getQuidditch2HTML() {
+            return `
+                <div class="game-header">
+                    <span class="game-title">🏆 魁地奇世界杯 - 最终决战</span>
+                    <button class="close-btn" onclick="closeGame()">×</button>
+                </div>
+                <div class="game-instruction">
+                    <strong>🎯 目标：</strong>抓住金色飞贼10次！但这次有4个游走球，飞贼移动更快！<br>
+                    <strong>⚡ 传说级难度：</strong>25秒时间，4个游走球，抓住飞贼10次才能夺冠！
+                </div>
+                <div class="quidditch-area" id="q2-area" onmousemove="movePlayer2(event)" ontouchmove="movePlayer2(event)">
+                    <div class="quidditch-score">抓住: <span id="q2-score">0</span>/10</div>
+                    <div class="quidditch-timer">时间: <span id="q2-timer">25</span>s</div>
+                    <div class="snitch" id="q2-snitch" onclick="catchSnitch2()" style="font-size: 2.5em">🪐</div>
+                    <div class="bludger" id="q2-b1" style="top: 30px; left: 50px">⚫</div>
+                    <div class="bludger" id="q2-b2" style="top: 80px; right: 80px">⚫</div>
+                    <div class="bludger" id="q2-b3" style="top: 180px; left: 150px">⚫</div>
+                    <div class="bludger" id="q2-b4" style="top: 250px; right: 120px">⚫</div>
+                    <div class="player" id="q2-player" style="font-size: 3em">🧙</div>
+                </div>
+                <div class="quidditch-controls">
+                    <button class="quidditch-start" id="q2-start" onclick="startQuidditch2()">开始世界杯决赛！</button>
+                </div>
+            `;
+        }
+
+        let q2State = { active: false, score: 0, timer: 25, interval: null };
+
+        function initQuidditch2() {
+            q2State = { active: false, score: 0, timer: 25, interval: null };
+        }
+
+        function startQuidditch2() {
+            q2State.active = true;
+            document.getElementById('q2-start').style.display = 'none';
+            
+            q2State.interval = setInterval(() => {
+                q2State.timer--;
+                document.getElementById('q2-timer').textContent = q2State.timer;
+                
+                moveBludgers2();
+                
+                if (q2State.timer <= 0) {
+                    clearInterval(q2State.interval);
+                    if (q2State.score >= 10) {
+                        winGame(200);
+                    } else {
+                        loseGame();
+                    }
+                }
+            }, 1000);
+            
+            moveSnitch2();
+        }
+
+        function movePlayer2(e) {
+            if (!q2State.active) return;
+            const area = document.getElementById('q2-area');
+            const rect = area.getBoundingClientRect();
+            const player = document.getElementById('q2-player');
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            player.style.left = Math.max(30, Math.min(rect.width - 30, x)) + 'px';
+            player.style.transform = 'translateX(-50%)';
+        }
+
+        function moveSnitch2() {
+            if (!q2State.active) return;
+            const snitch = document.getElementById('q2-snitch');
+            const area = document.getElementById('q2-area');
+            snitch.style.left = (50 + Math.random() * (area.offsetWidth - 100)) + 'px';
+            snitch.style.top = (30 + Math.random() * (area.offsetHeight - 100)) + 'px';
+            setTimeout(moveSnitch2, 400 + Math.random() * 300);
+        }
+
+        function moveBludgers2() {
+            const area = document.getElementById('q2-area');
+            for (let i = 1; i <= 4; i++) {
+                const b = document.getElementById('q2-b' + i);
+                b.style.left = parseInt(b.style.left) + (Math.random() - 0.5) * 80 + 'px';
+                b.style.top = parseInt(b.style.top) + (Math.random() - 0.5) * 60 + 'px';
+                b.style.left = Math.max(20, Math.min(area.offsetWidth - 50, parseInt(b.style.left))) + 'px';
+                b.style.top = Math.max(20, Math.min(area.offsetHeight - 50, parseInt(b.style.top))) + 'px';
+            }
+        }
+
+        function catchSnitch2() {
+            if (!q2State.active) return;
+            q2State.score++;
+            document.getElementById('q2-score').textContent = q2State.score;
+            
+            if (q2State.score >= 10) {
+                clearInterval(q2State.interval);
+                winGame(200);
+            }
+        }
+
         function saveGame() {
-            localStorage.setItem('stardewNewspaper', JSON.stringify(Game));
+            localStorage.setItem('prophetDaily', JSON.stringify(GameState));
         }
 
         function loadGame() {
-            const saved = localStorage.getItem('stardewNewspaper');
+            const saved = localStorage.getItem('prophetDaily');
             if (saved) {
                 const data = JSON.parse(saved);
-                Object.assign(Game, data);
-                console.log('💾 存档已加载！');
+                Object.assign(GameState, data);
+                console.log('💾 存档已加载！完成预言:', GameState.completed.length);
             }
-        }
-
-        function showStats() {
-            alert(`
-📊 游戏统计
-━━━━━━━━━━━━━━━━
-🌅 游戏天数: ${Game.day}
-💰 总金币: ${Game.gold}
-🐟 总钓鱼: ${Game.stats.totalFish}
-⛏️ 总采矿: ${Game.stats.totalOre}
-🌾 总收获: ${Game.stats.totalCrops}
-━━━━━━━━━━━━━━━━
-💡 刷新页面不会丢失进度
-            `);
         }
 
         init();

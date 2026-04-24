@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 预言家日报 · 星露谷互动版</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Playfair+Display:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
+    <title>🎮 预言家日报 · 星露谷传说</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -12,11 +12,10 @@
             --paper: #f4eddf;
             --ink: #1a1510;
             --ink-light: #4a4035;
-            --ink-faint: #8a8070;
             --accent: #2d5a27;
-            --gold: #b8860b;
-            --stardew-green: #5a8a3a;
-            --stardew-brown: #8b6914;
+            --energy: #3498db;
+            --danger: #e74c3c;
+            --gold: #f1c40f;
         }
 
         @keyframes float {
@@ -24,21 +23,21 @@
             50% { transform: translateY(-5px); }
         }
 
-        @keyframes bounce {
+        @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         @keyframes sparkle {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        @keyframes junimo-jump {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-10px) rotate(-5deg); }
-            50% { transform: translateY(0) rotate(0deg); }
-            75% { transform: translateY(-5px) rotate(5deg); }
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0) rotate(360deg); }
         }
 
         html {
@@ -47,794 +46,1256 @@
         }
 
         body {
-            font-family: 'Noto Serif SC', Georgia, serif;
+            font-family: 'VT323', monospace;
             color: var(--ink);
-            line-height: 1.65;
-            font-size: 16px;
-            padding: 20px 0;
-            overflow-x: hidden;
+            font-size: 18px;
+            padding: 15px 0;
         }
 
-        /* 祝尼魔 - 可点击 */
-        .junimo {
-            position: fixed;
-            font-size: 2.5rem;
-            z-index: 1000;
-            cursor: pointer;
-            transition: transform 0.2s;
-            user-select: none;
-        }
-        .junimo:hover { animation: junimo-jump 0.5s ease-in-out infinite; }
-        .junimo:active { transform: scale(1.3); }
-        .junimo-1 { top: 10%; left: 5%; }
-        .junimo-2 { top: 30%; right: 5%; }
-        .junimo-3 { bottom: 20%; left: 8%; }
-        .junimo-speech {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 0.3em;
-            white-space: nowrap;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        .junimo:hover .junimo-speech { opacity: 1; }
-
-        /* 报纸容器 */
-        .newspaper-container {
-            max-width: 1100px;
+        /* 游戏容器 */
+        .game-container {
+            max-width: 1000px;
             margin: 0 auto;
-            position: relative;
-        }
-        .newspaper {
             background: var(--paper);
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3), inset 0 0 100px rgba(139,115,85,0.15);
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f5efe6' surfaceScale='1.5'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
-            border-radius: 3px;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
         }
 
-        /* 刊头 */
-        .masthead {
-            border-bottom: 3px double var(--ink);
-            padding: 25px 20px 18px;
-            text-align: center;
-            position: relative;
-        }
-        .paper-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 3em;
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            animation: float 5s ease-in-out infinite;
-        }
-        .paper-subtitle {
-            font-size: 0.7em;
-            color: var(--ink-light);
-            letter-spacing: 0.3em;
-            margin-bottom: 12px;
-            font-family: 'VT323', monospace;
-        }
-        .paper-edition {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            border-top: 1px solid var(--ink);
-            border-bottom: 1px solid var(--ink);
-            padding: 5px 0;
-            font-size: 0.8em;
-            flex-wrap: wrap;
-        }
-        .edition-badge {
-            background: linear-gradient(135deg, var(--stardew-green), #4a8c43);
+        /* 顶部状态栏 */
+        .status-bar {
+            background: linear-gradient(135deg, var(--accent), #1a4d15);
             color: white;
-            padding: 3px 12px;
-            border-radius: 2px;
-            font-family: 'VT323', monospace;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .stat-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.15);
+            padding: 5px 12px;
+            border-radius: 4px;
+        }
+        .energy-bar {
+            width: 100px;
+            height: 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .energy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--energy), #5dade2);
+            transition: width 0.3s;
+            border-radius: 6px;
+        }
+        .day-display {
+            font-size: 1.1em;
+            font-weight: 700;
         }
 
-        /* 游戏入口栏 */
-        .game-bar {
+        /* 游戏主界面 */
+        .game-main {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            min-height: 550px;
+        }
+
+        /* 侧边栏菜单 */
+        .sidebar-menu {
+            background: linear-gradient(180deg, #e8dfd0, #d4c8b5);
+            padding: 15px;
+            border-right: 2px solid rgba(139,115,85,0.3);
+        }
+        .menu-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent), #3d7a35);
+            color: white;
+            border: none;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+            font-size: 1em;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .menu-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+        }
+        .menu-btn.active {
+            background: linear-gradient(135deg, #1a4d15, #0f3310);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
+        }
+        .player-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 6px;
+            text-align: center;
+        }
+        .player-avatar {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .player-name {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .player-level {
+            color: var(--accent);
+        }
+
+        /* 主游戏区域 */
+        .game-area {
+            padding: 20px;
+            position: relative;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        .screen-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+        }
+
+        /* 农场界面 */
+        .farm-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .farm-plot {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #8B4513, #654321);
+            border-radius: 6px;
             display: flex;
             justify-content: center;
-            gap: 15px;
-            padding: 15px 20px;
-            background: linear-gradient(180deg, rgba(90,138,58,0.1), transparent);
-            border-bottom: 2px solid var(--ink);
-            flex-wrap: wrap;
+            align-items: center;
+            font-size: 2.5em;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.3);
+            position: relative;
         }
-        .game-btn {
-            background: linear-gradient(135deg, var(--stardew-green), #4a7c33);
+        .farm-plot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .farm-plot.watered {
+            background: linear-gradient(135deg, #654321, #4a3520);
+        }
+        .farm-plot.ready {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        .growth-bar {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            right: 5px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .growth-fill {
+            height: 100%;
+            background: #2ecc71;
+            transition: width 0.5s;
+        }
+        .farm-tools {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .farm-tool {
+            background: linear-gradient(135deg, #8B4513, #654321);
             color: white;
             border: none;
             padding: 10px 20px;
-            font-family: 'VT323', monospace;
-            font-size: 1.1em;
+            border-radius: 6px;
             cursor: pointer;
-            border-radius: 4px;
+            font-family: 'VT323', monospace;
+            font-size: 1em;
             transition: all 0.2s;
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
         }
-        .game-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
-        }
-        .game-btn:active { transform: translateY(1px); }
-
-        /* 内容网格 */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            padding: 25px 20px;
+        .farm-tool:hover { transform: translateY(-2px); }
+        .farm-tool.active {
+            background: linear-gradient(135deg, var(--accent), #1a4d15);
+            box-shadow: 0 5px 15px rgba(45,90,39,0.4);
         }
 
-        /* 主新闻区 */
-        .main-news {
-            border-right: 1px solid var(--ink-faint);
-            padding-right: 20px;
-        }
-        .headline {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            line-height: 1.4;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .headline:hover { color: var(--stardew-green); }
-        .byline { font-size: 0.8em; color: var(--ink-faint); font-style: italic; margin-bottom: 10px; }
-        .news-body { font-size: 0.95em; line-height: 1.7; margin-bottom: 20px; }
-
-        .news-item {
-            padding: 12px 0;
-            border-bottom: 1px dotted rgba(139,115,85,0.2);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .news-item:hover { background: rgba(90,138,58,0.05); }
-        .news-title { font-size: 1.05em; font-weight: 600; margin-bottom: 5px; }
-        .news-summary { font-size: 0.85em; color: var(--ink-light); }
-
-        /* 侧边栏 */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .sidebar-box {
-            border: 2px solid var(--ink);
-            padding: 15px;
-            background: linear-gradient(135deg, rgba(255,250,240,0.5), transparent);
-        }
-        .sidebar-title {
-            font-family: 'VT323', monospace;
-            font-size: 1.1em;
-            font-weight: 700;
-            margin-bottom: 10px;
+        /* 钓鱼界面 */
+        .fishing-screen {
             text-align: center;
-            border-bottom: 1px solid var(--ink-faint);
-            padding-bottom: 5px;
         }
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            font-size: 0.9em;
-            border-bottom: 1px dashed rgba(139,115,85,0.15);
-        }
-        .stat-value { font-weight: 700; color: var(--stardew-green); }
-
-        /* 游戏模态框 */
-        .game-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .fishing-pond {
             width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-        .game-modal.active { display: flex; }
-        .game-container {
-            background: var(--paper);
-            padding: 25px;
-            border-radius: 8px;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .game-title {
-            font-family: 'VT323', monospace;
-            font-size: 1.5em;
-            font-weight: 700;
-        }
-        .close-btn {
-            background: #c0392b;
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2em;
-        }
-
-        /* 钓鱼游戏 */
-        .fishing-area {
-            height: 300px;
-            background: linear-gradient(180deg, #87CEEB 0%, #4a90c2 50%, #2d5a87 100%);
-            border-radius: 8px;
+            max-width: 500px;
+            height: 350px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #87CEEB 0%, #4a90c2 30%, #2d5a87 70%, #1a3a5c 100%);
+            border-radius: 12px;
             position: relative;
             overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
         }
         .water-surface {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 30px;
+            height: 40px;
             background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
         }
-        .fishing-rod {
+        .fishing-bar-container {
             position: absolute;
+            right: 30px;
             top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 200px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .fishing-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #2ecc71, #27ae60);
+            transition: height 0.1s;
+        }
+        .fish-indicator {
+            position: absolute;
             left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3em;
-            cursor: pointer;
-            transition: transform 0.1s;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            font-size: 1.5em;
+            transition: top 0.3s;
         }
-        .fish {
+        .fish-caught-particle {
             position: absolute;
-            font-size: 2em;
-            transition: all 0.5s;
-            cursor: pointer;
+            animation: sparkle 0.5s ease-out forwards;
+            font-size: 1.5em;
         }
-        .fish.caught { animation: bounce 0.3s ease-in-out 3; }
-        .fishing-score {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.5);
+        .fishing-controls {
+            margin-top: 20px;
+        }
+        .cast-btn {
+            background: linear-gradient(135deg, var(--accent), #1a4d15);
             color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
             font-family: 'VT323', monospace;
+            font-size: 1.2em;
+            transition: all 0.2s;
         }
-        .fishing-instruction {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.9em;
+        .cast-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .cast-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .reel-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+            font-size: 1.2em;
+            transition: all 0.1s;
+        }
+        .reel-btn:active { transform: scale(0.95); }
+        .fishing-status {
+            margin-top: 15px;
+            font-size: 1.1em;
             color: var(--ink-light);
         }
 
-        /* 采矿游戏 */
-        .mining-area {
-            height: 300px;
-            background: linear-gradient(180deg, #5a4a3a 0%, #3d2d1a 50%, #2a1f10 100%);
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
+        /* 采矿界面 */
+        .mining-mine {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            gap: 5px;
-            padding: 10px;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
         }
-        .rock {
+        .mine-rock {
+            aspect-ratio: 1;
             background: linear-gradient(135deg, #6b5b4f, #4a3f35);
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8em;
+            font-size: 2.5em;
             cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: inset -3px -3px 5px rgba(0,0,0,0.3), inset 3px 3px 5px rgba(255,255,255,0.1);
-        }
-        .rock:hover { transform: scale(1.05); }
-        .rock.mined { animation: sparkle 0.5s ease-out; opacity: 0; pointer-events: none; }
-        .mining-score {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-family: 'VT323', monospace;
-            z-index: 10;
-        }
-
-        /* 农场游戏 */
-        .farm-area {
-            height: 300px;
-            background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 30%, #5a8a3a 30%, #4a7a30 100%);
-            border-radius: 8px;
+            transition: all 0.1s;
+            box-shadow: inset -4px -4px 8px rgba(0,0,0,0.3), inset 4px 4px 8px rgba(255,255,255,0.1);
             position: relative;
+        }
+        .mine-rock:hover { transform: scale(1.05); }
+        .mine-rock:active { animation: shake 0.1s; }
+        .mine-rock.mined {
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s;
+        }
+        .rock-hp {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            right: 5px;
+            height: 6px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 3px;
             overflow: hidden;
         }
-        .farm-plots {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+        .rock-hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            transition: width 0.2s;
         }
-        .plot {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #8B4513, #654321);
-            border-radius: 4px;
+        .mining-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        /* 商店界面 */
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        .shop-item {
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+            border: 2px solid rgba(139,115,85,0.2);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .shop-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: var(--accent);
+        }
+        .item-icon {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .item-owned {
+            font-size: 0.8em;
+            color: var(--ink-light);
+        }
+
+        /* 背包界面 */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-width: 400px;
+        }
+        .inv-slot {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(139,115,85,0.1), rgba(139,115,85,0.2));
+            border: 2px solid rgba(139,115,85,0.3);
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2em;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.3);
+            position: relative;
         }
-        .plot:hover { transform: scale(1.1); }
-        .plot.watered { background: linear-gradient(135deg, #654321, #4a3520); }
-        .farm-score {
+        .inv-count {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            bottom: 2px;
+            right: 5px;
+            font-size: 0.4em;
             background: rgba(0,0,0,0.5);
             color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-family: 'VT323', monospace;
+            padding: 1px 5px;
+            border-radius: 3px;
         }
-        .farm-tools {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .tool-btn {
-            background: var(--stardew-brown);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-        }
-        .tool-btn.active { background: var(--stardew-green); }
 
-        /* 成就通知 */
-        .achievement {
+        /* 任务界面 */
+        .quest-list {
+            max-width: 500px;
+        }
+        .quest-item {
+            background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.3));
+            border: 2px solid rgba(139,115,85,0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quest-item.completed {
+            background: linear-gradient(135deg, rgba(46,204,113,0.2), rgba(46,204,113,0.1));
+            border-color: #2ecc71;
+        }
+        .quest-info h4 {
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+        .quest-reward {
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .quest-progress {
+            font-size: 0.9em;
+            color: var(--ink-light);
+        }
+
+        /* 通知系统 */
+        .notification {
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
-            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            background: linear-gradient(135deg, var(--accent), #1a4d15);
             color: white;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-radius: 8px;
-            font-family: 'VT323', monospace;
-            font-size: 1.2em;
-            z-index: 3000;
-            transition: transform 0.5s;
+            z-index: 5000;
+            transition: transform 0.3s;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            font-size: 1em;
         }
-        .achievement.show { transform: translateX(-50%) translateY(0); }
+        .notification.show { transform: translateX(-50%) translateY(0); }
 
-        /* 页脚 */
-        .footer {
-            padding: 25px 20px;
-            text-align: center;
-            border-top: 3px double var(--ink);
-            font-size: 0.75em;
-            color: var(--ink-faint);
+        /* 新的一天 */
+        .new-day-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 6000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
         }
-        .version-info {
-            background: rgba(45, 90, 39, 0.1);
-            padding: 5px 12px;
-            border-radius: 2px;
-            display: inline-block;
-            margin-bottom: 8px;
+        .new-day-overlay.show { opacity: 1; pointer-events: all; }
+        .new-day-text {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        /* 底部按钮 */
+        .bottom-actions {
+            padding: 15px;
+            background: linear-gradient(180deg, #e8dfd0, #d4c8b5);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .action-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
             font-family: 'VT323', monospace;
-            font-size: 1.1em;
+            font-size: 1em;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { transform: translateY(-2px); }
+        .action-btn.sleep {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
         }
 
         @media (max-width: 768px) {
-            .paper-title { font-size: 1.8em; }
-            .content-grid { grid-template-columns: 1fr; }
-            .main-news { border-right: none; padding-right: 0; }
-            .junimo { display: none; }
-            .game-btn { padding: 8px 15px; font-size: 1em; }
+            .game-main { grid-template-columns: 1fr; }
+            .sidebar-menu { display: flex; gap: 5px; flex-wrap: wrap; border-right: none; border-bottom: 2px solid rgba(139,115,85,0.3); }
+            .menu-btn { width: auto; padding: 8px 15px; margin-bottom: 0; }
+            .player-info { display: none; }
+            .farm-grid { grid-template-columns: repeat(4, 1fr); }
+            .mining-mine { grid-template-columns: repeat(4, 1fr); }
+            .inventory-grid { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
 <body>
-    <!-- 祝尼魔 - 可点击互动 -->
-    <div class="junimo junimo-1" onclick="junimoClick(this)">
-        <span>🍎</span>
-        <div class="junimo-speech">你好呀！👋</div>
-    </div>
-    <div class="junimo junimo-2" onclick="junimoClick(this)">
-        <span>🌿</span>
-        <div class="junimo-speech">祝你今天好运！🍀</div>
-    </div>
-    <div class="junimo junimo-3" onclick="junimoClick(this)">
-        <span>✨</span>
-        <div class="junimo-speech">社区中心需要你！🏠</div>
+    <!-- 通知 -->
+    <div class="notification" id="notification">消息</div>
+
+    <!-- 新的一天 -->
+    <div class="new-day-overlay" id="new-day">
+        <div class="new-day-text">🌅 第 <span id="day-number">1</span> 天</div>
+        <div>春季 · 星露谷</div>
     </div>
 
-    <!-- 成就通知 -->
-    <div class="achievement" id="achievement">🎉 成就解锁！</div>
-
-    <div class="newspaper-container">
-    <div class="newspaper">
-        <!-- 刊头 -->
-        <header class="masthead">
-            <h1 class="paper-title">预言家日报</h1>
-            <p class="paper-subtitle">THE DAILY PROPHET · STARDEW VALLEY INTERACTIVE EDITION</p>
-            <div class="paper-edition">
-                <span class="edition-badge">📅 2024年</span>
-                <span class="edition-badge">🎮 可互动版本</span>
-                <span class="edition-badge">🌾 星露谷分社</span>
+    <div class="game-container">
+        <!-- 状态栏 -->
+        <div class="status-bar">
+            <div class="stat-group">
+                <div class="stat-item">💰 <span id="gold">500</span></div>
+                <div class="stat-item">
+                    💪
+                    <div class="energy-bar">
+                        <div class="energy-fill" id="energy-fill" style="width: 100%"></div>
+                    </div>
+                    <span id="energy">270</span>/270
+                </div>
             </div>
-        </header>
-
-        <!-- 游戏入口栏 -->
-        <div class="game-bar">
-            <button class="game-btn" onclick="openGame('fishing')">🎣 去钓鱼</button>
-            <button class="game-btn" onclick="openGame('mining')">⛏️ 去采矿</button>
-            <button class="game-btn" onclick="openGame('farm')">🌾 去农场</button>
-            <button class="game-btn" onclick="collectDaily()">📦 每日奖励</button>
+            <div class="day-display">🌅 第 <span id="day-display">1</span> 天 · 春季</div>
         </div>
 
-        <!-- 内容区 -->
-        <div class="content-grid">
-            <div class="main-news">
-                <h2 class="headline" onclick="showNewsDetail(this)">🏆 格兰芬多魁地奇球队大胜斯莱特林！哈利波特上演精彩捕球</h2>
-                <p class="byline">丽塔·斯基特 特约撰稿 · 霍格沃茨球场 电</p>
-                <p class="news-body">在昨日进行的霍格沃茨魁地奇学院杯中，格兰芬多队以230比170大胜斯莱特林队！找球手哈利波特在最后时刻抓住金色飞贼，上演了精彩绝伦的表演。麦格教授表示："这是我见过最精彩的比赛之一！哈利展现了真正的格兰芬多勇气！"</p>
-
-                <div class="news-item" onclick="showNewsDetail(this)">
-                    <div class="news-title">🥕 皮埃尔杂货店今日特价！防风草价格上涨20%</div>
-                    <div class="news-summary">皮埃尔杂货店今日宣布防风草特价！所有春季作物价格上涨20%，农场主们欢呼雀跃。</div>
-                </div>
-
-                <div class="news-item" onclick="showNewsDetail(this)">
-                    <div class="news-title">💎 矿洞发现神秘矿石！探险家协会紧急招募</div>
-                    <div class="news-summary">昨日在矿洞120层发现了神秘的七彩矿石！探险家协会已发布紧急招募令。</div>
-                </div>
-
-                <div class="news-item" onclick="showNewsDetail(this)">
-                    <div class="news-title">🐄 星露谷奶牛大赛即将开幕！快来报名参加吧！</div>
-                    <div class="news-summary">一年一度的星露谷奶牛大赛将在下个月开幕！冠军将获得神秘奖品和丰厚奖金。</div>
-                </div>
-
-                <div class="news-item" onclick="showNewsDetail(this)">
-                    <div class="news-title">🚀 英伟达市值突破3.5万亿美元，AI芯片需求持续火爆</div>
-                    <div class="news-summary">英伟达股价持续上涨，市值已突破3.5万亿美元，公司订单已排到2027年。</div>
+        <!-- 主游戏区 -->
+        <div class="game-main">
+            <!-- 侧边菜单 -->
+            <div class="sidebar-menu">
+                <button class="menu-btn active" onclick="switchScreen('farm')">🌾 农场</button>
+                <button class="menu-btn" onclick="switchScreen('fishing')">🎣 钓鱼</button>
+                <button class="menu-btn" onclick="switchScreen('mining')">⛏️ 采矿</button>
+                <button class="menu-btn" onclick="switchScreen('shop')">🏪 商店</button>
+                <button class="menu-btn" onclick="switchScreen('inventory')">🎒 背包</button>
+                <button class="menu-btn" onclick="switchScreen('quests')">📋 任务</button>
+                
+                <div class="player-info">
+                    <div class="player-avatar">👨‍🌾</div>
+                    <div class="player-name">农场主</div>
+                    <div class="player-level">等级 1 新手</div>
                 </div>
             </div>
 
-            <div class="sidebar">
-                <div class="sidebar-box">
-                    <div class="sidebar-title">📊 玩家统计</div>
-                    <div class="stat-row"><span>钓到的鱼</span><span class="stat-value" id="fish-count">0</span></div>
-                    <div class="stat-row"><span>挖到的矿石</span><span class="stat-value" id="ore-count">0</span></div>
-                    <div class="stat-row"><span>种植的作物</span><span class="stat-value" id="crop-count">0</span></div>
-                    <div class="stat-row"><span>金币</span><span class="stat-value" id="gold-count">100</span></div>
-                    <div class="stat-row"><span>成就</span><span class="stat-value" id="achievement-count">0</span></div>
+            <!-- 游戏区域 -->
+            <div class="game-area">
+                <!-- 农场 -->
+                <div class="screen active" id="farm-screen">
+                    <h2 class="screen-title">🌾 我的农场</h2>
+                    <div class="farm-grid" id="farm-grid"></div>
+                    <div class="farm-tools">
+                        <button class="farm-tool active" onclick="selectFarmTool('hoe')">🔨 锄头</button>
+                        <button class="farm-tool" onclick="selectFarmTool('seed')">🌱 播种</button>
+                        <button class="farm-tool" onclick="selectFarmTool('water')">💧 浇水</button>
+                        <button class="farm-tool" onclick="selectFarmTool('harvest')">✂️ 收获</button>
+                    </div>
                 </div>
 
-                <div class="sidebar-box">
-                    <div class="sidebar-title">🌤️ 今日运势</div>
-                    <p style="text-align: center; font-size: 1.5em; margin: 10px 0;">⭐⭐⭐⭐⭐</p>
-                    <p style="text-align: center; color: var(--stardew-green); font-weight: 600;">大吉！今天适合钓鱼和采矿！</p>
+                <!-- 钓鱼 -->
+                <div class="screen" id="fishing-screen">
+                    <h2 class="screen-title">🎣 星露谷海滩</h2>
+                    <div class="fishing-screen">
+                        <div class="fishing-pond" id="fishing-pond">
+                            <div class="water-surface"></div>
+                            <div class="fishing-bar-container" id="fishing-bar-container" style="display: none">
+                                <div class="fishing-bar" id="fishing-bar" style="height: 30%"></div>
+                                <div class="fish-indicator" id="fish-indicator" style="top: 50%">🐟</div>
+                            </div>
+                        </div>
+                        <div class="fishing-controls">
+                            <button class="cast-btn" id="cast-btn" onclick="castLine()">🎣 抛竿钓鱼</button>
+                            <button class="reel-btn" id="reel-btn" style="display: none" onmousedown="startReeling()" onmouseup="stopReeling()" ontouchstart="startReeling()" ontouchend="stopReeling()">👆 收线（按住）</button>
+                        </div>
+                        <div class="fishing-status" id="fishing-status">点击"抛竿钓鱼"开始～消耗 8 能量</div>
+                    </div>
                 </div>
 
-                <div class="sidebar-box">
-                    <div class="sidebar-title">💡 每日提示</div>
-                    <p style="font-size: 0.9em;">• 点击祝尼魔可以获得惊喜！</p>
-                    <p style="font-size: 0.9em;">• 每天可以领取一次奖励！</p>
-                    <p style="font-size: 0.9em;">• 钓鱼和采矿可以获得金币！</p>
+                <!-- 采矿 -->
+                <div class="screen" id="mining-screen">
+                    <h2 class="screen-title">⛏️ 矿洞第 1 层</h2>
+                    <div class="mining-mine" id="mining-mine"></div>
+                    <div class="mining-info">
+                        <p>点击岩石来开采（每次消耗 3 能量）</p>
+                        <p>提示：不同矿石需要不同次数的敲击</p>
+                    </div>
+                </div>
+
+                <!-- 商店 -->
+                <div class="screen" id="shop-screen">
+                    <h2 class="screen-title">🏪 皮埃尔杂货店</h2>
+                    <div class="shop-items" id="shop-items"></div>
+                </div>
+
+                <!-- 背包 -->
+                <div class="screen" id="inventory-screen">
+                    <h2 class="screen-title">🎒 背包</h2>
+                    <div class="inventory-grid" id="inventory-grid"></div>
+                    <div style="margin-top: 20px; color: var(--ink-light)">
+                        <p>💡 提示：在商店购买种子和升级工具</p>
+                    </div>
+                </div>
+
+                <!-- 任务 -->
+                <div class="screen" id="quests-screen">
+                    <h2 class="screen-title">📋 任务列表</h2>
+                    <div class="quest-list" id="quest-list"></div>
                 </div>
             </div>
         </div>
 
-        <!-- 页脚 -->
-        <footer class="footer">
-            <div class="version-info">🎮 版本 v7.0 互动版 · 最后更新：2024年 · ✨ 哈利波特 + 星露谷物语 可玩耍版本</div>
-            <p>魔法部出版署批准 · 星露谷社区中心认证</p>
-            <p>祝尼魔团队精心打造 · 可互动、可玩耍、有魔法 ✨</p>
-            <p style="margin-top: 10px; font-style: italic; color: var(--ink-light);">"你来啦！星露谷需要你这样的年轻人！" — 镇长刘易斯</p>
-        </footer>
-    </div>
-    </div>
-
-    <!-- 钓鱼游戏模态框 -->
-    <div class="game-modal" id="fishing-modal">
-        <div class="game-container">
-            <div class="game-header">
-                <span class="game-title">🎣 星露谷钓鱼</span>
-                <button class="close-btn" onclick="closeGame('fishing')">×</button>
-            </div>
-            <div class="fishing-area" id="fishing-area">
-                <div class="water-surface"></div>
-                <div class="fishing-rod" onclick="catchFish(this)">🎣</div>
-                <div class="fishing-score">鱼: <span id="fishing-score">0</span></div>
-            </div>
-            <p class="fishing-instruction">点击水面上的鱼来捕获它们！鱼会到处游动，考验你的反应速度！</p>
-        </div>
-    </div>
-
-    <!-- 采矿游戏模态框 -->
-    <div class="game-modal" id="mining-modal">
-        <div class="game-container">
-            <div class="game-header">
-                <span class="game-title">⛏️ 星露谷采矿</span>
-                <button class="close-btn" onclick="closeGame('mining')">×</button>
-            </div>
-            <div class="mining-area" id="mining-area">
-                <div class="mining-score">矿石: <span id="mining-score">0</span></div>
-            </div>
-            <p class="fishing-instruction">点击岩石来开采它们！找到隐藏的宝石和矿石！</p>
-        </div>
-    </div>
-
-    <!-- 农场游戏模态框 -->
-    <div class="game-modal" id="farm-modal">
-        <div class="game-container">
-            <div class="game-header">
-                <span class="game-title">🌾 星露谷农场</span>
-                <button class="close-btn" onclick="closeGame('farm')">×</button>
-            </div>
-            <div class="farm-area">
-                <div class="farm-score">作物: <span id="farm-score">0</span></div>
-                <div class="farm-plots" id="farm-plots"></div>
-            </div>
-            <div class="farm-tools">
-                <button class="tool-btn active" onclick="selectTool('seed')">🌱 播种</button>
-                <button class="tool-btn" onclick="selectTool('water')">💧 浇水</button>
-                <button class="tool-btn" onclick="selectTool('harvest')">✂️ 收获</button>
-            </div>
+        <!-- 底部操作 -->
+        <div class="bottom-actions">
+            <button class="action-btn" onclick="showStats()">📊 统计</button>
+            <button class="action-btn sleep" onclick="sleep()">😴 睡觉</button>
+            <button class="action-btn" onclick="saveGame()">💾 保存</button>
         </div>
     </div>
 
     <script>
-        // 游戏状态
-        const gameState = {
-            gold: 100,
-            fish: 0,
-            ore: 0,
-            crops: 0,
-            achievements: 0,
-            dailyCollected: false,
-            currentTool: 'seed',
-            junimoClicks: 0
+        // ==========================================
+        // 🎮 星露谷传说 - 完整游戏系统
+        // ==========================================
+
+        const Game = {
+            day: 1,
+            gold: 500,
+            energy: 270,
+            maxEnergy: 270,
+            currentTool: 'hoe',
+            
+            // 工具等级
+            tools: { pickaxe: 1, hoe: 1, wateringCan: 1, fishingRod: 1 },
+            
+            // 背包物品
+            inventory: {
+                parsnip_seed: 15,
+                cauliflower_seed: 5
+            },
+            
+            // 农场数据
+            farmPlots: Array(18).fill(null).map(() => ({
+                tilled: false, seed: null, growth: 0, watered: false, ready: false
+            })),
+            
+            // 钓鱼状态
+            fishing: {
+                active: false, barHeight: 30, fishPosition: 50, fishVelocity: 0,
+                progress: 0, reeling: false, currentFish: null
+            },
+            
+            // 矿洞数据
+            mineLevel: 1,
+            rocks: [],
+            
+            // 任务系统
+            quests: [
+                { id: 1, name: '新手农场主', desc: '收获 5 个防风草', target: 5, progress: 0, reward: 100, completed: false },
+                { id: 2, name: '钓鱼新手', desc: '钓到 3 条鱼', target: 3, progress: 0, reward: 150, completed: false },
+                { id: 3, name: '矿工之路', desc: '开采 10 块矿石', target: 10, progress: 0, reward: 200, completed: false },
+                { id: 4, name: '第一桶金', desc: '赚取 1000 金币', target: 1000, progress: 500, reward: 300, completed: false }
+            ],
+            
+            // 统计
+            stats: {
+                totalFish: 0, totalOre: 0, totalCrops: 0, totalGoldEarned: 500
+            }
         };
 
-        // 祝尼魔点击
-        function junimoClick(el) {
-            gameState.junimoClicks++;
-            const speeches = [
-                "你好呀！👋", "今天天气真好！☀️", "祝你大丰收！🌾",
-                "社区中心需要你！🏠", "加油加油！💪", "找到闪亮的东西！✨",
-                "钓到大鱼！🐟", "挖到钻石！💎"
-            ];
-            const speech = el.querySelector('.junimo-speech');
-            speech.textContent = speeches[Math.floor(Math.random() * speeches.length)];
+        // 物品定义
+        const Items = {
+            parsnip_seed: { name: '防风草种子', icon: '🌱', price: 20, type: 'seed', growTime: 4, crop: 'parsnip' },
+            cauliflower_seed: { name: '花椰菜种子', icon: '🌿', price: 80, type: 'seed', growTime: 12, crop: 'cauliflower' },
+            potato_seed: { name: '土豆种子', icon: '🥔', price: 50, type: 'seed', growTime: 6, crop: 'potato' },
+            strawberry_seed: { name: '草莓种子', icon: '🍓', price: 100, type: 'seed', growTime: 8, crop: 'strawberry' },
+            parsnip: { name: '防风草', icon: '🥕', price: 35, type: 'crop' },
+            cauliflower: { name: '花椰菜', icon: '🥦', price: 175, type: 'crop' },
+            potato: { name: '土豆', icon: '🥔', price: 80, type: 'crop' },
+            strawberry: { name: '草莓', icon: '🍓', price: 120, type: 'crop' },
+            fish_basic: { name: '沙丁鱼', icon: '🐟', price: 40, type: 'fish' },
+            fish_medium: { name: '鲈鱼', icon: '🐠', price: 100, type: 'fish' },
+            fish_rare: { name: '传说之鱼', icon: '🐡', price: 500, type: 'fish' },
+            stone: { name: '石头', icon: '🪨', price: 2, type: 'ore' },
+            copper: { name: '铜矿', icon: '🟤', price: 15, type: 'ore' },
+            iron: { name: '铁矿', icon: '⬜', price: 35, type: 'ore' },
+            gold_ore: { name: '金矿', icon: '🟡', price: 75, type: 'ore' },
+            diamond: { name: '钻石', icon: '💎', price: 300, type: 'ore' }
+        };
+
+        // 商店物品
+        const ShopItems = [
+            'parsnip_seed', 'cauliflower_seed', 'potato_seed', 'strawberry_seed'
+        ];
+
+        // ==========================================
+        // 🎯 核心游戏函数
+        // ==========================================
+
+        function init() {
+            loadGame();
+            renderFarm();
+            renderShop();
+            renderInventory();
+            renderQuests();
+            generateRocks();
+            updateUI();
             
-            el.style.transform = 'scale(1.5)';
-            setTimeout(() => el.style.transform = '', 200);
+            document.getElementById('new-day').classList.add('show');
+            setTimeout(() => document.getElementById('new-day').classList.remove('show'), 2000);
             
-            if (gameState.junimoClicks === 10) {
-                showAchievement("🎉 祝尼魔朋友！和祝尼魔成为好朋友！");
-                gameState.achievements++;
-                updateStats();
+            setInterval(gameLoop, 50);
+            
+            console.log('🎮 星露谷传说已启动！');
+            console.log('💡 提示：游戏会自动保存，刷新页面不会丢失进度');
+        }
+
+        function gameLoop() {
+            if (Game.fishing.active && Game.fishing.reeling) {
+                Game.fishing.barHeight = Math.min(100, Game.fishing.barHeight + 1.5);
+                document.getElementById('fishing-bar').style.height = Game.fishing.barHeight + '%';
+            } else if (Game.fishing.active) {
+                Game.fishing.barHeight = Math.max(0, Game.fishing.barHeight - 0.8);
+                document.getElementById('fishing-bar').style.height = Game.fishing.barHeight + '%';
             }
-        }
-
-        // 打开游戏
-        function openGame(game) {
-            document.getElementById(`${game}-modal`).classList.add('active');
-            if (game === 'fishing') startFishing();
-            if (game === 'mining') startMining();
-            if (game === 'farm') startFarm();
-        }
-
-        function closeGame(game) {
-            document.getElementById(`${game}-modal`).classList.remove('active');
-        }
-
-        // 钓鱼游戏
-        let fishingInterval;
-        function startFishing() {
-            const area = document.getElementById('fishing-area');
-            const existing = area.querySelectorAll('.fish');
-            existing.forEach(f => f.remove());
             
-            const fishEmojis = ['🐟', '🐠', '🐡', '🦈', '🐙', '🦑', '🦐'];
-            
-            fishingInterval = setInterval(() => {
-                if (area.querySelectorAll('.fish').length < 5) {
-                    const fish = document.createElement('div');
-                    fish.className = 'fish';
-                    fish.textContent = fishEmojis[Math.floor(Math.random() * fishEmojis.length)];
-                    fish.style.left = (10 + Math.random() * 70) + '%';
-                    fish.style.top = (20 + Math.random() * 60) + '%';
-                    fish.onclick = function() {
-                        this.classList.add('caught');
-                        setTimeout(() => this.remove(), 300);
-                        gameState.fish++;
-                        gameState.gold += 5;
-                        document.getElementById('fishing-score').textContent = gameState.fish;
-                        updateStats();
-                        
-                        if (gameState.fish === 10) {
-                            showAchievement("🎣 钓鱼新手！钓到10条鱼！");
-                            gameState.achievements++;
-                            updateStats();
-                        }
-                        if (gameState.fish === 50) {
-                            showAchievement("🏆 钓鱼大师！钓到50条鱼！");
-                            gameState.achievements++;
-                            updateStats();
-                        }
-                    };
-                    area.appendChild(fish);
-                    
-                    setTimeout(() => {
-                        if (fish.parentNode) fish.remove();
-                    }, 5000);
+            if (Game.fishing.active) {
+                const fishEl = document.getElementById('fish-indicator');
+                const barTop = 100 - Game.fishing.barHeight;
+                const fishY = Game.fishing.fishPosition;
+                
+                if (fishY >= barTop && fishY <= barTop + Game.fishing.barHeight) {
+                    Game.fishing.progress = Math.min(100, Game.fishing.progress + 0.8);
+                } else {
+                    Game.fishing.progress = Math.max(0, Game.fishing.progress - 0.5);
                 }
-            }, 800);
-        }
-
-        function catchFish(el) {
-            el.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            setTimeout(() => el.style.transform = 'translate(-50%, -50%)', 100);
-        }
-
-        // 采矿游戏
-        function startMining() {
-            const area = document.getElementById('mining-area');
-            area.innerHTML = '<div class="mining-score">矿石: <span id="mining-score">' + gameState.ore + '</span></div>';
-            
-            const rocks = ['🪨', '🪨', '🪨', '🪨', '💎', '💜', '🟡', '❤️', '⭐'];
-            
-            for (let i = 0; i < 20; i++) {
-                const rock = document.createElement('div');
-                rock.className = 'rock';
-                rock.textContent = rocks[Math.floor(Math.random() * rocks.length)];
-                rock.onclick = function() {
-                    this.classList.add('mined');
-                    const isGem = ['💎', '💜', '🟡', '❤️', '⭐'].includes(this.textContent);
-                    gameState.ore++;
-                    gameState.gold += isGem ? 20 : 3;
-                    document.getElementById('mining-score').textContent = gameState.ore;
-                    updateStats();
-                    
-                    if (gameState.ore === 20) {
-                        showAchievement("⛏️ 矿工新手！挖到20块矿石！");
-                        gameState.achievements++;
-                        updateStats();
-                    }
-                    if (this.textContent === '💎') {
-                        showAchievement("💎 钻石！发现了珍贵的钻石！");
-                        gameState.achievements++;
-                        updateStats();
-                    }
-                    
-                    setTimeout(() => {
-                        this.textContent = rocks[Math.floor(Math.random() * rocks.length)];
-                        this.classList.remove('mined');
-                    }, 1000);
-                };
-                area.appendChild(rock);
+                
+                Game.fishing.fishVelocity += (Math.random() - 0.5) * 3 - (Game.fishing.fishPosition - 50) * 0.02;
+                Game.fishing.fishVelocity *= 0.95;
+                Game.fishing.fishPosition = Math.max(5, Math.min(95, Game.fishing.fishPosition + Game.fishing.fishVelocity));
+                
+                fishEl.style.top = Game.fishing.fishPosition + '%';
+                
+                if (Game.fishing.progress >= 100) {
+                    catchFishSuccess();
+                } else if (Game.fishing.progress <= 0) {
+                    fishEscaped();
+                }
             }
         }
 
-        // 农场游戏
-        function startFarm() {
-            const plots = document.getElementById('farm-plots');
-            plots.innerHTML = '';
+        function switchScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(screen + '-screen').classList.add('active');
+            event.target.classList.add('active');
             
-            const crops = ['🌱', '🌿', '🌾', '🌻', '🌷', '🌹', '🥕', '🍓'];
-            
-            for (let i = 0; i < 8; i++) {
-                const plot = document.createElement('div');
-                plot.className = 'plot';
-                plot.textContent = '';
-                plot.dataset.state = 'empty';
-                plot.onclick = function() {
-                    if (gameState.currentTool === 'seed' && this.dataset.state === 'empty') {
-                        this.textContent = crops[Math.floor(Math.random() * 3)];
-                        this.dataset.state = 'growing';
-                    } else if (gameState.currentTool === 'water' && this.dataset.state === 'growing') {
-                        this.classList.add('watered');
-                        this.textContent = crops[3 + Math.floor(Math.random() * 5)];
-                        this.dataset.state = 'ready';
-                    } else if (gameState.currentTool === 'harvest' && this.dataset.state === 'ready') {
-                        gameState.crops++;
-                        gameState.gold += 10;
-                        document.getElementById('farm-score').textContent = gameState.crops;
-                        updateStats();
-                        this.textContent = '';
-                        this.dataset.state = 'empty';
-                        this.classList.remove('watered');
-                        
-                        if (gameState.crops === 10) {
-                            showAchievement("🌾 农场新手！收获10个作物！");
-                            gameState.achievements++;
-                            updateStats();
-                        }
-                    }
-                };
-                plots.appendChild(plot);
+            if (screen === 'mining' && Game.rocks.length === 0) {
+                generateRocks();
             }
         }
 
-        function selectTool(tool) {
-            gameState.currentTool = tool;
-            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+        function updateUI() {
+            document.getElementById('gold').textContent = Game.gold;
+            document.getElementById('energy').textContent = Game.energy;
+            document.getElementById('energy-fill').style.width = (Game.energy / Game.maxEnergy * 100) + '%';
+            document.getElementById('day-display').textContent = Game.day;
+            document.getElementById('day-number').textContent = Game.day;
+        }
+
+        function showNotification(msg) {
+            const el = document.getElementById('notification');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2500);
+        }
+
+        function useEnergy(amount) {
+            if (Game.energy < amount) {
+                showNotification('😫 能量不足！去睡觉恢复吧～');
+                return false;
+            }
+            Game.energy -= amount;
+            updateUI();
+            return true;
+        }
+
+        // ==========================================
+        // 🌾 农场系统
+        // ==========================================
+
+        function selectFarmTool(tool) {
+            if (!Game.currentTool) Game.currentTool = '';
+            Game.currentTool = tool;
+            document.querySelectorAll('.farm-tool').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
         }
 
-        // 每日奖励
-        function collectDaily() {
-            if (gameState.dailyCollected) {
-                showAchievement("⏰ 今天已经领过奖励了，明天再来吧！");
+        function renderFarm() {
+            const grid = document.getElementById('farm-grid');
+            grid.innerHTML = '';
+            
+            Game.farmPlots.forEach((plot, idx) => {
+                const el = document.createElement('div');
+                el.className = 'farm-plot';
+                
+                if (plot.tilled) el.classList.add('tilled');
+                if (plot.watered) el.classList.add('watered');
+                if (plot.ready) el.classList.add('ready');
+                
+                if (plot.seed) {
+                    const item = Items[plot.seed];
+                    const stages = ['🌱', '🌿', '🪴'];
+                    const stage = Math.min(2, Math.floor(plot.growth / item.growTime * 3));
+                    el.textContent = plot.ready ? Items[item.crop].icon : stages[stage];
+                    
+                    const growthBar = document.createElement('div');
+                    growthBar.className = 'growth-bar';
+                    growthBar.innerHTML = `<div class="growth-fill" style="width: ${plot.growth / item.growTime * 100}%"></div>`;
+                    el.appendChild(growthBar);
+                }
+                
+                el.onclick = () => interactPlot(idx);
+                grid.appendChild(el);
+            });
+        }
+
+        function interactPlot(idx) {
+            const plot = Game.farmPlots[idx];
+            const tool = Game.currentTool || 'hoe';
+            
+            if (tool === 'hoe' && !plot.tilled && !plot.seed) {
+                if (!useEnergy(2)) return;
+                plot.tilled = true;
+                showNotification('🔨 土地已开垦！');
+            }
+            else if (tool === 'seed' && plot.tilled && !plot.seed) {
+                const seeds = Object.keys(Game.inventory).filter(k => k.includes('_seed') && Game.inventory[k] > 0);
+                if (seeds.length === 0) {
+                    showNotification('❌ 没有种子了！去商店购买吧～');
+                    return;
+                }
+                if (!useEnergy(2)) return;
+                Game.inventory[seeds[0]]--;
+                plot.seed = seeds[0];
+                plot.growth = 0;
+                showNotification('🌱 种下了 ' + Items[seeds[0]].name);
+                renderInventory();
+            }
+            else if (tool === 'water' && plot.seed && !plot.watered) {
+                if (!useEnergy(2)) return;
+                plot.watered = true;
+                showNotification('💧 浇水成功！');
+            }
+            else if (tool === 'harvest' && plot.ready) {
+                const item = Items[plot.seed];
+                const crop = item.crop;
+                Game.inventory[crop] = (Game.inventory[crop] || 0) + 1;
+                Game.stats.totalCrops++;
+                
+                const sellPrice = Items[crop].price;
+                Game.gold += sellPrice;
+                Game.stats.totalGoldEarned += sellPrice;
+                
+                updateQuestProgress('harvest', 1);
+                
+                plot.seed = null;
+                plot.ready = false;
+                plot.watered = false;
+                plot.growth = 0;
+                
+                showNotification('✂️ 收获了 ' + Items[crop].name + ' 并卖出！+' + sellPrice + '金币');
+                updateUI();
+                renderInventory();
+            }
+            
+            renderFarm();
+            saveGame();
+        }
+
+        // ==========================================
+        // 🎣 钓鱼系统（真实的星露谷机制！）
+        // ==========================================
+
+        function castLine() {
+            if (Game.fishing.active) return;
+            if (!useEnergy(8)) return;
+            
+            Game.fishing.active = true;
+            Game.fishing.barHeight = 30;
+            Game.fishing.fishPosition = 50 + (Math.random() - 0.5) * 40;
+            Game.fishing.fishVelocity = 0;
+            Game.fishing.progress = 30;
+            
+            const fishes = ['fish_basic', 'fish_basic', 'fish_basic', 'fish_medium', 'fish_medium', 'fish_rare'];
+            Game.fishing.currentFish = fishes[Math.floor(Math.random() * fishes.length)];
+            
+            document.getElementById('cast-btn').style.display = 'none';
+            document.getElementById('reel-btn').style.display = 'inline-block';
+            document.getElementById('fishing-bar-container').style.display = 'block';
+            document.getElementById('fishing-status').textContent = '🎣 上钩了！按住"收线"让绿色条覆盖住鱼！';
+        }
+
+        function startReeling() {
+            if (!Game.fishing.active) return;
+            Game.fishing.reeling = true;
+        }
+
+        function stopReeling() {
+            Game.fishing.reeling = false;
+        }
+
+        function catchFishSuccess() {
+            const fishId = Game.fishing.currentFish;
+            const fish = Items[fishId];
+            
+            Game.inventory[fishId] = (Game.inventory[fishId] || 0) + 1;
+            Game.stats.totalFish++;
+            
+            Game.gold += fish.price;
+            Game.stats.totalGoldEarned += fish.price;
+            
+            updateQuestProgress('fish', 1);
+            
+            showNotification('🎉 钓到了 ' + fish.name + '！+' + fish.price + ' 金币');
+            
+            resetFishing();
+            updateUI();
+            renderInventory();
+            saveGame();
+        }
+
+        function fishEscaped() {
+            showNotification('😢 鱼逃跑了...再试试吧！');
+            resetFishing();
+        }
+
+        function resetFishing() {
+            Game.fishing.active = false;
+            Game.fishing.reeling = false;
+            document.getElementById('cast-btn').style.display = 'inline-block';
+            document.getElementById('reel-btn').style.display = 'none';
+            document.getElementById('fishing-bar-container').style.display = 'none';
+            document.getElementById('fishing-status').textContent = '点击"抛竿钓鱼"开始～消耗 8 能量';
+        }
+
+        // ==========================================
+        // ⛏️ 采矿系统
+        // ==========================================
+
+        function generateRocks() {
+            const mine = document.getElementById('mining-mine');
+            mine.innerHTML = '';
+            Game.rocks = [];
+            
+            const rockTypes = [
+                { icon: '🪨', hp: 2, drops: 'stone', chance: 0.5 },
+                { icon: '🪨', hp: 3, drops: 'copper', chance: 0.3 },
+                { icon: '🪨', hp: 5, drops: 'iron', chance: 0.12 },
+                { icon: '💎', hp: 8, drops: 'diamond', chance: 0.03 },
+                { icon: '🟡', hp: 6, drops: 'gold_ore', chance: 0.05 }
+            ];
+            
+            for (let i = 0; i < 15; i++) {
+                const rand = Math.random();
+                let type;
+                if (rand < 0.5) type = rockTypes[0];
+                else if (rand < 0.8) type = rockTypes[1];
+                else if (rand < 0.92) type = rockTypes[2];
+                else if (rand < 0.97) type = rockTypes[4];
+                else type = rockTypes[3];
+                
+                const rock = {
+                    id: i,
+                    hp: type.hp,
+                    maxHp: type.hp,
+                    drops: type.drops,
+                    icon: type.icon
+                };
+                Game.rocks.push(rock);
+                
+                const el = document.createElement('div');
+                el.className = 'mine-rock';
+                el.id = 'rock-' + i;
+                el.innerHTML = `
+                    <span>${rock.icon}</span>
+                    <div class="rock-hp">
+                        <div class="rock-hp-fill" style="width: 100%" id="rock-hp-${i}"></div>
+                    </div>
+                `;
+                el.onclick = () => mineRock(i);
+                mine.appendChild(el);
+            }
+        }
+
+        function mineRock(idx) {
+            const rock = Game.rocks[idx];
+            if (!rock || rock.hp <= 0) return;
+            
+            if (!useEnergy(3)) return;
+            
+            const damage = Game.tools.pickaxe;
+            rock.hp -= damage;
+            
+            const el = document.getElementById('rock-' + idx);
+            const hpEl = document.getElementById('rock-hp-' + idx);
+            hpEl.style.width = (rock.hp / rock.maxHp * 100) + '%';
+            el.classList.add('mining');
+            setTimeout(() => el.classList.remove('mining'), 100);
+            
+            if (rock.hp <= 0) {
+                el.classList.add('mined');
+                const item = Items[rock.drops];
+                Game.inventory[rock.drops] = (Game.inventory[rock.drops] || 0) + 1;
+                Game.stats.totalOre++;
+                
+                Game.gold += item.price;
+                Game.stats.totalGoldEarned += item.price;
+                
+                updateQuestProgress('mine', 1);
+                
+                showNotification('⛏️ 获得 ' + item.name + '！+' + item.price + ' 金币');
+                updateUI();
+                renderInventory();
+                saveGame();
+                
+                setTimeout(() => {
+                    const emptyIdx = Game.rocks.findIndex(r => r && r.hp <= 0);
+                    if (emptyIdx !== -1) {
+                        const rockTypes = [
+                            { icon: '🪨', hp: 2, drops: 'stone', chance: 0.5 },
+                            { icon: '🪨', hp: 3, drops: 'copper', chance: 0.3 },
+                            { icon: '🪨', hp: 5, drops: 'iron', chance: 0.12 },
+                            { icon: '💎', hp: 8, drops: 'diamond', chance: 0.03 },
+                            { icon: '🟡', hp: 6, drops: 'gold_ore', chance: 0.05 }
+                        ];
+                        const rand = Math.random();
+                        let type;
+                        if (rand < 0.5) type = rockTypes[0];
+                        else if (rand < 0.8) type = rockTypes[1];
+                        else if (rand < 0.92) type = rockTypes[2];
+                        else if (rand < 0.97) type = rockTypes[4];
+                        else type = rockTypes[3];
+                        
+                        Game.rocks[emptyIdx] = { id: emptyIdx, hp: type.hp, maxHp: type.hp, drops: type.drops, icon: type.icon };
+                        const newEl = document.getElementById('rock-' + emptyIdx);
+                        newEl.innerHTML = `
+                            <span>${type.icon}</span>
+                            <div class="rock-hp">
+                                <div class="rock-hp-fill" style="width: 100%" id="rock-hp-${emptyIdx}"></div>
+                            </div>
+                        `;
+                        newEl.classList.remove('mined');
+                    }
+                }, 500);
+            }
+        }
+
+        // ==========================================
+        // 🏪 商店系统
+        // ==========================================
+
+        function renderShop() {
+            const container = document.getElementById('shop-items');
+            container.innerHTML = '';
+            
+            ShopItems.forEach(itemId => {
+                const item = Items[itemId];
+                const el = document.createElement('div');
+                el.className = 'shop-item';
+                el.innerHTML = `
+                    <div class="item-icon">${item.icon}</div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">💰 ${item.price}</div>
+                `;
+                el.onclick = () => buyItem(itemId);
+                container.appendChild(el);
+            });
+        }
+
+        function buyItem(itemId) {
+            const item = Items[itemId];
+            if (Game.gold < item.price) {
+                showNotification('💸 金币不足！');
                 return;
             }
-            gameState.dailyCollected = true;
-            gameState.gold += 50;
-            updateStats();
-            showAchievement("📦 领取了每日奖励！+50金币！");
+            
+            Game.gold -= item.price;
+            Game.inventory[itemId] = (Game.inventory[itemId] || 0) + 5;
+            
+            showNotification('🛒 购买了 5个 ' + item.name);
+            updateUI();
+            renderInventory();
+            saveGame();
         }
 
-        // 更新统计
-        function updateStats() {
-            document.getElementById('fish-count').textContent = gameState.fish;
-            document.getElementById('ore-count').textContent = gameState.ore;
-            document.getElementById('crop-count').textContent = gameState.crops;
-            document.getElementById('gold-count').textContent = gameState.gold;
-            document.getElementById('achievement-count').textContent = gameState.achievements;
+        // ==========================================
+        // 🎒 背包系统
+        // ==========================================
+
+        function renderInventory() {
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = '';
+            
+            const items = Object.entries(Game.inventory).filter(([k, v]) => v > 0);
+            
+            for (let i = 0; i < 24; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'inv-slot';
+                
+                if (items[i]) {
+                    const [itemId, count] = items[i];
+                    const item = Items[itemId];
+                    if (item) {
+                        slot.innerHTML = `
+                            ${item.icon}
+                            <span class="inv-count">${count}</span>
+                        `;
+                        slot.title = item.name;
+                    }
+                }
+                grid.appendChild(slot);
+            }
         }
 
-        // 显示成就
-        function showAchievement(text) {
-            const el = document.getElementById('achievement');
-            el.textContent = text;
-            el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 3000);
+        // ==========================================
+        // 📋 任务系统
+        // ==========================================
+
+        function renderQuests() {
+            const list = document.getElementById('quest-list');
+            list.innerHTML = '';
+            
+            Game.quests.forEach(quest => {
+                const el = document.createElement('div');
+                el.className = 'quest-item' + (quest.completed ? ' completed' : '');
+                el.innerHTML = `
+                    <div class="quest-info">
+                        <h4>${quest.completed ? '✅ ' : ''}${quest.name}</h4>
+                        <p>${quest.desc}</p>
+                        <div class="quest-progress">${quest.progress} / ${quest.target}</div>
+                    </div>
+                    <div class="quest-reward">💰 ${quest.reward}</div>
+                `;
+                list.appendChild(el);
+            });
         }
 
-        function showNewsDetail(el) {
-            showAchievement("📰 正在阅读：" + el.textContent.substring(0, 20) + "...");
+        function updateQuestProgress(type, amount) {
+            Game.quests.forEach(quest => {
+                if (quest.completed) return;
+                
+                if (type === 'harvest' && quest.id === 1) {
+                    quest.progress += amount;
+                } else if (type === 'fish' && quest.id === 2) {
+                    quest.progress += amount;
+                } else if (type === 'mine' && quest.id === 3) {
+                    quest.progress += amount;
+                } else if (type === 'gold' && quest.id === 4) {
+                    quest.progress = Game.stats.totalGoldEarned;
+                }
+                
+                if (quest.progress >= quest.target && !quest.completed) {
+                    quest.completed = true;
+                    Game.gold += quest.reward;
+                    showNotification('🏆 任务完成：' + quest.name + '！+' + quest.reward + '金币');
+                    updateUI();
+                }
+            });
+            
+            renderQuests();
         }
 
-        // 初始化
-        updateStats();
-        console.log('🎮 星露谷互动报纸已加载完成！');
-        console.log('🌾 点击祝尼魔、钓鱼、采矿、种植，尽情享受吧！');
+        // ==========================================
+        // 😴 睡觉（新的一天）
+        // ==========================================
+
+        function sleep() {
+            const overlay = document.getElementById('new-day');
+            overlay.classList.add('show');
+            
+            Game.day++;
+            Game.energy = Game.maxEnergy;
+            
+            Game.farmPlots.forEach(plot => {
+                if (plot.seed && plot.watered) {
+                    plot.growth++;
+                    const item = Items[plot.seed];
+                    if (plot.growth >= item.growTime) {
+                        plot.ready = true;
+                    }
+                }
+                plot.watered = false;
+            });
+            
+            Game.rocks = [];
+            
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                updateUI();
+                renderFarm();
+                generateRocks();
+                showNotification('🌅 早上好！第 ' + Game.day + ' 天开始了！');
+                saveGame();
+            }, 2000);
+        }
+
+        // ==========================================
+        // 💾 存档系统
+        // ==========================================
+
+        function saveGame() {
+            localStorage.setItem('stardewNewspaper', JSON.stringify(Game));
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('stardewNewspaper');
+            if (saved) {
+                const data = JSON.parse(saved);
+                Object.assign(Game, data);
+                console.log('💾 存档已加载！');
+            }
+        }
+
+        function showStats() {
+            alert(`
+📊 游戏统计
+━━━━━━━━━━━━━━━━
+🌅 游戏天数: ${Game.day}
+💰 总金币: ${Game.gold}
+🐟 总钓鱼: ${Game.stats.totalFish}
+⛏️ 总采矿: ${Game.stats.totalOre}
+🌾 总收获: ${Game.stats.totalCrops}
+━━━━━━━━━━━━━━━━
+💡 刷新页面不会丢失进度
+            `);
+        }
+
+        init();
     </script>
 </body>
 </html>

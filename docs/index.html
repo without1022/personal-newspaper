@@ -7,21 +7,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 报纸核心字体 */
-        .serif { font-family: 'Noto Serif SC', Georgia, 'Times New Roman', SimSun, serif; }
-        .sans { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif; }
+        /* ========== 报纸核心字体 ========== */
+        .serif { 
+            font-family: 'Noto Serif SC', Georgia, 'Times New Roman', SimSun, serif;
+            /* 模拟油墨印刷效果 - 轻微模糊 */
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+        .sans { 
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
         
-        /* ========== 真实报纸底色 - 这是灵魂 ========== */
+        /* ========== 真实报纸底色 - 灵魂 ========== */
         body {
-            background: #e8e2d6;  /* 旧报纸米黄色 */
+            background: #c4b8a8;  /* 报纸外面的深一点米黄色 */
+            min-height: 100vh;
         }
         
         .newspaper-paper {
-            background: linear-gradient(180deg, #f5f0e6 0%, #f0ebe0 50%, #ebe6db 100%);
+            background: linear-gradient(180deg, #f7f2e8 0%, #f2ede2 25%, #efe9dc 50%, #ede6d9 75%, #eae3d6 100%);
             position: relative;
+            /* 纸张阴影 */
+            box-shadow: 
+                0 0 0 1px rgba(90, 80, 60, 0.1),
+                0 2px 15px rgba(60, 50, 40, 0.15),
+                0 15px 60px rgba(60, 50, 40, 0.25),
+                inset 0 0 80px rgba(180, 160, 130, 0.08);
         }
         
-        /* 报纸纹理 - 真实的纸张噪点 */
+        /* ========== 最强纸张纹理叠加 ========== */
+        
+        /* 1. 纸张噪点 */
         .newspaper-paper::before {
             content: '';
             position: absolute;
@@ -29,14 +45,14 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise1)'/%3E%3C/svg%3E");
             pointer-events: none;
             z-index: 1;
             mix-blend-mode: multiply;
-            opacity: 0.4;
+            opacity: 0.55;
         }
         
-        /* 报纸边缘泛黄效果 */
+        /* 2. 纸张纤维纹理 */
         .newspaper-paper::after {
             content: '';
             position: absolute;
@@ -44,42 +60,114 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(ellipse at center, transparent 60%, rgba(180, 160, 120, 0.15) 100%);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='fiber'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.04 0.4' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23fiber)' opacity='0.08'/%3E%3C/svg%3E");
             pointer-events: none;
-            z-index: 1;
+            z-index: 2;
+            mix-blend-mode: soft-light;
+            opacity: 0.4;
         }
         
-        /* 星空背景（只在报纸外） */
-        #starfield {
-            position: fixed;
+        /* 3. 报纸十字折痕 */
+        .fold-lines {
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+            right: 0;
+            bottom: 0;
             pointer-events: none;
-            opacity: 0.15;
+            z-index: 3;
+        }
+        
+        .fold-vertical {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(90, 70, 50, 0.08) 5%,
+                rgba(90, 70, 50, 0.12) 20%,
+                rgba(90, 70, 50, 0.15) 50%,
+                rgba(90, 70, 50, 0.12) 80%,
+                rgba(90, 70, 50, 0.08) 95%,
+                transparent 100%
+            );
+            box-shadow: 
+                -1px 0 0 rgba(255, 255, 255, 0.15),
+                1px 0 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .fold-horizontal {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(90, 70, 50, 0.06) 5%,
+                rgba(90, 70, 50, 0.1) 20%,
+                rgba(90, 70, 50, 0.12) 50%,
+                rgba(90, 70, 50, 0.1) 80%,
+                rgba(90, 70, 50, 0.06) 95%,
+                transparent 100%
+            );
+            box-shadow: 
+                0 -1px 0 rgba(255, 255, 255, 0.12),
+                0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* 4. 边缘泛黄和扫描阴影 */
+        .paper-edges {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 4;
+            box-shadow: 
+                inset 0 0 40px rgba(140, 120, 90, 0.08),
+                inset 0 0 100px rgba(140, 120, 90, 0.04);
+            background: radial-gradient(ellipse at center, transparent 55%, rgba(140, 120, 90, 0.06) 100%);
+        }
+        
+        /* 5. 印刷网点效果 - 半色调 */
+        .halftone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.03;
+            background-image: radial-gradient(circle, #4a4030 1px, transparent 1px);
+            background-size: 4px 4px;
         }
         
         /* 栏分隔线 */
         .column-divider {
-            border-right: 1px solid #c4bba8;
+            border-right: 1px solid #c8beac;
         }
         
         /* 报纸装饰线 */
         .headline-rule {
-            height: 4px;
-            background: #3a352a;
+            height: 3px;
+            background: linear-gradient(90deg, #3a352a, #4a4030, #3a352a);
         }
         
         .section-rule {
             height: 2px;
-            background: #5a554a;
+            background: linear-gradient(90deg, #5a5040, #6a5f4a, #5a5040);
         }
         
         .thin-rule {
             height: 1px;
-            background: #d4cab8;
+            background: linear-gradient(90deg, transparent, #c8beac, #c8beac, transparent);
         }
         
         /* 3D 卡片（报纸版） */
@@ -90,14 +178,16 @@
         }
         
         .card-3d:hover {
-            box-shadow: 0 4px 20px rgba(90, 80, 60, 0.15);
+            box-shadow: 
+                0 2px 8px rgba(90, 80, 60, 0.1),
+                0 4px 15px rgba(90, 80, 60, 0.08);
         }
         
         /* 渐入动画 */
         .reveal {
             opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.5s ease;
+            transform: translateY(10px);
+            transition: all 0.6s ease;
         }
         
         .reveal.active {
@@ -118,8 +208,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139,92,246,0.15), transparent);
-            animation: shimmer 3s infinite;
+            background: linear-gradient(90deg, transparent, rgba(139,92,246,0.12), transparent);
+            animation: shimmer 4s infinite;
         }
         
         @keyframes shimmer {
@@ -130,19 +220,19 @@
         /* 水晶球浮动 */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-5px); }
         }
         
         .crystal-ball {
-            animation: float 4s ease-in-out infinite;
+            animation: float 5s ease-in-out infinite;
         }
         
         /* 首字下沉 */
         .drop-cap::first-letter {
             float: left;
-            font-size: 3.2rem;
+            font-size: 3rem;
             line-height: 0.85;
-            padding-right: 0.4rem;
+            padding-right: 0.5rem;
             font-weight: 700;
             font-family: 'Noto Serif SC', serif;
             color: #3a352a;
@@ -150,19 +240,24 @@
         
         /* 引用样式 */
         .quote {
-            border-left: 3px solid #8a7f6a;
+            border-left: 3px solid #9a8f7a;
             padding-left: 1rem;
             font-style: italic;
             color: #5a5040;
             margin-left: 0.5rem;
+            background: rgba(180, 160, 130, 0.08);
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-right: 0.5rem;
         }
         
         /* 标签（报纸色） */
         .tag {
-            font-size: 0.65rem;
-            letter-spacing: 0.05em;
-            background: #e8e0d0;
-            color: #6a5f4a;
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            background: #e5ddcd;
+            color: #5a4f3a;
+            border: 1px solid #d4caba;
         }
         
         /* 文章卡片悬停 */
@@ -172,68 +267,116 @@
         }
         
         .article-card:hover {
-            background: rgba(180, 160, 120, 0.1);
+            background: rgba(180, 160, 130, 0.12);
         }
         
-        /* 详情页报纸色 */
+        /* 详情页报纸色版 */
         .modal-paper {
-            background: linear-gradient(180deg, #f5f0e6 0%, #f0ebe0 100%);
+            background: linear-gradient(180deg, #f7f2e8 0%, #f2ede2 50%, #efe9dc 100%);
+            box-shadow: 
+                0 0 0 1px rgba(90, 80, 60, 0.15),
+                0 5px 30px rgba(60, 50, 40, 0.3),
+                0 20px 80px rgba(60, 50, 40, 0.2),
+                inset 0 0 40px rgba(180, 160, 130, 0.06);
+            position: relative;
+        }
+        
+        /* 模态框纸张纹理 */
+        .modal-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise2)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: multiply;
+            opacity: 0.4;
+            border-radius: 0.75rem;
+        }
+        
+        /* 星空背景（只在报纸外） */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.08;
+        }
+        
+        /* 所有内容要在纹理上面 */
+        main, header, footer {
+            position: relative;
+            z-index: 10;
         }
     </style>
 </head>
-<body class="relative overflow-x-hidden">
+<body class="relative overflow-x-hidden py-8">
     <canvas id="starfield"></canvas>
     
     <!-- 报纸主体 -->
-    <div class="max-w-7xl mx-auto newspaper-paper shadow-2xl relative z-10 min-h-screen">
+    <div class="max-w-7xl mx-auto newspaper-paper relative rounded-sm">
+        
+        <!-- 纸张效果层 -->
+        <div class="paper-edges rounded-sm"></div>
+        <div class="halftone"></div>
+        <div class="fold-lines">
+            <div class="fold-vertical"></div>
+            <div class="fold-horizontal"></div>
+        </div>
         
         <!-- ==================== 报头 ==================== -->
-        <header class="border-b-4 border-[#3a352a] py-5 px-8 relative z-10">
+        <header class="border-b-4 border-[#3a352a] py-6 px-10 relative">
             <div class="flex items-center justify-between">
-                <div class="text-sm text-[#5a5040] sans">
+                <div class="text-xs text-[#5a5040] sans">
                     <span id="current-date">加载中...</span>
                 </div>
-                <div class="text-center flex-1 mx-10">
+                <div class="text-center flex-1 mx-12">
                     <div class="flex items-center justify-center gap-4 mb-1">
                         <span class="text-2xl crystal-ball">🔮</span>
-                        <h1 class="text-5xl font-bold serif tracking-[0.3em] text-[#2a251a]">星 象 日 报</h1>
+                        <h1 class="text-5xl font-bold serif tracking-[0.35em] text-[#2a251a]">星 象 日 报</h1>
                         <span class="text-2xl crystal-ball" style="animation-delay: 0.5s">🔮</span>
                     </div>
                     <p class="text-[#7a7060] text-xs sans tracking-[0.2em]">ASTRO DAILY · 用数据预见未来 · 创刊于2024</p>
                 </div>
-                <div class="text-sm text-[#5a5040] sans text-right">
+                <div class="text-xs text-[#5a5040] sans text-right">
                     <div>第 876 期</div>
                     <div>今日 32 版</div>
                 </div>
             </div>
             
             <!-- 导航栏 -->
-            <nav class="flex justify-center gap-5 mt-4 pt-4 border-t border-[#c4bba8] text-sm sans text-[#4a4030]">
+            <nav class="flex justify-center gap-5 mt-5 pt-4 border-t border-[#c4baa8] text-xs sans text-[#4a4030]">
                 <a href="#" class="hover:text-purple-700 transition-colors font-medium">头版</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#prophecy" class="hover:text-purple-700 transition-colors font-medium">预言</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#tech" class="hover:text-purple-700 transition-colors font-medium">科技</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#finance" class="hover:text-purple-700 transition-colors font-medium">金融</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#ai" class="hover:text-purple-700 transition-colors font-medium">AI</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#world" class="hover:text-purple-700 transition-colors font-medium">国际</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#china" class="hover:text-purple-700 transition-colors font-medium">国内</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#robot" class="hover:text-purple-700 transition-colors font-medium">机器人</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#sports" class="hover:text-purple-700 transition-colors font-medium">体育</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#culture" class="hover:text-purple-700 transition-colors font-medium">文娱</a>
-                <span class="text-[#b4a990]">|</span>
+                <span class="text-[#b4a988]">|</span>
                 <a href="#opinion" class="hover:text-purple-700 transition-colors font-medium">评论</a>
             </nav>
             
             <!-- 股指栏 -->
-            <div class="flex justify-between items-center mt-4 py-2 bg-[#e8e0d0] rounded px-4 text-xs sans border border-[#d4cab8] text-[#4a4030]">
+            <div class="flex justify-between items-center mt-5 py-3 bg-[#e5ddcd] rounded px-5 text-xs sans border border-[#d4caba] text-[#4a4030]">
                 <span>📈 <strong>道指</strong> 45,231 <span class="text-green-700">+0.82%</span></span>
                 <span>📈 <strong>纳指</strong> 28,742 <span class="text-green-700">+1.24%</span></span>
                 <span>📈 <strong>标普</strong> 6,182 <span class="text-green-700">+0.67%</span></span>
@@ -245,57 +388,57 @@
             </div>
         </header>
 
-        <main class="px-8 py-7 relative z-10">
+        <main class="px-10 py-8">
             
             <!-- ==================== 头版头条 ==================== -->
-            <section class="mb-9 reveal">
-                <div class="headline-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 头 版 头 条 ◆</h2>
+            <section class="mb-10 reveal">
+                <div class="headline-rule mb-6"></div>
+                <h2 class="text-sm font-bold serif mb-6 tracking-wide text-[#3a352a]">◆ 头 版 头 条 ◆</h2>
                 
-                <div class="grid md:grid-cols-12 gap-7">
+                <div class="grid md:grid-cols-12 gap-8">
                     <!-- 主头条 -->
-                    <div class="md:col-span-8 column-divider pr-7 article-card" onclick="openArticle('nvidia')">
-                        <div class="mb-3">
-                            <span class="tag px-2 py-0.5 rounded sans font-medium">✨ 预言验证中</span>
+                    <div class="md:col-span-8 column-divider pr-8 article-card" onclick="openArticle('nvidia')">
+                        <div class="mb-4">
+                            <span class="tag px-3 py-1 rounded sans font-medium">✨ 预言验证中</span>
                         </div>
-                        <h1 class="text-3xl font-bold serif leading-tight mb-3 text-[#2a251a]">
+                        <h1 class="text-3xl font-bold serif leading-tight mb-4 text-[#2a251a]">
                             英伟达市值剑指 5 万亿美元<br/>
                             <span class="text-xl text-[#6a5f4a]">AI 革命进入第二阶段， Blackwell 芯片一机难求</span>
                         </h1>
-                        <div class="flex items-center gap-4 text-xs text-[#7a7060] sans mb-5">
+                        <div class="flex items-center gap-4 text-xs text-[#7a7060] sans mb-6">
                             <span>记者：张明远</span>
                             <span>|</span>
                             <span>发自旧金山</span>
                         </div>
                         
                         <!-- 预言进度条 -->
-                        <div class="mb-5 p-3 bg-[#f0e8d8] rounded border border-[#d4cab8]">
+                        <div class="mb-6 p-4 bg-[#ede5d5] rounded border border-[#d4caba]">
                             <div class="flex items-center justify-between mb-2">
                                 <span class="font-bold serif text-sm">预言达成进度</span>
                                 <span class="text-purple-700 font-bold">78%</span>
                             </div>
-                            <div class="h-2.5 bg-[#ddd0bc] rounded-full overflow-hidden shimmer-bar">
+                            <div class="h-2.5 bg-[#dcd0bc] rounded-full overflow-hidden shimmer-bar">
                                 <div class="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full" style="width: 78%"></div>
                             </div>
-                            <div class="text-xs text-[#7a7060] mt-1 sans">当前市值 4.2 万亿，距目标还差 19%</div>
+                            <div class="text-xs text-[#7a7060] mt-2 sans">当前市值 4.2 万亿，距目标还差 19%</div>
                         </div>
                         
-                        <p class="serif text-base leading-relaxed text-[#4a4030] drop-cap mb-3">
+                        <p class="serif text-sm leading-relaxed text-[#4a4030] drop-cap mb-3">
                             星象日报2024年发布的"英伟达市值2025年突破5万亿美元"预言，正在加速兑现。截至发稿时，英伟达市值已达4.2万亿美元，距离预言目标仅一步之遥。
                         </p>
-                        <p class="serif text-base leading-relaxed text-[#4a4030] mb-3">
+                        <p class="serif text-sm leading-relaxed text-[#4a4030] mb-3">
                             最新财报显示，Blackwell 芯片出货量连续三个季度超预期，AI 服务器订单已排至2027年。分析师普遍上调目标价，认为"AI 硬件的超级周期才刚刚开始"。
                         </p>
                         <p class="text-xs text-purple-700 sans font-medium">【点击阅读全文】→</p>
                     </div>
                     
                     <!-- 边栏新闻 -->
-                    <div class="md:col-span-4 space-y-5">
-                        <div class="article-card p-3 rounded border border-[#d4cab8]" onclick="openArticle('btc')">
-                            <span class="tag px-2 py-0.5 rounded sans">预言中</span>
-                            <h3 class="text-lg font-bold serif mt-2 mb-2 text-[#2a251a]">比特币 12.8 万美元，向 20 万挺进</h3>
+                    <div class="md:col-span-4 space-y-4">
+                        <div class="article-card p-4 rounded border border-[#d4caba]" onclick="openArticle('btc')">
+                            <span class="tag px-2 py-1 rounded sans">预言中</span>
+                            <h3 class="font-bold serif mt-3 mb-2 text-[#2a251a]">比特币 12.8 万美元，向 20 万挺进</h3>
                             <p class="text-xs text-[#6a5f4a] serif">减半效应持续发酵，ETF 累计净流入超1500亿美元</p>
-                            <div class="h-1.5 mt-2 bg-[#ddd0bc] rounded-full overflow-hidden shimmer-bar">
+                            <div class="h-1.5 mt-3 bg-[#dcd0bc] rounded-full overflow-hidden shimmer-bar">
                                 <div class="h-full bg-gradient-to-r from-orange-400 to-yellow-500 rounded-full" style="width: 64%"></div>
                             </div>
                             <p class="text-xs text-right text-orange-700 mt-1 sans">当前进度 64%</p>
@@ -303,196 +446,196 @@
                         
                         <div class="thin-rule"></div>
                         
-                        <div class="article-card p-3" onclick="openArticle('o3')">
-                            <span class="tag px-2 py-0.5 rounded sans bg-green-100 text-green-800">刚刚</span>
-                            <h3 class="font-bold serif mt-2 mb-1 text-[#2a251a]">OpenAI o3 发布，推理能力超越人类博士</h3>
+                        <div class="article-card p-4" onclick="openArticle('o3')">
+                            <span class="tag px-2 py-1 rounded sans bg-green-100 text-green-800">刚刚</span>
+                            <h3 class="font-bold serif mt-3 mb-2 text-[#2a251a]">OpenAI o3 发布，推理能力超越人类博士</h3>
                             <p class="text-xs text-[#6a5f4a] serif">MMLU-Pro 得分 96.4%，普通人类平均 89%</p>
-                            <p class="text-xs text-[#9a9080] mt-1 sans">8分钟前 · 科技</p>
+                            <p class="text-xs text-[#9a9080] mt-2 sans">8分钟前 · 科技</p>
                         </div>
                         
                         <div class="thin-rule"></div>
                         
-                        <div class="article-card p-3" onclick="openArticle('robotaxi')">
-                            <span class="tag px-2 py-0.5 rounded sans bg-red-100 text-red-800">独家</span>
-                            <h3 class="font-bold serif mt-2 mb-1 text-[#2a251a]">特斯拉 Robotaxi 12 城上线，无人出租时代来临</h3>
+                        <div class="article-card p-4" onclick="openArticle('robotaxi')">
+                            <span class="tag px-2 py-1 rounded sans bg-red-100 text-red-800">独家</span>
+                            <h3 class="font-bold serif mt-3 mb-2 text-[#2a251a]">特斯拉 Robotaxi 12 城上线，无人出租时代来临</h3>
                             <p class="text-xs text-[#6a5f4a] serif">FSD V15.2 获批，成本降至每英里 0.5 美元</p>
-                            <p class="text-xs text-[#9a9080] mt-1 sans">2小时前 · 金融</p>
+                            <p class="text-xs text-[#9a9080] mt-2 sans">2小时前 · 金融</p>
                         </div>
                         
                         <div class="thin-rule"></div>
                         
-                        <div class="article-card p-3" onclick="openArticle('fusion')">
-                            <h3 class="font-bold serif mb-1 text-[#2a251a]">⚛️ Helion 核聚变持续发电72小时，商业时代来临</h3>
+                        <div class="article-card p-4" onclick="openArticle('fusion')">
+                            <h3 class="font-bold serif mb-2 text-[#2a251a]">⚛️ Helion 核聚变持续发电72小时，商业时代来临</h3>
                             <p class="text-xs text-[#6a5f4a] serif">示范堆成功输出100MW，微软已签购电协议</p>
-                            <p class="text-xs text-[#9a9080] mt-1 sans">昨天 16:45</p>
+                            <p class="text-xs text-[#9a9080] mt-2 sans">昨天 16:45</p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== 预言追踪专版 ==================== -->
-            <section id="prophecy" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 预 言 追 踪 · 本 报 独 家 ◆</h2>
+            <section id="prophecy" class="mb-10 reveal">
+                <div class="section-rule mb-6"></div>
+                <h2 class="text-sm font-bold serif mb-6 tracking-wide text-[#3a352a]">◆ 预 言 追 踪 · 本 报 独 家 ◆</h2>
                 
-                <div class="grid md:grid-cols-5 gap-4">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('visionpro')">
-                        <div class="text-center mb-2">
+                <div class="grid md:grid-cols-5 gap-5">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('visionpro')">
+                        <div class="text-center mb-3">
                             <span class="text-3xl">🍎</span>
-                            <span class="absolute bg-green-600 text-white text-xs px-2 py-0.5 rounded-full ml-1">已验证</span>
+                            <span class="absolute bg-green-600 text-white text-xs px-2 py-1 rounded-full ml-1">已验证</span>
                         </div>
-                        <h3 class="font-bold serif text-center text-sm mb-1 text-[#2a251a]">Vision Pro 2 销量破千万</h3>
-                        <div class="h-1.5 bg-[#ddd0bc] rounded-full overflow-hidden mt-2">
+                        <h3 class="font-bold serif text-center mb-2 text-[#2a251a]">Vision Pro 2 销量破千万</h3>
+                        <div class="h-1.5 bg-[#dcd0bc] rounded-full overflow-hidden mt-2">
                             <div class="h-full bg-green-500 rounded-full w-full"></div>
                         </div>
-                        <p class="text-xs text-center text-green-700 mt-1 sans">✅ 预言成真</p>
+                        <p class="text-xs text-center text-green-700 mt-2 sans">✅ 预言成真</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('china-gdp')">
-                        <div class="text-center mb-2">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('china-gdp')">
+                        <div class="text-center mb-3">
                             <span class="text-3xl">🇨🇳</span>
-                            <span class="absolute bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">进行中</span>
+                            <span class="absolute bg-yellow-500 text-white text-xs px-2 py-1 rounded-full ml-1">进行中</span>
                         </div>
-                        <h3 class="font-bold serif text-center text-sm mb-1 text-[#2a251a]">中国 GDP 2028 年超美</h3>
-                        <div class="h-1.5 bg-[#ddd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
+                        <h3 class="font-bold serif text-center mb-2 text-[#2a251a]">中国 GDP 2028 年超美</h3>
+                        <div class="h-1.5 bg-[#dcd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
                             <div class="h-full bg-yellow-500 rounded-full" style="width: 87%"></div>
                         </div>
-                        <p class="text-xs text-center text-yellow-700 mt-1 sans">⏳ 进度 87%</p>
+                        <p class="text-xs text-center text-yellow-700 mt-2 sans">⏳ 进度 87%</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('neuralink')">
-                        <div class="text-center mb-2">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('neuralink')">
+                        <div class="text-center mb-3">
                             <span class="text-3xl">🧬</span>
-                            <span class="absolute bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">新预言</span>
+                            <span class="absolute bg-blue-500 text-white text-xs px-2 py-1 rounded-full ml-1">新预言</span>
                         </div>
-                        <h3 class="font-bold serif text-center text-sm mb-1 text-[#2a251a]">Neuralink 2027 让瘫痪者行走</h3>
-                        <div class="h-1.5 bg-[#ddd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
+                        <h3 class="font-bold serif text-center mb-2 text-[#2a251a]">Neuralink 2027 让瘫痪者行走</h3>
+                        <div class="h-1.5 bg-[#dcd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
                             <div class="h-full bg-blue-500 rounded-full" style="width: 55%"></div>
                         </div>
-                        <p class="text-xs text-center text-blue-700 mt-1 sans">🔮 概率 55%</p>
+                        <p class="text-xs text-center text-blue-700 mt-2 sans">🔮 概率 55%</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('fusion-prophecy')">
-                        <div class="text-center mb-2">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('fusion-prophecy')">
+                        <div class="text-center mb-3">
                             <span class="text-3xl">⚛️</span>
-                            <span class="absolute bg-cyan-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">新预言</span>
+                            <span class="absolute bg-cyan-500 text-white text-xs px-2 py-1 rounded-full ml-1">新预言</span>
                         </div>
-                        <h3 class="font-bold serif text-center text-sm mb-1 text-[#2a251a]">2029 年商用电聚变上线</h3>
-                        <div class="h-1.5 bg-[#ddd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
+                        <h3 class="font-bold serif text-center mb-2 text-[#2a251a]">2029 年商用电聚变上线</h3>
+                        <div class="h-1.5 bg-[#dcd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
                             <div class="h-full bg-cyan-500 rounded-full" style="width: 48%"></div>
                         </div>
-                        <p class="text-xs text-center text-cyan-700 mt-1 sans">🔮 概率 48%</p>
+                        <p class="text-xs text-center text-cyan-700 mt-2 sans">🔮 概率 48%</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('spacex')">
-                        <div class="text-center mb-2">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] bg-gradient-to-b from-[#f8f4eb] to-transparent" onclick="openArticle('spacex')">
+                        <div class="text-center mb-3">
                             <span class="text-3xl">🚀</span>
-                            <span class="absolute bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">进行中</span>
+                            <span class="absolute bg-rose-500 text-white text-xs px-2 py-1 rounded-full ml-1">进行中</span>
                         </div>
-                        <h3 class="font-bold serif text-center text-sm mb-1 text-[#2a251a]">SpaceX 2030 火星载人登陆</h3>
-                        <div class="h-1.5 bg-[#ddd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
+                        <h3 class="font-bold serif text-center mb-2 text-[#2a251a]">SpaceX 2030 火星载人登陆</h3>
+                        <div class="h-1.5 bg-[#dcd0bc] rounded-full overflow-hidden shimmer-bar mt-2">
                             <div class="h-full bg-rose-500 rounded-full" style="width: 62%"></div>
                         </div>
-                        <p class="text-xs text-center text-rose-700 mt-1 sans">🔮 概率 62%</p>
+                        <p class="text-xs text-center text-rose-700 mt-2 sans">🔮 概率 62%</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== 科技新闻 ==================== -->
-            <section id="tech" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 科 技 前 沿 ◆</h2>
+            <section id="tech" class="mb-10 reveal">
+                <div class="section-rule mb-6"></div>
+                <h2 class="text-sm font-bold serif mb-6 tracking-wide text-[#3a352a]">◆ 科 技 前 沿 ◆</h2>
                 
-                <div class="grid md:grid-cols-4 gap-5">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('antibiotic')">
-                        <div class="h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded mb-3 flex items-center justify-center text-3xl">💊</div>
-                        <span class="tag px-2 py-0.5 rounded sans">医疗突破</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">AI 发现「万古霉素2.0」，超级细菌治愈率98%</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba]" onclick="openArticle('antibiotic')">
+                        <div class="h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded mb-4 flex items-center justify-center text-3xl">💊</div>
+                        <span class="tag px-2 py-1 rounded sans">医疗突破</span>
+                        <h3 class="font-bold serif mt-3 mb-2 text-[#2a251a]">AI 发现「万古霉素2.0」，超级细菌治愈率98%</h3>
                         <p class="text-xs text-[#6a5f4a] serif">AlphaFold 3 精准设计分子结构，FDA 授予突破性疗法</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">昨天 21:30</p>
+                        <p class="text-xs text-[#9a9080] mt-3 sans">昨天 21:30</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('quantum')">
-                        <div class="h-20 bg-gradient-to-br from-violet-400 to-purple-600 rounded mb-3 flex items-center justify-center text-3xl">⚛️</div>
-                        <span class="tag px-2 py-0.5 rounded sans">量子计算</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">IBM 量子比特突破 1000，实用化时代开启</h3>
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba]" onclick="openArticle('quantum')">
+                        <div class="h-20 bg-gradient-to-br from-violet-400 to-purple-600 rounded mb-4 flex items-center justify-center text-3xl">⚛️</div>
+                        <span class="tag px-2 py-1 rounded sans">量子计算</span>
+                        <h3 class="font-bold serif mt-3 mb-2 text-[#2a251a]">IBM 量子比特突破 1000，实用化时代开启</h3>
                         <p class="text-xs text-[#6a5f4a] serif">纠错率达 99.9%，密码学破解进入倒计时</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">昨天 14:20</p>
+                        <p class="text-xs text-[#9a9080] mt-3 sans">昨天 14:20</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('battery')">
-                        <div class="h-20 bg-gradient-to-br from-green-400 to-emerald-600 rounded mb-3 flex items-center justify-center text-3xl">🔋</div>
-                        <span class="tag px-2 py-0.5 rounded sans">电池革命</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">固态能量密度破 500Wh/kg，充电 10 分钟续航 800km</h3>
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba]" onclick="openArticle('battery')">
+                        <div class="h-20 bg-gradient-to-br from-green-400 to-emerald-600 rounded mb-4 flex items-center justify-center text-3xl">🔋</div>
+                        <span class="tag px-2 py-1 rounded sans">电池革命</span>
+                        <h3 class="font-bold serif mt-3 mb-2 text-[#2a251a]">固态能量密度破 500Wh/kg，充电 10 分钟续航 800km</h3>
                         <p class="text-xs text-[#6a5f4a] serif">宁德时代量产线启动，2027 年全面装车</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">今天 09:15</p>
+                        <p class="text-xs text-[#9a9080] mt-3 sans">今天 09:15</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('6g')">
-                        <div class="h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded mb-3 flex items-center justify-center text-3xl">📡</div>
-                        <span class="tag px-2 py-0.5 rounded sans">通信</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">6G 技术标准确定，2028 年商用，速度是 5G 的 50 倍</h3>
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba]" onclick="openArticle('6g')">
+                        <div class="h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded mb-4 flex items-center justify-center text-3xl">📡</div>
+                        <span class="tag px-2 py-1 rounded sans">通信</span>
+                        <h3 class="font-bold serif mt-3 mb-2 text-[#2a251a]">6G 技术标准确定，2028 年商用，速度是 5G 的 50 倍</h3>
                         <p class="text-xs text-[#6a5f4a] serif">时延降至 0.1ms，全息通信成为可能</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">昨天 11:00</p>
+                        <p class="text-xs text-[#9a9080] mt-3 sans">昨天 11:00</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== 金融市场 ==================== -->
-            <section id="finance" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 金 融 市 场 ◆</h2>
+            <section id="finance" class="mb-10 reveal">
+                <div class="section-rule mb-6"></div>
+                <h2 class="text-sm font-bold serif mb-6 tracking-wide text-[#3a352a]">◆ 金 融 市 场 ◆</h2>
                 
-                <div class="grid md:grid-cols-6 gap-4">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] text-center" onclick="openArticle('btc-price')">
+                <div class="grid md:grid-cols-6 gap-5">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] text-center" onclick="openArticle('btc-price')">
                         <span class="text-3xl">₿</span>
-                        <div class="flex items-center justify-center gap-2 mt-2 mb-1">
-                            <span class="font-bold serif text-lg">$128,450</span>
+                        <div class="flex items-center justify-center gap-2 mt-3 mb-2">
+                            <span class="font-bold serif">$128,450</span>
                             <span class="text-green-700 text-xs font-bold">+2.31%</span>
                         </div>
                         <p class="text-xs text-[#7a7060] serif">比特币</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] text-center" onclick="openArticle('aapl')">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] text-center" onclick="openArticle('aapl')">
                         <span class="text-3xl">📱</span>
-                        <div class="flex items-center justify-center gap-2 mt-2 mb-1">
-                            <span class="font-bold serif text-lg">$248.32</span>
+                        <div class="flex items-center justify-center gap-2 mt-3 mb-2">
+                            <span class="font-bold serif">$248.32</span>
                             <span class="text-green-700 text-xs font-bold">+1.45%</span>
                         </div>
                         <p class="text-xs text-[#7a7060] serif">苹果</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] text-center" onclick="openArticle('tsla')">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] text-center" onclick="openArticle('tsla')">
                         <span class="text-3xl">🚗</span>
-                        <div class="flex items-center justify-center gap-2 mt-2 mb-1">
-                            <span class="font-bold serif text-lg">$387.56</span>
+                        <div class="flex items-center justify-center gap-2 mt-3 mb-2">
+                            <span class="font-bold serif">$387.56</span>
                             <span class="text-green-700 text-xs font-bold">+3.21%</span>
                         </div>
                         <p class="text-xs text-[#7a7060] serif">特斯拉</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] text-center" onclick="openArticle('nvda')">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] text-center" onclick="openArticle('nvda')">
                         <span class="text-3xl">🤖</span>
-                        <div class="flex items-center justify-center gap-2 mt-2 mb-1">
-                            <span class="font-bold serif text-lg">$1,056</span>
+                        <div class="flex items-center justify-center gap-2 mt-3 mb-2">
+                            <span class="font-bold serif">$1,056</span>
                             <span class="text-green-700 text-xs font-bold">+0.89%</span>
                         </div>
                         <p class="text-xs text-[#7a7060] serif">英伟达</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] text-center" onclick="openArticle('msft')">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] text-center" onclick="openArticle('msft')">
                         <span class="text-3xl">☁️</span>
-                        <div class="flex items-center justify-center gap-2 mt-2 mb-1">
-                            <span class="font-bold serif text-lg">$512.78</span>
+                        <div class="flex items-center justify-center gap-2 mt-3 mb-2">
+                            <span class="font-bold serif">$512.78</span>
                             <span class="text-green-700 text-xs font-bold">+1.12%</span>
                         </div>
                         <p class="text-xs text-[#7a7060] serif">微软</p>
                     </div>
                     
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8] text-center" onclick="openArticle('eth')">
+                    <div class="article-card card-3d p-5 rounded border border-[#d4caba] text-center" onclick="openArticle('eth')">
                         <span class="text-3xl">💎</span>
-                        <div class="flex items-center justify-center gap-2 mt-2 mb-1">
-                            <span class="font-bold serif text-lg">$5,234</span>
+                        <div class="flex items-center justify-center gap-2 mt-3 mb-2">
+                            <span class="font-bold serif">$5,234</span>
                             <span class="text-green-700 text-xs font-bold">+1.87%</span>
                         </div>
                         <p class="text-xs text-[#7a7060] serif">以太坊</p>
@@ -501,252 +644,70 @@
             </section>
 
             <!-- ==================== AI 前沿 ==================== -->
-            <section id="ai" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ AI 前 沿 ◆</h2>
+            <section id="ai" class="mb-10 reveal">
+                <div class="section-rule mb-6"></div>
+                <h2 class="text-sm font-bold serif mb-6 tracking-wide text-[#3a352a]">◆ AI 前 沿 ◆</h2>
                 
-                <div class="grid md:grid-cols-3 gap-5">
-                    <div class="md:col-span-2 article-card card-3d p-5 rounded border border-[#d4cab8] column-divider pr-6" onclick="openArticle('o3-detail')">
-                        <span class="tag bg-violet-100 text-violet-800 px-2 py-0.5 rounded sans">重磅发布</span>
-                        <h3 class="font-bold serif text-xl mt-3 mb-3 text-[#2a251a]">OpenAI o3 正式发布，数学推理首次超越人类博士</h3>
-                        <p class="text-xs text-[#7a7060] sans mb-3">2026年4月24日 · 旧金山</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 article-card card-3d p-6 rounded border border-[#d4caba] column-divider pr-8" onclick="openArticle('o3-detail')">
+                        <span class="tag bg-violet-100 text-violet-800 px-2 py-1 rounded sans">重磅发布</span>
+                        <h3 class="font-bold serif text-xl mt-4 mb-4 text-[#2a251a]">OpenAI o3 正式发布，数学推理首次超越人类博士</h3>
+                        <p class="text-xs text-[#7a7060] sans mb-4">2026年4月24日 · 旧金山</p>
                         <p class="serif text-sm text-[#4a4030] leading-relaxed drop-cap">
                             在最新的 MMLU-Pro 基准测试中，o3 模型得分达到惊人的 96.4%，而普通人类博士的平均得分约为 89%。这标志着 AI 在抽象推理领域又迈出了里程碑式的一步。
                         </p>
-                        <p class="text-xs text-purple-700 sans font-medium mt-3">【点击阅读全文】→</p>
+                        <p class="text-xs text-purple-700 sans font-medium mt-4">【点击阅读全文】→</p>
                     </div>
                     
-                    <div class="space-y-3">
-                        <div class="article-card p-3 rounded border border-[#d4cab8]" onclick="openArticle('claude4')">
-                            <h3 class="font-bold serif text-sm mb-1 text-[#2a251a]">Claude 4 上下文窗口扩展至 200 万 tokens</h3>
+                    <div class="space-y-4">
+                        <div class="article-card p-4 rounded border border-[#d4caba]" onclick="openArticle('claude4')">
+                            <h3 class="font-bold serif mb-2 text-[#2a251a]">Claude 4 上下文窗口扩展至 200 万 tokens</h3>
                             <p class="text-xs text-[#6a5f4a] serif">可一次性处理整套代码库或整本百科全书</p>
                         </div>
-                        <div class="article-card p-3 rounded border border-[#d4cab8]" onclick="openArticle('gemini25')">
-                            <h3 class="font-bold serif text-sm mb-1 text-[#2a251a]">Gemini 2.5 实时视频理解突破</h3>
+                        <div class="article-card p-4 rounded border border-[#d4caba]" onclick="openArticle('gemini25')">
+                            <h3 class="font-bold serif mb-2 text-[#2a251a]">Gemini 2.5 实时视频理解突破</h3>
                             <p class="text-xs text-[#6a5f4a] serif">可理解实时视频流中的复杂动作和逻辑关系</p>
                         </div>
-                        <div class="article-card p-3 rounded border border-[#d4cab8]" onclick="openArticle('china-llm')">
-                            <h3 class="font-bold serif text-sm mb-1 text-[#2a251a]">国产大模型集体突破，成本降至国外 1/3</h3>
+                        <div class="article-card p-4 rounded border border-[#d4caba]" onclick="openArticle('china-llm')">
+                            <h3 class="font-bold serif mb-2 text-[#2a251a]">国产大模型集体突破，成本降至国外 1/3</h3>
                             <p class="text-xs text-[#6a5f4a] serif">国产算力生态成熟，性价比优势开始显现</p>
                         </div>
-                        <div class="article-card p-3 rounded border border-[#d4cab8]" onclick="openArticle('agent')">
-                            <h3 class="font-bold serif text-sm mb-1 text-[#2a251a]">AI Agent 自主创业，3 个月营收 10 万美元</h3>
+                        <div class="article-card p-4 rounded border border-[#d4caba]" onclick="openArticle('agent')">
+                            <h3 class="font-bold serif mb-2 text-[#2a251a]">AI Agent 自主创业，3 个月营收 10 万美元</h3>
                             <p class="text-xs text-[#6a5f4a] serif">首个完全由 AI 运营的公司实现盈利</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ==================== 国际新闻 ==================== -->
-            <section id="world" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 国 际 新 闻 ◆</h2>
-                
-                <div class="grid md:grid-cols-4 gap-5">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('fed')">
-                        <span class="tag px-2 py-0.5 rounded sans bg-blue-100 text-blue-800">美国</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">美联储年内首次降息 25 基点</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">通胀回落至 2.1%，货币政策转向宽松周期</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">华盛顿</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('eu-ai')">
-                        <span class="tag px-2 py-0.5 rounded sans bg-red-100 text-red-800">欧盟</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">欧盟 AI 监管法案正式生效</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">分级监管框架确立，通用人工智能需特殊审查</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">布鲁塞尔</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('saudi')">
-                        <span class="tag px-2 py-0.5 rounded sans bg-orange-100 text-orange-800">中东</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">沙特 5000 亿美元 AI 城动工</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">规划 50 万台服务器，目标成为全球 AI 算力中心</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">利雅得</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('japan')">
-                        <span class="tag px-2 py-0.5 rounded sans bg-green-100 text-green-800">日本</span>
-                        <h3 class="font-bold serif text-base mt-2 mb-2 text-[#2a251a]">人形机器人大规模进入养老机构</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">护理机器人覆盖率达 35%，缓解老龄化压力</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">东京</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== 国内新闻 ==================== -->
-            <section id="china" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 国 内 新 闻 ◆</h2>
-                
-                <div class="grid md:grid-cols-4 gap-5">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('china-ev')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">中国新能源车渗透率突破 60%</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">比亚迪单月销量破 50 万，出口量持续增长</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">深圳</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('huawei')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">华为 Mate 80 搭载国产 3nm 芯片发布</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">中芯国际 N+2 工艺成熟，供应链完全自主</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">深圳</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('highspeed')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">时速 600 公里磁悬浮开始商业运营</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">上海-杭州 20 分钟直达，长三角一小时生活圈</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">上海</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('housing')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">房地产市场企稳，一线城市成交量回升 30%</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">政策组合拳见效，刚需和改善型需求释放</p>
-                        <p class="text-xs text-[#9a9080] mt-2 sans">北京</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== 机器人专版 ==================== -->
-            <section id="robot" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 机 器 人 专 版 ◆</h2>
-                
-                <div class="grid md:grid-cols-3 gap-5">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('figure')">
-                        <div class="h-20 bg-gradient-to-br from-rose-400 to-red-600 rounded mb-3 flex items-center justify-center text-3xl">🤖</div>
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">Figure 02 量产下线，首批 1 万台交付宝马工厂</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">单台成本降至 4.5 万美元，可连续工作 20 小时</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('optimus')">
-                        <div class="h-20 bg-gradient-to-br from-gray-400 to-gray-600 rounded mb-3 flex items-center justify-center text-3xl">⚙️</div>
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">特斯拉 Optimus 开始在超级工厂上岗</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">承担 15% 流水线工作，准确率达 99.5%</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('unitree')">
-                        <div class="h-20 bg-gradient-to-br from-blue-400 to-indigo-600 rounded mb-3 flex items-center justify-center text-3xl">🐕</div>
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">宇树四足机器人销量破 10 万，工业应用爆发</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">巡检、安防、物流场景大规模落地</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== 体育新闻 ==================== -->
-            <section id="sports" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 体 育 快 讯 ◆</h2>
-                
-                <div class="grid md:grid-cols-4 gap-5">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('worldcup')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">⚽ 2026 世界杯开幕，AI 裁判首次全面应用</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">越位判罚延迟降至 0.1 秒，准确率 99.9%</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('nba')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">🏀 NBA 总决赛 AI 教练辅助系统成标配</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">实时分析对手战术，暂停决策准确率提升 40%</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('esports')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">🎮 电竞入奥！2032 布里斯班奥运会正式纳入</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">三大项目入选，全球电竞观众突破 30 亿</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('marathon')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">🏃 机器人马拉松完赛，成绩 2 小时 45 分</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">双足机器人耐力取得重大突破</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== 文娱新闻 ==================== -->
-            <section id="culture" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 文 化 娱 乐 ◆</h2>
-                
-                <div class="grid md:grid-cols-4 gap-5">
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('ai-movie')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">🎬 AI 生成电影《无限》获戛纳金棕榈提名</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">首部 AI 主导制作长片入围三大电影节</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('ai-music')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">🎵 Suno AI 歌手登上格莱美舞台</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">虚拟偶像打破次元壁，AI 音乐时代到来</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('vr-social')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">🥽 Vision Pro 社交用户破亿，沉浸社交爆发</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">虚拟空间成为年轻人社交新主场</p>
-                    </div>
-                    
-                    <div class="article-card card-3d p-4 rounded border border-[#d4cab8]" onclick="openArticle('hologram')">
-                        <h3 class="font-bold serif text-base mb-2 text-[#2a251a]">🎤 全息投影演唱会成标配，邓丽君"复出"巡演</h3>
-                        <p class="text-xs text-[#6a5f4a] serif">数字人技术让经典巨星重返舞台</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== 评论版 ==================== -->
-            <section id="opinion" class="mb-9 reveal">
-                <div class="section-rule mb-5"></div>
-                <h2 class="text-base font-bold serif mb-5 tracking-wide text-[#3a352a]">◆ 时 事 评 论 ◆</h2>
-                
-                <div class="grid md:grid-cols-3 gap-5">
-                    <div class="article-card p-5 rounded border border-[#d4cab8] bg-[#f8f4eb]" onclick="openArticle('opinion1')">
-                        <h3 class="font-bold serif text-lg mb-3 text-[#2a251a]">AI 革命：从工具到伙伴的跨越</h3>
-                        <p class="text-xs text-[#7a7060] sans mb-3">本报评论员 · 王思远</p>
-                        <p class="serif text-sm text-[#4a4030] leading-relaxed">
-                            o3 的发布标志着 AI 不再是简单的工具，而是真正具备了深度推理能力。人类需要思考：如何与这个新"伙伴"共处...
-                        </p>
-                    </div>
-                    
-                    <div class="article-card p-5 rounded border border-[#d4cab8] bg-[#f8f4eb]" onclick="openArticle('opinion2')">
-                        <h3 class="font-bold serif text-lg mb-3 text-[#2a251a]">核聚变商业化：能源危机的终结</h3>
-                        <p class="text-xs text-[#7a7060] sans mb-3">特约评论员 · 李教授</p>
-                        <p class="serif text-sm text-[#4a4030] leading-relaxed">
-                            Helion 的成功不是偶然，而是人类数十年技术积累的爆发。廉价清洁的能源，将彻底改变世界经济格局...
-                        </p>
-                    </div>
-                    
-                    <div class="article-card p-5 rounded border border-[#d4cab8] bg-[#f8f4eb]" onclick="openArticle('opinion3')">
-                        <h3 class="font-bold serif text-lg mb-3 text-[#2a251a]">人形机器人时代：就业与机遇的辩证</h3>
-                        <p class="text-xs text-[#7a7060] sans mb-3">本报评论员 · 张明</p>
-                        <p class="serif text-sm text-[#4a4030] leading-relaxed">
-                            机器人大规模上岗不可避免，但历史告诉我们，技术进步最终创造的就业远多于消灭的...
-                        </p>
-                    </div>
-                </div>
-            </section>
-
             <!-- ==================== 预言成绩单 ==================== -->
-            <section class="mb-9 reveal">
-                <div class="bg-gradient-to-r from-[#e8e0d0] to-[#e0d8c8] rounded-lg p-6 border border-[#d4cab8]">
-                    <h2 class="text-lg font-bold serif mb-5 text-center text-[#3a352a]">📊 星象预言成绩单</h2>
-                    <div class="grid md:grid-cols-6 gap-4 text-center">
+            <section class="mb-10 reveal">
+                <div class="bg-gradient-to-r from-[#e5ddcd] to-[#ddd5c5] rounded-lg p-8 border border-[#d4caba]">
+                    <h2 class="text-lg font-bold serif mb-6 text-center text-[#3a352a]">📊 星象预言成绩单</h2>
+                    <div class="grid md:grid-cols-6 gap-5 text-center">
                         <div>
                             <div class="text-3xl font-bold serif text-purple-700">142</div>
-                            <div class="text-xs text-[#7a7060] sans mt-1">活跃预言</div>
+                            <div class="text-xs text-[#7a7060] sans mt-2">活跃预言</div>
                         </div>
                         <div>
                             <div class="text-3xl font-bold serif text-green-700">28</div>
-                            <div class="text-xs text-[#7a7060] sans mt-1">已验证</div>
+                            <div class="text-xs text-[#7a7060] sans mt-2">已验证</div>
                         </div>
                         <div>
                             <div class="text-3xl font-bold serif text-yellow-700">87.3%</div>
-                            <div class="text-xs text-[#7a7060] sans mt-1">准确率</div>
+                            <div class="text-xs text-[#7a7060] sans mt-2">准确率</div>
                         </div>
                         <div>
                             <div class="text-3xl font-bold serif text-blue-700">106</div>
-                            <div class="text-xs text-[#7a7060] sans mt-1">进行中</div>
+                            <div class="text-xs text-[#7a7060] sans mt-2">进行中</div>
                         </div>
                         <div>
                             <div class="text-3xl font-bold serif text-red-600">4</div>
-                            <div class="text-xs text-[#7a7060] sans mt-1">未命中</div>
+                            <div class="text-xs text-[#7a7060] sans mt-2">未命中</div>
                         </div>
                         <div>
                             <div class="text-3xl font-bold serif text-[#5a5040]">4</div>
-                            <div class="text-xs text-[#7a7060] sans mt-1">待揭晓</div>
+                            <div class="text-xs text-[#7a7060] sans mt-2">待揭晓</div>
                         </div>
                     </div>
                 </div>
@@ -754,7 +715,7 @@
         </main>
 
         <!-- ==================== 报尾 ==================== -->
-        <footer class="border-t-4 border-[#3a352a] py-6 px-8 relative z-10 bg-[#e8e0d0]">
+        <footer class="border-t-4 border-[#3a352a] py-6 px-10 relative bg-[#e5ddcd]">
             <div class="flex flex-col md:flex-row justify-between items-center gap-5">
                 <div class="flex items-center gap-4">
                     <span class="text-2xl crystal-ball">🔮</span>
@@ -776,23 +737,23 @@
     </div>
 
     <!-- 水晶球彩蛋 -->
-    <div class="fixed bottom-7 right-7 z-50 cursor-pointer opacity-50 hover:opacity-100 transition-all" onclick="openCrystalBall()">
+    <div class="fixed bottom-8 right-8 z-50 cursor-pointer opacity-40 hover:opacity-100 transition-all" onclick="openCrystalBall()">
         <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-xl shadow-lg crystal-ball">
             🔮
         </div>
     </div>
 
     <!-- 文章详情模态框（报纸色版） -->
-    <div id="article-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="modal-paper rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-[#c4bba8]" id="article-container">
-            <button onclick="closeArticle()" class="absolute top-4 right-4 text-[#7a7060] hover:text-[#3a352a] text-2xl z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center">&times;</button>
+    <div id="article-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+        <div class="modal-paper rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative" id="article-container">
+            <button onclick="closeArticle()" class="absolute top-5 right-5 text-[#7a7060] hover:text-[#3a352a] text-2xl z-20 bg-white/70 rounded-full w-8 h-8 flex items-center justify-center shadow-sm">&times;</button>
             <div class="p-8 relative z-10" id="article-content"></div>
         </div>
     </div>
 
     <!-- 水晶球模态框 -->
-    <div id="crystal-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-gradient-to-br from-[#f5f0e6] to-[#e8e0d0] rounded-xl max-w-md w-full shadow-2xl p-8 text-center border border-[#c4bba8]">
+    <div id="crystal-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+        <div class="bg-gradient-to-br from-[#f7f2e8] to-[#e5ddcd] rounded-xl max-w-md w-full shadow-2xl p-8 text-center border border-[#d4caba]">
             <div class="text-5xl mb-5 crystal-ball">🔮</div>
             <h3 class="text-xl font-bold serif mb-4 text-[#3a352a]">神秘水晶球</h3>
             <p class="text-[#7a7060] mb-6 leading-relaxed sans text-sm">在心中默念一个是否问题，然后点击获取你的专属预言</p>
@@ -842,7 +803,7 @@
                 
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(100, 90, 70, ${twinkleOpacity})`;
+                ctx.fillStyle = `rgba(80, 70, 50, ${twinkleOpacity})`;
                 ctx.fill();
             });
             requestAnimationFrame(animateStars);
@@ -947,17 +908,17 @@
             
             content.innerHTML = `
                 <h1 class="text-2xl font-bold serif mb-4 text-[#2a251a] leading-tight">${article.title}</h1>
-                <div class="flex items-center gap-4 text-xs text-[#7a7060] sans mb-6 pb-4 border-b border-[#d4cab8]">
+                <div class="flex items-center gap-4 text-xs text-[#7a7060] sans mb-6 pb-4 border-b border-[#d4caba]">
                     <span>记者：${article.author}</span>
                     <span>|</span>
                     <span>发自${article.location}</span>
                     <span>|</span>
                     <span>星象日报 · 2026年4月24日</span>
                 </div>
-                <div class="serif text-[#4a4030] leading-relaxed space-y-4 text-base">
+                <div class="serif text-[#4a4030] leading-relaxed space-y-4 text-sm">
                     ${article.content}
                 </div>
-                <div class="mt-8 pt-4 border-t border-[#d4cab8] text-center text-xs text-[#9a9080] sans">
+                <div class="mt-8 pt-4 border-b border-[#d4caba] text-center text-xs text-[#9a9080] sans">
                     【本文章由星象日报 AI 辅助生成，不构成任何投资建议】
                 </div>
             `;
@@ -1030,7 +991,7 @@
         resizeCanvas();
         animateStars();
         
-        console.log('🔮 星象日报 2026 报纸版已加载！');
+        console.log('🔮 星象日报 2026 真实报纸版已加载！');
     </script>
 </body>
 </html>

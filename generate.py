@@ -1030,7 +1030,7 @@ class MagicNewspaper:
         }}
     </style>
 </head>
-<body>
+<body><div class="newspaper-container">
     <!-- 报纸刊头 - 预言家日报风格 -->
     <header class="masthead">
         <div class="masthead-inner">
@@ -1115,7 +1115,7 @@ class MagicNewspaper:
         {nav_html}
     </nav>
 
-    <script>
+    </div><script>
         // 头版文章展开
         function openMagicArticle(newsId, btn) {{
             const content = document.getElementById(newsId);

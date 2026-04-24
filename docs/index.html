@@ -9,9 +9,6 @@
     <style>
         * { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif; }
         
-        /* ==================== 高级特效 CSS ==================== */
-        
-        /* 渐变动画背景 */
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -24,7 +21,6 @@
             animation: gradientShift 15s ease infinite;
         }
         
-        /* 预言卡片发光 */
         @keyframes prophecyGlow {
             0%, 100% { 
                 box-shadow: 0 0 5px rgba(139, 92, 246, 0.3), 
@@ -49,14 +45,12 @@
             box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.4);
         }
         
-        /* 3D 卡片倾斜效果 */
         .card-3d {
             transform-style: preserve-3d;
             perspective: 1000px;
             transition: transform 0.3s ease;
         }
         
-        /* 粒子背景 Canvas */
         #starfield {
             position: fixed;
             top: 0;
@@ -67,7 +61,6 @@
             pointer-events: none;
         }
         
-        /* 鼠标跟随星尘 */
         .stardust {
             position: fixed;
             pointer-events: none;
@@ -79,7 +72,6 @@
             mix-blend-mode: screen;
         }
         
-        /* 文字发光效果 */
         @keyframes textGlow {
             0%, 100% { text-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
             50% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.4); }
@@ -87,12 +79,6 @@
         
         .glow-text {
             animation: textGlow 3s ease-in-out infinite;
-        }
-        
-        /* 滚动渐入动画 */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .reveal {
@@ -106,7 +92,6 @@
             transform: translateY(0);
         }
         
-        /* 预言概率条流光 */
         @keyframes shimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
@@ -128,7 +113,6 @@
             animation: shimmer 2s infinite;
         }
         
-        /* 水晶球 3D 旋转 */
         @keyframes floatRotate {
             0%, 100% { transform: translateY(0) rotateY(0deg); }
             25% { transform: translateY(-10px) rotateY(90deg); }
@@ -141,7 +125,6 @@
             transform-style: preserve-3d;
         }
         
-        /* 魔法波纹效果 */
         @keyframes ripple {
             0% { transform: scale(0); opacity: 1; }
             100% { transform: scale(4); opacity: 0; }
@@ -155,13 +138,6 @@
             pointer-events: none;
         }
         
-        /* 数字计数动画 */
-        @keyframes countUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* 预言验证成功/失败的粒子爆炸 */
         @keyframes explode {
             0% { transform: scale(0) rotate(0deg); opacity: 1; }
             100% { transform: scale(1) rotate(180deg); opacity: 0; }
@@ -173,7 +149,6 @@
             animation: explode 1s ease-out forwards;
         }
         
-        /* 毛玻璃效果 */
         .glass {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
@@ -181,7 +156,6 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        /* 分类按钮 hover 效果 */
         .category-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -203,7 +177,6 @@
             left: 100%;
         }
         
-        /* 新闻卡片悬浮 */
         .news-card {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -213,7 +186,6 @@
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
         }
         
-        /* 模态框弹出动画 */
         @keyframes modalPop {
             0% { opacity: 0; transform: scale(0.8) translateY(20px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
@@ -223,7 +195,6 @@
             animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
-        /* 水晶球彩蛋按钮 */
         .easter-egg {
             position: fixed;
             bottom: 30px;
@@ -239,7 +210,6 @@
             transform: scale(1.2) rotate(10deg);
         }
         
-        /* 预测成真/失败动画 */
         @keyframes truePrediction {
             0% { background: white; }
             25% { background: rgba(34, 197, 94, 0.4); }
@@ -266,13 +236,10 @@
     </style>
 </head>
 <body class="bg-gray-50 relative overflow-x-hidden">
-    <!-- 星空背景 Canvas -->
     <canvas id="starfield"></canvas>
     
-    <!-- 顶部导航 -->
     <header class="animated-gradient text-white shadow-2xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 relative">
-            <!-- 光晕装饰 -->
             <div class="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute top-0 right-1/4 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
             
@@ -295,7 +262,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 分类导航 -->
             <nav class="flex gap-3 pb-4 overflow-x-auto">
                 <button class="category-btn active px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg" onclick="filterNews('all')">全部</button>
                 <button class="category-btn px-5 py-2.5 rounded-full text-sm font-medium glass hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('tech')">💻 科技</button>
@@ -310,38 +276,36 @@
         <!-- 头条区域 -->
         <section class="mb-12 reveal">
             <div class="grid md:grid-cols-2 gap-6">
-                <!-- 主头条 - 预言新闻 -->
+                <!-- 主头条预言 -->
                 <div class="bg-white rounded-3xl shadow-xl overflow-hidden news-card card-3d prophecy-card cursor-pointer" onclick="openProphecy('nvidia')">
                     <div class="h-64 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 relative overflow-hidden">
-                        <!-- 动态波纹背景 -->
                         <div class="absolute inset-0">
                             <div class="absolute w-96 h-96 -top-20 -left-20 bg-white/10 rounded-full blur-3xl"></div>
                             <div class="absolute w-64 h-64 bottom-0 right-0 bg-purple-400/20 rounded-full blur-2xl"></div>
                         </div>
                         <div class="absolute inset-0 flex items-center justify-center text-9xl opacity-20" style="animation: floatRotate 10s linear infinite">🚀</div>
                         <div class="absolute top-6 left-6">
-                            <span class="bg-gradient-to-r from-purple-400 to-blue-400 text-white text-sm px-4 py-1.5 rounded-full font-medium shadow-lg">✨ 预言新闻</span>
+                            <span class="bg-gradient-to-r from-purple-400 to-blue-400 text-white text-sm px-4 py-1.5 rounded-full font-medium shadow-lg">✨ 预言验证中</span>
                         </div>
                         <div class="absolute bottom-6 right-6 glass rounded-2xl px-4 py-3">
-                            <div class="text-xs text-white mb-2 font-medium">成真概率</div>
+                            <div class="text-xs text-white mb-2 font-medium">当前达成度</div>
                             <div class="h-3 w-40 bg-white/30 rounded-full overflow-hidden shimmer-bar">
-                                <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 92%"></div>
+                                <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 78%"></div>
                             </div>
-                            <div class="text-right text-white text-sm mt-1 font-bold">92%</div>
+                            <div class="text-right text-white text-sm mt-1 font-bold">78%</div>
                         </div>
                     </div>
                     <div class="p-7">
                         <h2 class="text-2xl font-bold text-gray-900 mb-4 leading-tight">
-                            预言：英伟达市值将在2025年突破5万亿美元，AI芯片需求持续爆发
+                            预言回顾：英伟达市值将在2025年突破5万亿美元
                         </h2>
                         <p class="text-gray-600 mb-5 leading-relaxed">
-                            据星象研究院预测，随着AI大模型训练需求持续增长，英伟达GPU订单已排至2027年。分析师普遍看好其增长前景，认为AI硬件革命才刚刚开始...
+                            当前市值已达 4.2 万亿美元，距离预言目标还差 19%。Blackwell 芯片出货量持续超预期，AI 服务器需求增长势头不减...
                         </p>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">📊 星象金融分析组 · 3小时前</span>
+                            <span class="text-gray-500">📊 星象金融组 · 发布于2024年</span>
                             <span class="text-purple-600 font-semibold hover:underline flex items-center gap-1">
-                                点击验证预言 
-                                <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                                验证预言结果 →
                             </span>
                         </div>
                     </div>
@@ -349,16 +313,17 @@
 
                 <!-- 次头条 -->
                 <div class="space-y-5">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openNews('openai')">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openNews('o3')">
                         <div class="flex">
                             <div class="w-36 h-36 bg-gradient-to-br from-green-500 via-teal-500 to-emerald-600 flex items-center justify-center text-6xl relative overflow-hidden">
                                 <div class="absolute inset-0 bg-white/10 rounded-full blur-xl scale-150"></div>
                                 🧠
                             </div>
                             <div class="p-5 flex-1">
-                                <h3 class="font-bold text-gray-900 mb-2 text-lg">OpenAI GPT-5 即将发布，推理能力突破人类水平</h3>
-                                <p class="text-gray-600 text-sm line-clamp-2">最新泄露的测试数据显示，GPT-5在多项推理测试中已超越普通人类水平，AGI里程碑渐近...</p>
-                                <p class="text-gray-400 text-xs mt-3">💻 科技 · 2小时前</p>
+                                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">刚刚</span>
+                                <h3 class="font-bold text-gray-900 mb-2 text-lg mt-2">OpenAI o3 模型发布，数学推理能力首次超越人类博士水平</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">在最新 MMLU-Pro 测试中，o3 得分 96.4%，远超人类平均的 89%，AGI 里程碑渐近...</p>
+                                <p class="text-gray-400 text-xs mt-3">💻 科技 · 8分钟前</p>
                             </div>
                         </div>
                     </div>
@@ -371,13 +336,14 @@
                                 <span class="absolute top-3 right-3 text-sm bg-white/40 backdrop-blur px-2 py-0.5 rounded-full">✨</span>
                             </div>
                             <div class="p-5 flex-1">
-                                <h3 class="font-bold text-gray-900 mb-2 text-lg">预言：比特币将在2025年Q2突破20万美元大关</h3>
-                                <p class="text-gray-600 text-sm line-clamp-2">减半效应+ETF资金持续流入，星象模型预测上涨概率达78%，机构增持趋势明显...</p>
+                                <span class="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">预言中</span>
+                                <h3 class="font-bold text-gray-900 mb-2 text-lg mt-2">当前 $12.8万 | 预言：2026 Q4 突破 20万美元</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">减半效应持续发酵，ETF 累计净流入超 1500 亿美元，机构持仓占比达 23%</p>
                                 <div class="flex items-center gap-3 mt-3">
                                     <div class="h-2.5 w-28 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
-                                        <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 78%"></div>
+                                        <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 64%"></div>
                                     </div>
-                                    <span class="text-xs text-gray-500 font-medium">78% 概率</span>
+                                    <span class="text-xs text-gray-500 font-medium">当前进度 64%</span>
                                 </div>
                             </div>
                         </div>
@@ -390,9 +356,10 @@
                                 🚗
                             </div>
                             <div class="p-5 flex-1">
-                                <h3 class="font-bold text-gray-900 mb-2 text-lg">特斯拉全自动驾驶FSD V13全球推送，事故率降低90%</h3>
-                                <p class="text-gray-600 text-sm line-clamp-2">最新数据显示，FSD V13的驾驶安全性已远超人类驾驶员，全球数百万车主已更新...</p>
-                                <p class="text-gray-400 text-xs mt-3">💰 金融 · 5小时前</p>
+                                <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">今天</span>
+                                <h3 class="font-bold text-gray-900 mb-2 text-lg mt-2">特斯拉 Robotaxi 正式上线，美国 12 城开启无人出租车服务</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">FSD V15.2 全无人版获批，初期投入 5000 辆 Model Y，成本降至 $0.5/英里</p>
+                                <p class="text-gray-400 text-xs mt-3">💰 金融 · 2小时前</p>
                             </div>
                         </div>
                     </div>
@@ -405,10 +372,10 @@
             <div class="flex items-center justify-between mb-8">
                 <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
                     <span class="text-3xl" style="animation: floatRotate 6s ease-in-out infinite">✨</span> 
-                    今日预言
+                    预言追踪
                     <span class="text-sm font-normal text-gray-500 ml-2 bg-purple-100 text-purple-600 px-3 py-1 rounded-full">点击验证</span>
                 </h2>
-                <span class="text-sm text-purple-600 cursor-pointer hover:underline font-medium">查看全部预言 →</span>
+                <span class="text-sm text-purple-600 cursor-pointer hover:underline font-medium">查看全部 142 个预言 →</span>
             </div>
             
             <div class="grid md:grid-cols-3 gap-6">
@@ -416,18 +383,18 @@
                     <div class="p-7">
                         <div class="flex items-start justify-between mb-5">
                             <span class="text-5xl">🍎</span>
-                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">预言</span>
+                            <span class="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">已验证 ✅</span>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-3 text-lg">Vision Pro 2销量破千万，空间计算时代正式到来</h3>
-                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">第二代Vision Pro价格下探至$1999，普通消费者购买力被激活，内容生态爆发...</p>
+                        <h3 class="font-bold text-gray-900 mb-3 text-lg">Vision Pro 2 销量破千万，空间计算时代如期而至</h3>
+                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">$1999 起售价成功激活大众市场，Vision OS 应用数量突破 5 万</p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <div class="h-2.5 w-24 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
-                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 65%"></div>
+                                <div class="h-2.5 w-24 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full bg-green-500" style="width: 100%"></div>
                                 </div>
-                                <span class="text-sm font-bold text-gray-600">65%</span>
+                                <span class="text-sm font-bold text-green-600">已达成</span>
                             </div>
-                            <span class="text-sm text-purple-600 font-medium flex items-center gap-1">验证 →</span>
+                            <span class="text-sm text-green-600 font-medium flex items-center gap-1">预言正确 ✓</span>
                         </div>
                     </div>
                 </div>
@@ -436,36 +403,36 @@
                     <div class="p-7">
                         <div class="flex items-start justify-between mb-5">
                             <span class="text-5xl">🇨🇳</span>
-                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">预言</span>
+                            <span class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">进行中 🔄</span>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-3 text-lg">中国GDP总量将在2028年超越美国，成为世界第一大经济体</h3>
-                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">高端制造产业升级持续推进，内需市场稳步扩大，科技创新投入逐年增长...</p>
+                        <h3 class="font-bold text-gray-900 mb-3 text-lg">中国 GDP 总量将在 2028 年超越美国</h3>
+                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">2025 年中国 GDP 达 24.8 万亿，美国 28.3 万亿，差距正在稳步缩小</p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <div class="h-2.5 w-24 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
-                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 58%"></div>
+                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 87%"></div>
                                 </div>
-                                <span class="text-sm font-bold text-gray-600">58%</span>
+                                <span class="text-sm font-bold text-gray-600">当前 87%</span>
                             </div>
                             <span class="text-sm text-purple-600 font-medium flex items-center gap-1">验证 →</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow-xl overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openProphecy('mars')" id="card-mars">
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openProphecy('neuralink')" id="card-neuralink">
                     <div class="p-7">
                         <div class="flex items-start justify-between mb-5">
-                            <span class="text-5xl">🔴</span>
-                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">预言</span>
+                            <span class="text-5xl">🧬</span>
+                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">新预言 ✨</span>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-3 text-lg">SpaceX星舰2030年前实现载人登陆火星，首批100名殖民者</h3>
-                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">星舰原型机测试顺利，猛禽发动机已达到设计推力，火星基地规划已启动...</p>
+                        <h3 class="font-bold text-gray-900 mb-3 text-lg">Neuralink 2027 年将让瘫痪患者重新行走</h3>
+                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">已完成 23 例人体植入，脑机接口带宽突破 10Gbps，临床试验进展顺利</p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <div class="h-2.5 w-24 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
-                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 42%"></div>
+                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 55%"></div>
                                 </div>
-                                <span class="text-sm font-bold text-gray-600">42%</span>
+                                <span class="text-sm font-bold text-gray-600">概率 55%</span>
                             </div>
                             <span class="text-sm text-purple-600 font-medium flex items-center gap-1">验证 →</span>
                         </div>
@@ -477,7 +444,7 @@
         <!-- 普通新闻流 -->
         <section class="mb-12 reveal">
             <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                <span class="text-3xl">📰</span> 最新资讯
+                <span class="text-3xl">📰</span> 今日要闻
             </h2>
             
             <div class="grid md:grid-cols-2 gap-6">
@@ -488,55 +455,55 @@
                             💊
                         </div>
                         <div class="flex-1">
-                            <span class="text-xs text-blue-600 bg-blue-100 px-3 py-1 rounded-full font-medium">科技</span>
-                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">AI药物发现平台发现新型抗生素，可对抗超级细菌</h3>
-                            <p class="text-gray-600 text-sm line-clamp-2">DeepMind团队利用AlphaFold发现全新分子结构，对耐药性细菌有效率达98%</p>
-                            <p class="text-gray-400 text-xs mt-3">昨天 18:32</p>
+                            <span class="text-xs text-blue-600 bg-blue-100 px-3 py-1 rounded-full font-medium">医疗突破</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">AI 发现新型抗生素「万古霉素 2.0」，耐药超级细菌治愈率 98%</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">DeepMind AlphaFold 3 精准设计分子结构，FDA 已授予突破性疗法认定</p>
+                            <p class="text-gray-400 text-xs mt-3">昨天 21:30</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
                     <div class="flex gap-5">
-                        <div class="w-28 h-28 bg-gradient-to-br from-green-400 via-green-500 to-green-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
+                        <div class="w-28 h-28 bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
                             <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
-                            ⚡
+                            ⚛️
                         </div>
                         <div class="flex-1">
-                            <span class="text-xs text-green-600 bg-green-100 px-3 py-1 rounded-full font-medium">能源</span>
-                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">可控核聚变突破：Q值达到50，商业化进程加速</h3>
-                            <p class="text-gray-600 text-sm line-clamp-2">美国能源部宣布国家点火装置实现重大突破，能量增益达到历史新高</p>
-                            <p class="text-gray-400 text-xs mt-3">昨天 14:15</p>
+                            <span class="text-xs text-cyan-600 bg-cyan-100 px-3 py-1 rounded-full font-medium">能源革命</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">Helion 核聚变示范堆成功发电，持续运行 72 小时输出 100MW</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">商用堆预计 2028 年上线，电价目标 $0.01/kWh，微软已签下 2030 年购电协议</p>
+                            <p class="text-gray-400 text-xs mt-3">昨天 16:45</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
                     <div class="flex gap-5">
-                        <div class="w-28 h-28 bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
-                            🧬
-                        </div>
-                        <div class="flex-1">
-                            <span class="text-xs text-purple-600 bg-purple-100 px-3 py-1 rounded-full font-medium">医疗</span>
-                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">CRISPR基因编辑治愈镰刀型贫血症，首批患者已停药3年</h3>
-                            <p class="text-gray-600 text-sm line-clamp-2">基因疗法长期效果确认，一次性治疗永久治愈遗传性疾病成为可能</p>
-                            <p class="text-gray-400 text-xs mt-3">昨天 11:08</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
-                    <div class="flex gap-5">
-                        <div class="w-28 h-28 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
+                        <div class="w-28 h-28 bg-gradient-to-br from-violet-400 via-violet-500 to-purple-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
                             <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
                             🤖
                         </div>
                         <div class="flex-1">
-                            <span class="text-xs text-orange-600 bg-orange-100 px-3 py-1 rounded-full font-medium">AI</span>
-                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">人形机器人成本降至2万美元以下，2025年开始量产</h3>
-                            <p class="text-gray-600 text-sm line-clamp-2">特斯拉Optimus、波士顿动力等多家厂商宣布成本大幅下降，工厂应用加速</p>
-                            <p class="text-gray-400 text-xs mt-3">今天 09:45</p>
+                            <span class="text-xs text-violet-600 bg-violet-100 px-3 py-1 rounded-full font-medium">机器人</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">Figure 02 人形机器人量产下线，首批 1 万台交付宝马工厂</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">单台成本降至 $4.5 万，可连续工作 20 小时，替代 70% 重复性流水线工作</p>
+                            <p class="text-gray-400 text-xs mt-3">今天 10:20</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
+                    <div class="flex gap-5">
+                        <div class="w-28 h-28 bg-gradient-to-br from-rose-400 via-rose-500 to-red-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
+                            🔴
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-xs text-rose-600 bg-rose-100 px-3 py-1 rounded-full font-medium">SpaceX</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">星舰第 15 次试飞成功，完成火星往返全程模拟</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">33 台猛禽发动机完美工作，轨道加注验证完成，载人火星任务倒计时开始</p>
+                            <p class="text-gray-400 text-xs mt-3">今天 08:15</p>
                         </div>
                     </div>
                 </div>
@@ -546,36 +513,34 @@
         <!-- 数据统计区 -->
         <section class="mb-12 reveal">
             <div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-3xl p-10 text-white relative overflow-hidden">
-                <!-- 背景装饰 -->
                 <div class="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
                 <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
                 
                 <h2 class="text-2xl font-bold mb-8 flex items-center gap-3 relative z-10">
-                    <span class="text-3xl">📊</span> 星象预言统计
+                    <span class="text-3xl">📊</span> 星象预言成绩单
                 </h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
                     <div class="glass rounded-2xl p-6">
-                        <div class="text-4xl font-bold mb-2 counter" data-target="1247">0</div>
-                        <div class="text-white/70 text-sm">总预言数</div>
+                        <div class="text-4xl font-bold mb-2 counter" data-target="142">0</div>
+                        <div class="text-white/70 text-sm">活跃预言</div>
                     </div>
                     <div class="glass rounded-2xl p-6">
                         <div class="text-4xl font-bold mb-2 text-green-300 counter" data-target="87.3" data-suffix="%">0</div>
                         <div class="text-white/70 text-sm">准确率</div>
                     </div>
                     <div class="glass rounded-2xl p-6">
-                        <div class="text-4xl font-bold mb-2 counter" data-target="6">0</div>
-                        <div class="text-white/70 text-sm">预言已验证</div>
+                        <div class="text-4xl font-bold mb-2 counter" data-target="28">0</div>
+                        <div class="text-white/70 text-sm">已验证</div>
                     </div>
                     <div class="glass rounded-2xl p-6">
-                        <div class="text-4xl font-bold mb-2 counter" data-target="142">0</div>
-                        <div class="text-white/70 text-sm">待验证预言</div>
+                        <div class="text-4xl font-bold mb-2 counter" data-target="6">0</div>
+                        <div class="text-white/70 text-sm">待揭晓</div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 页脚 -->
     <footer class="bg-gray-900 text-white py-12 relative z-10">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center gap-8">
@@ -594,34 +559,27 @@
                 </div>
             </div>
             <div class="border-t border-gray-800 mt-10 pt-8 text-center text-gray-500 text-sm">
-                <p>© 2024 星象日报 Astro Daily. 所有预言仅供参考，不构成投资建议。</p>
+                <p>© 2026 星象日报 Astro Daily. 所有预言仅供参考，不构成投资建议。</p>
                 <p class="mt-3">✨ 发现右下角隐藏的水晶球彩蛋，获取你的私人预言</p>
             </div>
         </div>
     </footer>
 
-    <!-- 水晶球彩蛋 -->
     <div class="easter-egg" onclick="openCrystalBall()">
         <div class="w-16 h-16 bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500 rounded-full flex items-center justify-center text-3xl shadow-2xl crystal-3d">
             🔮
         </div>
     </div>
 
-    <!-- 预言验证模态框 -->
     <div id="prophecy-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl modal-animate relative" id="prophecy-container">
-            <div class="p-8" id="prophecy-content">
-                <!-- 动态内容 -->
-            </div>
+            <div class="p-8" id="prophecy-content"></div>
         </div>
     </div>
 
-    <!-- 水晶球游戏模态框 -->
     <div id="crystal-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 rounded-3xl max-w-md w-full shadow-2xl p-10 text-white text-center modal-animate relative overflow-hidden">
-            <!-- 魔法背景 -->
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
-            
             <div class="text-7xl mb-6 crystal-3d relative z-10">🔮</div>
             <h3 class="text-2xl font-bold mb-5 relative z-10">神秘水晶球</h3>
             <p class="text-white/80 mb-8 relative z-10 leading-relaxed">在心中默念一个是否问题，然后点击水晶球获取你的专属预言</p>
@@ -634,9 +592,6 @@
     </div>
 
     <script>
-        // ==================== 高级 JS 特效 ====================
-        
-        // 1. Canvas 星空粒子背景
         const canvas = document.getElementById('starfield');
         const ctx = canvas.getContext('2d');
         let stars = [];
@@ -673,7 +628,6 @@
                 star.twinklePhase += star.twinkleSpeed;
                 const twinkleOpacity = star.opacity * (0.5 + 0.5 * Math.sin(star.twinklePhase));
                 
-                // 鼠标引力效果
                 const dx = mouseX - star.x;
                 const dy = mouseY - star.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
@@ -685,13 +639,11 @@
                 star.x += star.speedX;
                 star.y += star.speedY;
                 
-                // 边界循环
                 if (star.x < 0) star.x = canvas.width;
                 if (star.x > canvas.width) star.x = 0;
                 if (star.y < 0) star.y = canvas.height;
                 if (star.y > canvas.height) star.y = 0;
                 
-                // 绘制星星
                 const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.radius * 3);
                 gradient.addColorStop(0, `rgba(139, 92, 246, ${twinkleOpacity})`);
                 gradient.addColorStop(0.5, `rgba(139, 92, 246, ${twinkleOpacity * 0.5})`);
@@ -711,51 +663,41 @@
             requestAnimationFrame(animateStars);
         }
         
-        // 2. 鼠标跟随星尘效果
-        let dustParticles = [];
-        
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
             
-            // 创建星尘粒子
             if (Math.random() < 0.3) {
-                createDustParticle(e.clientX, e.clientY);
+                const dust = document.createElement('div');
+                dust.className = 'stardust';
+                dust.style.left = e.clientX + 'px';
+                dust.style.top = e.clientY + 'px';
+                document.body.appendChild(dust);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 2 + 1;
+                let opacity = 1;
+                
+                const animate = () => {
+                    e.clientX += Math.cos(angle) * speed;
+                    e.clientY += Math.sin(angle) * speed - 0.5;
+                    opacity -= 0.02;
+                    
+                    dust.style.left = e.clientX + 'px';
+                    dust.style.top = e.clientY + 'px';
+                    dust.style.opacity = opacity;
+                    
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        dust.remove();
+                    }
+                };
+                
+                requestAnimationFrame(animate);
             }
         });
         
-        function createDustParticle(x, y) {
-            const dust = document.createElement('div');
-            dust.className = 'stardust';
-            dust.style.left = x + 'px';
-            dust.style.top = y + 'px';
-            dust.style.transform = `scale(${Math.random() * 2 + 0.5})`;
-            document.body.appendChild(dust);
-            
-            const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 2 + 1;
-            let opacity = 1;
-            
-            const animate = () => {
-                x += Math.cos(angle) * speed;
-                y += Math.sin(angle) * speed - 0.5;
-                opacity -= 0.02;
-                
-                dust.style.left = x + 'px';
-                dust.style.top = y + 'px';
-                dust.style.opacity = opacity;
-                
-                if (opacity > 0) {
-                    requestAnimationFrame(animate);
-                } else {
-                    dust.remove();
-                }
-            };
-            
-            requestAnimationFrame(animate);
-        }
-        
-        // 3. 3D 卡片倾斜效果
         document.querySelectorAll('.card-3d').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
@@ -775,7 +717,6 @@
             });
         });
         
-        // 4. 滚动渐入动画 (Intersection Observer)
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -786,7 +727,6 @@
         
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
         
-        // 5. 数字计数动画
         function animateCounter(el) {
             const target = parseFloat(el.dataset.target);
             const suffix = el.dataset.suffix || '';
@@ -824,7 +764,6 @@
         
         document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
         
-        // 6. 按钮点击波纹效果
         document.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', (e) => {
                 const rect = button.getBoundingClientRect();
@@ -841,16 +780,16 @@
             });
         });
         
-        // ==================== 业务逻辑 ====================
-        
         const prophecies = {
             nvidia: {
-                title: '英伟达市值将在2025年突破5万亿美元',
+                title: '英伟达市值 2025 年突破 5 万亿美元',
                 icon: '🚀',
-                probability: 92,
-                description: 'AI芯片需求持续爆发，H100、H200供不应求，订单已排至2027年。',
+                probability: 78,
+                status: '验证中',
+                current: '当前市值 4.2 万亿美元，距离目标还差 19%',
+                description: 'AI 芯片需求持续爆发，Blackwell 芯片出货量持续超预期。',
                 factors: [
-                    { name: 'AI训练需求增长', weight: 35, positive: true },
+                    { name: 'AI 训练需求增长', weight: 35, positive: true },
                     { name: '数据中心建设加速', weight: 25, positive: true },
                     { name: '竞争格局稳定', weight: 20, positive: true },
                     { name: '地缘政治风险', weight: 12, positive: false },
@@ -858,36 +797,42 @@
                 ]
             },
             btc: {
-                title: '比特币将在2025年Q2突破20万美元',
+                title: '比特币 2026 Q4 突破 20 万美元',
                 icon: '₿',
-                probability: 78,
-                description: '减半效应叠加ETF持续资金流入，机构配置比例逐年提升。',
+                probability: 64,
+                status: '进行中',
+                current: '当前价格 $128,000，进度 64%',
+                description: '减半效应叠加 ETF 持续资金流入，机构配置比例逐年提升。',
                 factors: [
                     { name: '减半供应收缩', weight: 30, positive: true },
-                    { name: 'ETF资金流入', weight: 28, positive: true },
+                    { name: 'ETF 资金流入', weight: 28, positive: true },
                     { name: '机构配置增加', weight: 20, positive: true },
                     { name: '监管不确定性', weight: 14, positive: false },
                     { name: '宏观流动性', weight: 8, positive: true }
                 ]
             },
             apple: {
-                title: 'Vision Pro 2销量破千万',
+                title: 'Vision Pro 2 销量破千万',
                 icon: '🍎',
-                probability: 65,
-                description: '第二代产品价格下探至$1999，内容生态逐渐丰富。',
+                probability: 100,
+                status: '已达成 ✅',
+                current: '实际销量 1280 万，超额完成',
+                description: '$1999 起售价成功激活大众市场，内容生态逐渐丰富。',
                 factors: [
                     { name: '价格下降刺激需求', weight: 28, positive: true },
                     { name: '内容生态完善', weight: 25, positive: true },
                     { name: '技术成熟度', weight: 20, positive: true },
-                    { name: '大众接受度', weight: 15, positive: false },
+                    { name: '大众接受度', weight: 15, positive: true },
                     { name: '竞品冲击', weight: 12, positive: false }
                 ]
             },
             china: {
-                title: '中国GDP 2028年超越美国',
+                title: '中国 GDP 2028 年超越美国',
                 icon: '🇨🇳',
-                probability: 58,
-                description: '高端制造升级持续，内需市场稳步扩大。',
+                probability: 87,
+                status: '进行中',
+                current: '2025 年中国 24.8 万亿，美国 28.3 万亿，差距稳步缩小',
+                description: '高端制造产业升级持续推进，内需市场稳步扩大。',
                 factors: [
                     { name: '产业升级成效', weight: 25, positive: true },
                     { name: '内需市场扩大', weight: 22, positive: true },
@@ -896,17 +841,19 @@
                     { name: '科技创新速度', weight: 15, positive: true }
                 ]
             },
-            mars: {
-                title: '2030年前载人登陆火星',
-                icon: '🔴',
-                probability: 42,
-                description: '星舰测试顺利，猛禽发动机达到设计推力。',
+            neuralink: {
+                title: 'Neuralink 2027 年让瘫痪患者重新行走',
+                icon: '🧬',
+                probability: 55,
+                status: '新预言',
+                current: '已完成 23 例人体植入，临床试验进展顺利',
+                description: '脑机接口带宽突破 10Gbps，运动神经解码准确率 92%。',
                 factors: [
-                    { name: '星舰研发进度', weight: 30, positive: true },
-                    { name: '生命支持系统', weight: 25, positive: false },
-                    { name: '辐射防护技术', weight: 20, positive: false },
+                    { name: '技术突破速度', weight: 30, positive: true },
+                    { name: 'FDA 审批进度', weight: 25, positive: false },
+                    { name: '临床试验安全性', weight: 20, positive: false },
                     { name: '资金投入强度', weight: 15, positive: true },
-                    { name: '国际合作意愿', weight: 10, positive: false }
+                    { name: '公众接受度', weight: 10, positive: false }
                 ]
             }
         };
@@ -923,16 +870,16 @@
         }
         
         function openNews(id) {
-            alert('这是普通新闻，详细内容页开发中...');
+            alert('详细内容页开发中...');
         }
         
         function openProphecy(id) {
-            const prophecy = prophecies[id];
+            const p = prophecies[id];
             const isVerified = verifiedProphecies[id];
             const modal = document.getElementById('prophecy-modal');
             const content = document.getElementById('prophecy-content');
             
-            let factorsHTML = prophecy.factors.map(f => `
+            let factorsHTML = p.factors.map(f => `
                 <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
                     <span class="text-base">${f.positive ? '✅' : '❌'} ${f.name}</span>
                     <span class="text-base font-semibold ${f.positive ? 'text-green-600' : 'text-red-500'}">${f.weight}%</span>
@@ -941,18 +888,19 @@
 
             content.innerHTML = `
                 <div class="text-center mb-8">
-                    <div class="text-6xl mb-4">${prophecy.icon}</div>
-                    <h3 class="text-2xl font-bold text-gray-900">${prophecy.title}</h3>
-                    <p class="text-gray-600 mt-3 leading-relaxed">${prophecy.description}</p>
+                    <div class="text-6xl mb-4">${p.icon}</div>
+                    <span class="text-sm px-3 py-1 rounded-full ${p.probability === 100 ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${p.status}</span>
+                    <h3 class="text-2xl font-bold text-gray-900 mt-4">${p.title}</h3>
+                    <p class="text-gray-600 mt-3 leading-relaxed">${p.current}</p>
                 </div>
                 
                 <div class="mb-8">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-base font-semibold text-gray-700">预言成真概率</span>
-                        <span class="text-2xl font-bold ${prophecy.probability > 70 ? 'text-green-600' : prophecy.probability > 50 ? 'text-yellow-600' : 'text-red-500'}">${prophecy.probability}%</span>
+                        <span class="text-2xl font-bold ${p.probability > 70 ? 'text-green-600' : p.probability > 50 ? 'text-yellow-600' : 'text-red-500'}">${p.probability}%</span>
                     </div>
                     <div class="h-5 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
-                        <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500 transition-all duration-1500" style="width: ${prophecy.probability}%"></div>
+                        <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500 transition-all duration-1500" style="width: ${p.probability}%"></div>
                     </div>
                 </div>
 
@@ -970,6 +918,14 @@
                             </div>
                             <div class="text-gray-500 mt-2">你选择了：${isVerified.choice}</div>
                             <div class="text-sm text-gray-400 mt-1">${isVerified.correct ? '🎉 你的判断正确！' : '😅 这次没猜对...'}</div>
+                        </div>
+                    </div>
+                ` : p.probability === 100 ? `
+                    <div class="p-6 rounded-2xl bg-green-50 border-2 border-green-200">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">✅</div>
+                            <div class="text-xl font-semibold text-green-700">预言已验证成真！</div>
+                            <div class="text-gray-500 mt-2">星象预言准确命中</div>
                         </div>
                     </div>
                 ` : `
@@ -993,8 +949,8 @@
         }
         
         function verifyProphecy(id, choice) {
-            const prophecy = prophecies[id];
-            const actualResult = Math.random() * 100 < prophecy.probability;
+            const p = prophecies[id];
+            const actualResult = Math.random() * 100 < p.probability;
             const isCorrect = choice === actualResult;
             
             verifiedProphecies[id] = {
@@ -1009,7 +965,6 @@
             const card = document.getElementById('card-' + id);
             if (card) {
                 card.classList.add(actualResult ? 'prediction-true' : 'prediction-false');
-                
                 createExplosion(card, actualResult ? '✨' : '💫', 8);
             }
             
@@ -1031,12 +986,10 @@
                 
                 const angle = (i / count) * Math.PI * 2;
                 const distance = 80 + Math.random() * 60;
-                const targetX = centerX + Math.cos(angle) * distance;
-                const targetY = centerY + Math.sin(angle) * distance - 50;
                 
                 particle.animate([
                     { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 1 },
-                    { transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(1.5) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance - 50}px) scale(1.5) rotate(${Math.random() * 360}deg)`, opacity: 0 }
                 ], {
                     duration: 1000,
                     easing: 'cubic-bezier(0, 0.5, 0.5, 1)'
@@ -1096,21 +1049,19 @@
             }
         });
         
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').textContent = '📅 ' + now.toLocaleDateString('zh-CN', options) + ' ' + now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+        }
+        updateCurrentDate();
+        setInterval(updateCurrentDate, 60000);
+        
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         animateStars();
         
-        // 动态更新当前日期
-function updateCurrentDate() {
-    const now = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    document.getElementById('current-date').textContent = '📅 ' + now.toLocaleDateString('zh-CN', options) + ' ' + now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
-}
-updateCurrentDate();
-setInterval(updateCurrentDate, 60000); // 每分钟更新一次
-
-console.log('🔮 星象日报高级特效版已加载！');
-        console.log(`✨ 已验证预言: ${Object.keys(verifiedProphecies).length} 个`);
+        console.log('🔮 星象日报 2026 版已加载！');
     </script>
 </body>
 </html>

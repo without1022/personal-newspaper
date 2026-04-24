@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-📰 魔法财经日报 v5.0
-- 老报纸复古排版
-- 哈利波特魔法报纸效果
+📰 预言家财经日报 v5.1
+- 严肃黑白报纸风格
+- 强化哈利波特元素
+- 图片动效升级
 """
 
 import os
@@ -13,8 +14,8 @@ from typing import Dict, List
 CONFIG = {"output_dir": "./docs"}
 
 NEWS_CATEGORIES = {
-    "domestic": {"name": "国内财经", "icon": "🇨🇳"},
-    "international": {"name": "国际财经", "icon": "🌍"},
+    "domestic": {"name": "国内财经", "icon": "🏛️"},
+    "international": {"name": "国际要闻", "icon": "🌍"},
     "ai-tech": {"name": "魔法科技", "icon": "✨"},
     "internet": {"name": "互联网", "icon": "💻"},
     "semiconductor": {"name": "魔晶工业", "icon": "🔮"},
@@ -40,44 +41,52 @@ class MagicNewspaper:
                 {
                     "title": "A股三大指数集体收涨，成交额突破万亿元大关",
                     "source": "证券时报",
-                    "location": "上海",
+                    "location": "上海证券交易所",
                     "summary": "今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升，市场信心稳步恢复。",
+                    "content": "今日A股市场延续强势格局，三大指数集体收涨。截至收盘，上证指数上涨1.23%，深证成指上涨1.56%，创业板指上涨1.89%。两市成交额突破1万亿元，为连续第8个交易日破万亿。\n\n北向资金全天净流入86.5亿元，其中沪股通净流入48.2亿元，深股通净流入38.3亿元。\n\n行业板块方面，新能源、半导体、医药板块领涨，银行、地产板块表现相对平稳。魔法部分析师认为，随着经济复苏预期增强，市场信心持续恢复，A股有望延续震荡上行走势。",
                     "tags": ["A股", "成交额", "北向资金"],
                     "mood": 0.8,
                     "hot": 92,
-                    "image": "📈"
+                    "image": "📈",
+                    "reporter": "丽塔·斯基特"
                 },
                 {
                     "title": "央行开展500亿元逆回购操作，维护流动性合理充裕",
                     "source": "中国人民银行",
                     "location": "北京",
                     "summary": "央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。",
+                    "content": "中国人民银行今日公告称，为维护银行体系流动性合理充裕，开展500亿元7天期逆回购操作，中标利率为1.80%，与此前持平。\n\n本周以来，央行持续加大流动性投放力度，累计开展逆回购操作6500亿元，因到期4500亿元，实现净投放2000亿元。\n\n古灵阁分析师表示，央行灵活开展公开市场操作，有助于平抑短期资金波动，保持市场利率平稳运行。",
                     "tags": ["央行", "逆回购", "流动性"],
                     "mood": 0.75,
                     "hot": 85,
-                    "image": "🏦"
+                    "image": "🏦",
+                    "reporter": "魔法部财经记者"
                 }
             ],
             "international": [
                 {
                     "title": "美联储释放鸽派信号，美股三大指数创历史新高",
                     "source": "路透社",
-                    "location": "纽约",
+                    "location": "纽约华尔街",
                     "summary": "美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨，集体创出历史新高。",
+                    "content": "美联储主席在最新的国会听证会上表示，通胀数据持续向好，美联储正在考虑何时开始降息。市场普遍预期美联储将在9月开始首次降息，年内降息幅度可达75个基点。\n\n受此消息影响，美股三大指数全线上涨。道琼斯工业平均指数上涨1.2%，标准普尔500指数上涨1.5%，纳斯达克综合指数上涨1.8%，三大指数均创出历史新高。\n\n科技股领涨，英伟达、苹果、微软等巨头股价均有不错表现。霍格沃茨投资俱乐部建议投资者保持乐观，但需警惕魔法市场的波动性。",
                     "tags": ["美联储", "美股", "降息"],
                     "mood": 0.85,
                     "hot": 95,
-                    "image": "🗽"
+                    "image": "🗽",
+                    "reporter": "丽塔·斯基特"
                 },
                 {
                     "title": "英伟达市值突破3.5万亿美元，AI芯片需求持续火爆",
                     "source": "彭博社",
                     "location": "硅谷",
                     "summary": "英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长，公司订单已排到2027年。",
+                    "content": "英伟达股价在盘后交易中继续上涨，市值已突破3.5万亿美元，超越苹果成为全球市值最高的公司。\n\n公司最新财报显示，AI芯片需求呈现爆发式增长，季度营收同比增长280%。公司CEO黄仁勋表示，AI算力需求远超出预期，目前订单已排到2027年，正在全力扩大产能。\n\n魔法部科技司认为，这标志着魔法算力革命的开始。",
                     "tags": ["英伟达", "AI芯片", "市值"],
                     "mood": 0.9,
                     "hot": 98,
-                    "image": "🚀"
+                    "image": "🚀",
+                    "reporter": "魔法部科技记者"
                 }
             ],
             "ai-tech": [
@@ -86,10 +95,12 @@ class MagicNewspaper:
                     "source": "魔法部公告",
                     "location": "旧金山",
                     "summary": "OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。新模型支持更长上下文窗口。",
+                    "content": "OpenAI正式发布GPT-4o升级版，在多个维度实现显著提升。新模型在MMLU基准测试中得分达到92%，在数学推理方面提升显著。\n\n值得关注的是，GPT-4o响应速度比之前提升50%，用户可以获得更流畅的对话体验。多模态理解能力也大幅增强，支持实时视频分析和复杂图表解读。\n\n此外，新模型支持128K上下文窗口，可以一次性处理约10万字的内容。魔法部将此评为本年度最重要的魔法科技突破。",
                     "tags": ["OpenAI", "GPT-4o", "大模型"],
                     "mood": 0.9,
                     "hot": 98,
-                    "image": "🤖"
+                    "image": "🤖",
+                    "reporter": "魔法部科技记者"
                 }
             ],
             "crypto": [
@@ -98,10 +109,12 @@ class MagicNewspaper:
                     "source": "CoinDesk",
                     "location": "加密世界",
                     "summary": "比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。",
+                    "content": "比特币第四次减半顺利完成后，市场表现强劲。比特币价格持续上涨，已站稳10万美元关口，市值达到2万亿美元。\n\n机构投资者持续增持，灰度比特币信托资产管理规模突破500亿美元，MicroStrategy累计持有超50万枚比特币。\n\n古灵阁分析师认为，随着机构资金持续流入，减半后的供应减少效应将逐步显现，比特币有望继续上行。巫师投资者应保持谨慎乐观。",
                     "tags": ["比特币", "减半", "机构"],
                     "mood": 0.85,
                     "hot": 94,
-                    "image": "🪙"
+                    "image": "🪙",
+                    "reporter": "古灵阁特派记者"
                 }
             ],
             "ev": [
@@ -110,20 +123,24 @@ class MagicNewspaper:
                     "source": "比亚迪",
                     "location": "深圳",
                     "summary": "比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。",
+                    "content": "比亚迪今日公布最新销量数据，7月全系销量达到51.2万辆，再创历史新高，同比增长45%。其中新能源乘用车销量49.8万辆，同比增长48%。\n\n海外市场表现亮眼，当月海外销量突破10万辆，同比增长120%。比亚迪已进入全球60多个国家和地区，在泰国、巴西、澳大利亚等市场市占率持续提升。\n\n霍格沃茨飞行课教授对此表示，这是麻瓜科技追赶魔法飞毯的重要里程碑。",
                     "tags": ["比亚迪", "新能源", "销量"],
                     "mood": 0.85,
                     "hot": 91,
-                    "image": "🚗"
+                    "image": "🚗",
+                    "reporter": "魔法飞毯专栏"
                 },
                 {
                     "title": "特斯拉FSD正式入华，自动驾驶行业加速",
                     "source": "特斯拉中国",
-                    "location": "上海",
+                    "location": "上海超级工厂",
                     "summary": "特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。",
+                    "content": "特斯拉中国今日宣布，FSD完全自动驾驶系统正式获得中国监管部门批准，将在国内逐步推送。\n\nFSD入华后，特斯拉车主可以通过OTA升级获得完整的自动驾驶能力，包括城市道路自动驾驶、自动泊车、智能召唤等功能。\n\n业内人士认为，FSD入华将加速中国自动驾驶行业标准制定，推动整个产业链快速发展。国内自动驾驶公司也将加速技术迭代，提升竞争力。魔法部交通司将密切关注此事态发展。",
                     "tags": ["特斯拉", "FSD", "自动驾驶"],
                     "mood": 0.8,
                     "hot": 94,
-                    "image": "⚡"
+                    "image": "⚡",
+                    "reporter": "魔法部交通记者"
                 }
             ]
         }
@@ -152,7 +169,8 @@ class MagicNewspaper:
         ]
 
     def generate_html(self):
-        print("🎨 正在生成魔法报纸（老报纸 + 哈利波特风格）...")
+        current_hour = datetime.now().hour
+        print("🎨 正在生成严肃版魔法报纸（黑白严肃 + 哈利波特元素）...")
 
         # 导航
         nav_html = ""
@@ -163,29 +181,63 @@ class MagicNewspaper:
             </a>
             """
 
-        # 要闻（第一条）
+        # 头版头条（第一条国际新闻）
         top_news = self.all_news["international"][0]
         
-        # 头版头条
+        # 头版头条 HTML
         headline_html = f"""
-        <div class="headline-article">
-            <div class="headline-image">
-                <span class="magic-emoji">{top_news['image']}</span>
-            </div>
-            <div class="headline-content">
-                <div class="headline-location">{top_news['location']} · {top_news['source']}</div>
-                <h1 class="headline-title">{top_news['title']}</h1>
-                <p class="headline-lead">{top_news['summary']}</p>
-                <div class="headline-tags">
-                    {"".join([f'<span class="tag">{tag}</span>' for tag in top_news['tags']])}
+        <article class="frontpage-article">
+            <div class="frontpage-image">
+                <div class="moving-photo">
+                    <span class="photo-emoji">{top_news['image']}</span>
+                    <div class="photo-shimmer"></div>
+                </div>
+                <div class="photo-caption">
+                    <span>📷 本报特派记者摄于{top_news['location']}</span>
                 </div>
             </div>
-        </div>
+            <div class="frontpage-content">
+                <div class="article-dateline">{top_news['location']} — {current_hour}:{datetime.now().minute:02d} GMT+8</div>
+                <h1 class="frontpage-headline">{top_news['title']}</h1>
+                <p class="frontpage-byline">By {top_news['reporter']} · {top_news['source']}</p>
+                <div class="frontpage-lead">{top_news['summary']}</div>
+                <button class="continue-article-btn" onclick="openMagicArticle('frontpage', this)">
+                    ▶ 继续阅读第2版
+                </button>
+            </div>
+            <div class="frontpage-full" id="frontpage">
+                <div class="article-continued">
+                    <div class="continued-header">— 从第1版续 —</div>
+                    {top_news['content'].replace(chr(10), '<br><br>')}
+                    <p class="article-end">❧</p>
+                </div>
+            </div>
+        </article>
+        """
+
+        # 第二条要闻
+        second_news = self.all_news["international"][1]
+        second_headline_html = f"""
+        <article class="second-article">
+            <div class="second-image">
+                <div class="moving-photo-small">
+                    <span class="photo-emoji">{second_news['image']}</span>
+                </div>
+            </div>
+            <div class="second-content">
+                <div class="second-dateline">{second_news['location']}</div>
+                <h2 class="second-headline">{second_news['title']}</h2>
+                <p class="second-byline">By {second_news['reporter']}</p>
+                <p class="second-lead">{second_news['summary']}</p>
+            </div>
+        </article>
         """
 
         # 新闻板块 - 报纸分栏风格
         news_sections_html = ""
         for cat_key, cat_info in NEWS_CATEGORIES.items():
+            if cat_key == "international": continue  # 国际新闻已经在头版了
+                
             news_list = self.all_news.get(cat_key, [])
             if not news_list:
                 continue
@@ -196,31 +248,31 @@ class MagicNewspaper:
                 tags_html = "".join([f'<span class="tag">{tag}</span>' for tag in news["tags"]])
                 
                 news_cards_html += f"""
-                <article class="news-article" data-newsid="{news_id}">
-                    <div class="article-image">
-                        <span class="magic-emoji-small">{news['image']}</span>
-                    </div>
-                    <div class="article-content">
-                        <div class="article-meta">
-                            <span class="article-location">{news['location']}</span>
-                            <span class="article-source">{news['source']}</span>
+                <article class="news-item" data-newsid="{news_id}">
+                    <div class="news-item-image">
+                        <div class="tiny-photo">
+                            <span class="tiny-emoji">{news['image']}</span>
                         </div>
-                        <h3 class="article-title">{news['title']}</h3>
-                        <p class="article-summary">{news['summary']}</p>
-                        <div class="article-footer">
-                            <div class="article-tags">{tags_html}</div>
-                            <button class="article-expand" onclick="toggleMagicNews('{news_id}', this)">
-                                ✨ 继续阅读
+                    </div>
+                    <div class="news-item-content">
+                        <div class="news-item-meta">
+                            <span class="news-item-location">{news['location']}</span>
+                            <span class="news-item-source"> | {news['source']}</span>
+                            <span class="news-item-reporter"> · By {news['reporter']}</span>
+                        </div>
+                        <h3 class="news-item-title">{news['title']}</h3>
+                        <p class="news-item-summary">{news['summary']}</p>
+                        <div class="news-item-footer">
+                            <div class="news-item-tags">{tags_html}</div>
+                            <button class="read-more-btn" onclick="toggleMagicNews('{news_id}', this)">
+                                [ 继续阅读 ]
                             </button>
                         </div>
                     </div>
-                    <!-- 魔法展开内容 -->
-                    <div class="article-full" id="{news_id}">
-                        <div class="article-full-inner">
-                            <p>📜 据魔法部可靠消息人士透露...</p>
-                            <p>{news['summary']}</p>
-                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
-                            <p class="magic-sign">— 预言家日报特派记者</p>
+                    <div class="news-item-full" id="{news_id}">
+                        <div class="news-item-full-inner">
+                            {news['content'].replace(chr(10), '<br><br>')}
+                            <p class="article-end">❧</p>
                         </div>
                     </div>
                 </article>
@@ -228,14 +280,12 @@ class MagicNewspaper:
 
             news_sections_html += f"""
             <section id="{cat_key}" class="news-section">
-                <div class="section-header">
+                <div class="section-head">
                     <span class="section-icon">{cat_info['icon']}</span>
                     <h2 class="section-title">{cat_info['name']}</h2>
-                    <div class="section-rule"></div>
+                    <div class="section-rules"></div>
                 </div>
-                <div class="section-grid">
-                    {news_cards_html}
-                </div>
+                {news_cards_html}
             </section>
             """
 
@@ -272,10 +322,10 @@ class MagicNewspaper:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📰 预言家财经日报</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>📰 预言家日报 · 财经版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Playfair+Display:wght@400;700;900&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     <style>
-        /* ===== 魔法报纸基础样式 ===== */
+        /* ===== 严肃魔法报纸 - 黑白风格 ===== */
         * {{
             margin: 0;
             padding: 0;
@@ -283,398 +333,360 @@ class MagicNewspaper:
         }}
 
         :root {{
-            --paper: #f5f0e6;
-            --paper-dark: #e8e0d0;
+            --paper: #f8f5ee;
+            --paper-dark: #e8e4db;
             --ink: #1a1a1a;
             --ink-light: #4a4a4a;
-            --ink-faint: #7a7a7a;
-            --gold: #b8860b;
-            --gold-light: #daa520;
-            --magic: #6366f1;
+            --ink-faint: #8a8a8a;
+            --accent: #2563eb;
         }}
 
         @keyframes float {{
             0%, 100% {{ transform: translateY(0); }}
-            50% {{ transform: translateY(-5px); }}
+            50% {{ transform: translateY(-4px); }}
         }}
 
         @keyframes shimmer {{
-            0% {{ opacity: 0.3; }}
+            0% {{ opacity: 0.4; }}
             50% {{ opacity: 0.8; }}
-            100% {{ opacity: 0.3; }}
+            100% {{ opacity: 0.4; }}
         }}
 
-        @keyframes magicGlow {{
-            0%, 100% {{ box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }}
-            50% {{ box-shadow: 0 0 40px rgba(99, 102, 241, 0.4); }}
-        }}
-
-        @keyframes inkSpread {{
-            from {{
-                opacity: 0;
-                transform: scale(0.95);
-            }}
-            to {{
-                opacity: 1;
-                transform: scale(1);
-            }}
+        @keyframes pulse {{
+            0%, 100% {{ opacity: 0.6; }}
+            50% {{ opacity: 1; }}
         }}
 
         body {{
-            font-family: 'Noto Serif SC', 'Playfair Display', Georgia, serif;
+            font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;
             background: var(--paper);
             background-image: 
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
             color: var(--ink);
-            line-height: 1.7;
+            line-height: 1.65;
+            font-size: 16px;
         }}
 
-        /* ===== 魔法粒子背景 ===== */
-        .magic-particles {{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }}
-
-        .particle {{
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: shimmer 3s infinite;
-        }}
-
-        /* ===== 报纸刊头 ===== */
-        .newspaper-header {{
+        /* ===== 报纸刊头 - 预言家日报风格 ===== */
+        .masthead {{
             background: var(--paper);
-            border-bottom: 4px double var(--ink);
-            padding: 30px 20px 20px;
+            border-bottom: 3px double var(--ink);
+            padding: 28px 20px 20px;
             position: relative;
         }}
 
-        .newspaper-masthead {{
+        .masthead-inner {{
             max-width: 1000px;
             margin: 0 auto;
             text-align: center;
+            position: relative;
         }}
 
-        .newspaper-title {{
-            font-family: 'Playfair Display', 'Noto Serif SC', serif;
-            font-size: 3.5em;
-            font-weight: 900;
-            letter-spacing: 0.1em;
-            margin-bottom: 8px;
-            animation: float 4s ease-in-out infinite;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }}
-
-        .newspaper-subtitle {{
-            font-size: 0.95em;
+        /* 预言家日报装饰元素 */
+        .masthead::before {{
+            content: "❧";
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
             color: var(--ink-light);
-            letter-spacing: 0.3em;
+        }}
+
+        .masthead::after {{
+            content: "❧";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            font-size: 2em;
+            color: var(--ink-light);
+        }}
+
+        .paper-title {{
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            font-size: 3.8em;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            animation: float 5s ease-in-out infinite;
+        }}
+
+        .paper-subtitle {{
+            font-size: 0.75em;
+            color: var(--ink-light);
+            letter-spacing: 0.5em;
             text-transform: uppercase;
             margin-bottom: 16px;
         }}
 
-        .newspaper-meta {{
+        .paper-edition {{
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid var(--ink-faint);
-            border-bottom: 1px solid var(--ink-faint);
-            padding: 8px 0;
+            border-top: 1px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+            padding: 6px 0;
             font-size: 0.85em;
-            color: var(--ink-light);
+            color: var(--ink);
         }}
 
-        .weather-widget {{
-            font-size: 1.2em;
-            animation: float 3s ease-in-out infinite;
+        .edition-price {{
+            font-weight: 600;
         }}
 
         /* ===== 头版头条 ===== */
-        .headline-section {{
+        .frontpage {{
             max-width: 1000px;
             margin: 0 auto;
-            padding: 30px 20px;
+            padding: 24px 20px;
             border-bottom: 2px solid var(--ink);
         }}
 
-        .headline-article {{
+        .frontpage-article {{
             display: grid;
-            grid-template-columns: 120px 1fr;
+            grid-template-columns: 280px 1fr;
             gap: 24px;
-            align-items: start;
+            margin-bottom: 24px;
         }}
 
-        .headline-image {{
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* ===== 会动的照片 - 哈利波特风格 ===== */
+        .moving-photo {{
+            position: relative;
+            border: 8px solid #2a2a2a;
+            border-radius: 2px;
+            padding: 10px;
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            box-shadow: 
+                4px 4px 12px rgba(0,0,0,0.15),
+                inset 0 0 20px rgba(0,0,0,0.05);
         }}
 
-        .magic-emoji {{
-            font-size: 5em;
-            animation: float 3s ease-in-out infinite, magicGlow 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.5));
-        }}
-
-        .magic-emoji-small {{
-            font-size: 2.5em;
+        .photo-emoji {{
+            font-size: 6em;
+            display: block;
+            text-align: center;
             animation: float 3s ease-in-out infinite;
         }}
 
-        .headline-location {{
-            font-size: 0.8em;
+        .photo-shimmer {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                110deg,
+                transparent 20%,
+                rgba(255,255,255,0.3) 45%,
+                rgba(255,255,255,0.5) 50%,
+                rgba(255,255,255,0.3) 55%,
+                transparent 80%
+            );
+            animation: shimmer 4s ease-in-out infinite;
+            pointer-events: none;
+        }}
+
+        .photo-caption {{
+            font-size: 0.7em;
+            color: var(--ink-faint);
+            text-align: center;
+            margin-top: 8px;
+            font-style: italic;
+        }}
+
+        .moving-photo-small {{
+            position: relative;
+            border: 5px solid #2a2a2a;
+            padding: 8px;
+            background: white;
+        }}
+
+        .moving-photo-small .photo-emoji {{
+            font-size: 3.5em;
+        }}
+
+        .tiny-photo {{
+            position: relative;
+            border: 3px solid #2a2a2a;
+            padding: 5px;
+            background: white;
+        }}
+
+        .tiny-emoji {{
+            font-size: 2.2em;
+            display: block;
+            animation: float 3.5s ease-in-out infinite;
+        }}
+
+        /* ===== 头版内容 ===== */
+        .article-dateline {{
+            font-size: 0.75em;
             color: var(--ink-faint);
             text-transform: uppercase;
             letter-spacing: 0.15em;
             margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
         }}
 
-        .headline-title {{
+        .frontpage-headline {{
             font-family: 'Playfair Display', 'Noto Serif SC', serif;
-            font-size: 1.8em;
+            font-size: 1.7em;
             font-weight: 700;
             line-height: 1.4;
-            margin-bottom: 12px;
-        }}
-
-        .headline-lead {{
-            font-size: 1.05em;
-            color: var(--ink-light);
-            line-height: 1.8;
-            margin-bottom: 12px;
-        }}
-
-        .headline-tags {{
-            display: flex;
-            gap: 8px;
-        }}
-
-        /* ===== 板块标题 ===== */
-        .news-section {{
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 24px 20px;
-            border-bottom: 1px solid var(--ink-faint);
-        }}
-
-        .section-header {{
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }}
-
-        .section-icon {{
-            font-size: 1.5em;
-            animation: float 3s ease-in-out infinite;
-        }}
-
-        .section-title {{
-            font-family: 'Playfair Display', 'Noto Serif SC', serif;
-            font-size: 1.3em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }}
-
-        .section-rule {{
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, var(--ink) 0%, transparent 100%);
-        }}
-
-        .section-grid {{
-            display: grid;
-            gap: 24px;
-        }}
-
-        /* ===== 新闻文章 - 报纸风格 ===== */
-        .news-article {{
-            display: grid;
-            grid-template-columns: 60px 1fr;
-            gap: 16px;
-            padding: 16px 0;
-            border-bottom: 1px dotted var(--ink-faint);
-            transition: all 0.3s;
-        }}
-
-        .news-article:last-child {{
-            border-bottom: none;
-        }}
-
-        .news-article:hover {{
-            background: rgba(184, 134, 11, 0.05);
-            margin: 0 -10px;
-            padding: 16px 10px;
-            border-radius: 8px;
-        }}
-
-        .article-image {{
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 4px;
-        }}
-
-        .article-meta {{
-            font-size: 0.75em;
-            color: var(--ink-faint);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }}
-
-        .article-location::after {{
-            content: " — ";
-        }}
-
-        .article-title {{
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1.1em;
-            font-weight: 600;
-            line-height: 1.5;
             margin-bottom: 8px;
-            transition: color 0.2s;
         }}
 
-        .news-article:hover .article-title {{
-            color: var(--gold);
-        }}
-
-        .article-summary {{
-            font-size: 0.9em;
+        .frontpage-byline {{
+            font-size: 0.8em;
             color: var(--ink-light);
-            line-height: 1.7;
-            margin-bottom: 10px;
+            font-style: italic;
+            margin-bottom: 12px;
         }}
 
-        .article-footer {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
+        .frontpage-lead {{
+            font-size: 1em;
+            line-height: 1.8;
+            color: var(--ink);
         }}
 
-        .article-tags {{
-            display: flex;
-            gap: 6px;
-        }}
-
-        .tag {{
-            background: var(--paper-dark);
-            color: var(--ink-light);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.7em;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-            cursor: pointer;
-        }}
-
-        .tag:hover {{
-            background: var(--gold);
-            color: white;
-        }}
-
-        /* ===== 魔法展开按钮 ===== */
-        .article-expand {{
+        .continue-article-btn {{
             background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.75em;
+            border: 1px solid var(--ink);
+            color: var(--ink);
+            padding: 6px 16px;
             font-family: 'Noto Serif SC', serif;
+            font-size: 0.8em;
             cursor: pointer;
-            transition: all 0.3s;
+            margin-top: 12px;
+            transition: all 0.2s;
         }}
 
-        .article-expand:hover {{
-            background: var(--gold);
-            color: white;
-            box-shadow: 0 0 15px rgba(184, 134, 11, 0.4);
+        .continue-article-btn:hover {{
+            background: var(--ink);
+            color: var(--paper);
         }}
 
-        /* ===== 魔法展开内容 ===== */
-        .article-full {{
+        /* ===== 文章展开 ===== */
+        .frontpage-full {{
             grid-column: 1 / -1;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-out, margin 0.3s;
+            transition: max-height 0.6s ease-out;
         }}
 
-        .article-full.open {{
-            max-height: 300px;
+        .frontpage-full.open {{
+            max-height: 800px;
+            margin-top: 20px;
+        }}
+
+        .article-continued {{
+            border-top: 1px solid var(--ink-faint);
+            padding-top: 16px;
+        }}
+
+        .continued-header {{
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--ink-faint);
+            margin-bottom: 12px;
+        }}
+
+        .article-end {{
+            text-align: center;
+            font-size: 1.5em;
+            color: var(--ink-faint);
             margin-top: 16px;
         }}
 
-        .article-full-inner {{
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(218, 165, 32, 0.05) 100%);
-            border-left: 3px solid var(--gold);
-            padding: 16px 20px;
-            border-radius: 0 8px 8px 0;
-            animation: inkSpread 0.5s ease-out;
+        /* ===== 第二条要闻 ===== */
+        .second-row {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--ink-faint);
         }}
 
-        .article-full-inner p {{
-            margin-bottom: 10px;
-            color: var(--ink-light);
-            font-size: 0.9em;
+        .second-article {{
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 16px;
         }}
 
-        .magic-sign {{
-            text-align: right;
+        .second-headline {{
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            font-size: 1.15em;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }}
+
+        .second-dateline {{
+            font-size: 0.7em;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+        }}
+
+        .second-byline {{
+            font-size: 0.75em;
+            color: var(--ink-faint);
             font-style: italic;
-            color: var(--gold) !important;
-            margin-top: 12px;
+            margin-bottom: 6px;
         }}
 
-        /* ===== 魔法股票行情 ===== */
-        .stocks-section {{
+        .second-lead {{
+            font-size: 0.85em;
+            line-height: 1.6;
+            color: var(--ink-light);
+        }}
+
+        /* ===== 行情板块 ===== */
+        .markets-section {{
             max-width: 1000px;
             margin: 0 auto;
             padding: 24px 20px;
             border-bottom: 2px solid var(--ink);
         }}
 
-        .stock-table {{
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9em;
+        .markets-title {{
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }}
 
-        .stock-table th {{
+        .market-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }}
+
+        .market-table th {{
             text-align: left;
             padding: 10px 8px;
             border-bottom: 2px solid var(--ink);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            font-size: 0.8em;
+            font-size: 0.75em;
         }}
 
-        .stock-table td {{
+        .market-table td {{
             padding: 12px 8px;
             border-bottom: 1px solid var(--paper-dark);
         }}
 
-        .stock-table tr:hover {{
-            background: rgba(184, 134, 11, 0.05);
+        .market-table tr:hover {{
+            background: rgba(0,0,0,0.03);
         }}
 
         .stock-code {{
             font-family: 'Courier New', monospace;
             font-weight: 600;
-            color: var(--gold);
+            color: var(--ink);
         }}
 
         .stock-name {{
@@ -682,21 +694,22 @@ class MagicNewspaper:
         }}
 
         .up {{
-            color: #b45309;
+            color: #92400e;
             font-weight: 700;
         }}
 
         .recommend {{
             padding: 3px 10px;
             border-radius: 12px;
-            font-size: 0.75em;
+            font-size: 0.7em;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
+            border: 1px solid currentColor;
         }}
 
         .recommend.buy {{
-            background: #dcfce7;
             color: #16a34a;
+            background: #f0fdf4;
         }}
 
         /* ===== 市场情绪魔镜 ===== */
@@ -707,30 +720,35 @@ class MagicNewspaper:
             border-bottom: 2px solid var(--ink);
         }}
 
-        .mood-mirror {{
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%);
-            border-radius: 20px;
-            padding: 24px;
+        .mood-box {{
+            border: 2px solid var(--ink);
+            padding: 20px;
             text-align: center;
-            box-shadow: 
-                0 0 30px rgba(251, 191, 36, 0.3),
-                inset 0 0 30px rgba(255, 255, 255, 0.5);
-            animation: magicGlow 3s ease-in-out infinite;
+            position: relative;
+        }}
+
+        .mood-box::before {{
+            content: "✦";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--paper);
+            padding: 0 10px;
+            font-size: 1.2em;
+            animation: pulse 2s ease-in-out infinite;
         }}
 
         .mood-score {{
-            font-size: 4em;
-            font-weight: 900;
             font-family: 'Playfair Display', serif;
-            color: var(--gold);
-            text-shadow: 2px 2px 10px rgba(184, 134, 11, 0.3);
+            font-size: 3em;
+            font-weight: 900;
             animation: float 4s ease-in-out infinite;
         }}
 
         .mood-label {{
-            font-size: 1.2em;
-            color: var(--ink);
-            margin-top: 8px;
+            font-size: 1em;
+            margin-top: 4px;
         }}
 
         .mood-stats {{
@@ -738,30 +756,180 @@ class MagicNewspaper:
             justify-content: center;
             gap: 40px;
             margin-top: 16px;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: var(--ink-light);
         }}
 
-        /* ===== 报纸底部 ===== */
-        .newspaper-footer {{
+        /* ===== 新闻板块 ===== */
+        .news-section {{
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--ink-faint);
+        }}
+
+        .section-head {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--ink);
+        }}
+
+        .section-icon {{
+            font-size: 1.3em;
+            animation: float 3s ease-in-out infinite;
+        }}
+
+        .section-title {{
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }}
+
+        .section-rules {{
+            flex: 1;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--ink) 0px,
+                var(--ink) 8px,
+                transparent 8px,
+                transparent 12px
+            );
+        }}
+
+        .news-item {{
+            display: grid;
+            grid-template-columns: 70px 1fr;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px dotted var(--paper-dark);
+        }}
+
+        .news-item:last-child {{
+            border-bottom: none;
+        }}
+
+        .news-item-meta {{
+            font-size: 0.7em;
+            color: var(--ink-faint);
+            margin-bottom: 6px;
+        }}
+
+        .news-item-title {{
+            font-size: 1.05em;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 6px;
+            transition: color 0.2s;
+        }}
+
+        .news-item:hover .news-item-title {{
+            color: var(--accent);
+        }}
+
+        .news-item-summary {{
+            font-size: 0.85em;
+            color: var(--ink-light);
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }}
+
+        .news-item-footer {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }}
+
+        .news-item-tags {{
+            display: flex;
+            gap: 6px;
+        }}
+
+        .tag {{
+            background: var(--paper-dark);
+            color: var(--ink-light);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.7em;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }}
+
+        .tag:hover {{
+            background: var(--ink);
+            color: var(--paper);
+        }}
+
+        .read-more-btn {{
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.75em;
+            cursor: pointer;
+            padding: 4px 0;
+        }}
+
+        .read-more-btn:hover {{
+            text-decoration: underline;
+        }}
+
+        /* ===== 新闻展开 ===== */
+        .news-item-full {{
+            grid-column: 1 / -1;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }}
+
+        .news-item-full.open {{
+            max-height: 600px;
+            margin-top: 12px;
+        }}
+
+        .news-item-full-inner {{
+            border-left: 2px solid var(--ink-faint);
+            padding: 12px 16px;
+            font-size: 0.9em;
+            color: var(--ink-light);
+            line-height: 1.8;
+        }}
+
+        /* ===== 页脚 - 预言家日报风格 ===== */
+        .footer {{
             max-width: 1000px;
             margin: 0 auto;
             padding: 30px 20px;
             text-align: center;
-            border-top: 4px double var(--ink);
-            font-size: 0.85em;
+            border-top: 3px double var(--ink);
+            font-size: 0.8em;
             color: var(--ink-faint);
         }}
 
-        .newspaper-footer p {{
+        .footer p {{
             margin-bottom: 6px;
         }}
 
-        .magic-quote {{
+        .footer-quote {{
             font-style: italic;
-            color: var(--gold);
             margin-top: 12px;
+            color: var(--ink-light);
             font-size: 0.95em;
+        }}
+
+        .footer-quote::before {{
+            content: '"';
+        }}
+
+        .footer-quote::after {{
+            content: '"';
         }}
 
         /* ===== 悬浮导航 ===== */
@@ -771,132 +939,149 @@ class MagicNewspaper:
             left: 50%;
             transform: translateX(-50%);
             background: var(--paper);
-            border: 2px solid var(--gold);
-            border-radius: 30px;
-            padding: 10px 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border: 2px solid var(--ink);
+            border-radius: 2px;
+            padding: 8px 16px;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
             z-index: 100;
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }}
 
         .nav-item {{
-            padding: 8px 14px;
-            border-radius: 20px;
+            padding: 6px 12px;
             color: var(--ink-light);
             text-decoration: none;
-            font-size: 0.8em;
+            font-size: 0.75em;
             transition: all 0.2s;
             font-weight: 500;
         }}
 
         .nav-item:hover, .nav-item.active {{
-            background: var(--gold);
-            color: white;
+            background: var(--ink);
+            color: var(--paper);
         }}
 
         /* ===== 响应式 ===== */
         @media (max-width: 768px) {{
-            .newspaper-title {{
-                font-size: 2em;
+            .paper-title {{
+                font-size: 2.2em;
             }}
-            .newspaper-subtitle {{
-                font-size: 0.7em;
-                letter-spacing: 0.1em;
+            .paper-subtitle {{
+                font-size: 0.6em;
+                letter-spacing: 0.2em;
             }}
-            .headline-article {{
-                grid-template-columns: 1fr;
-                text-align: center;
-            }}
-            .headline-image {{
-                justify-content: center;
-            }}
-            .news-article {{
+            .frontpage-article {{
                 grid-template-columns: 1fr;
             }}
-            .article-image {{
+            .moving-photo {{
+                max-width: 200px;
+                margin: 0 auto 16px;
+            }}
+            .second-row {{
+                grid-template-columns: 1fr;
+            }}
+            .news-item {{
+                grid-template-columns: 1fr;
+            }}
+            .news-item-image {{
                 display: none;
             }}
             .floating-nav {{
-                padding: 8px 12px;
-                gap: 4px;
-            }}
-            .nav-item {{
                 padding: 6px 10px;
-                font-size: 0.7em;
-            }}
-            .article-footer {{
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }}
-            .article-expand {{
-                align-self: flex-end;
-            }}
-        }}
-
-        @media (max-width: 480px) {{
-            .floating-nav {{
+                gap: 4px;
                 bottom: 10px;
-                padding: 6px 8px;
             }}
             .nav-item {{
                 padding: 5px 8px;
                 font-size: 0.65em;
             }}
+            .masthead::before,
+            .masthead::after {{
+                display: none;
+            }}
+        }}
+
+        @media (max-width: 480px) {{
+            .paper-title {{
+                font-size: 1.8em;
+            }}
+            .paper-edition {{
+                flex-direction: column;
+                gap: 4px;
+                font-size: 0.75em;
+            }}
             .mood-score {{
-                font-size: 2.5em;
+                font-size: 2em;
             }}
             .mood-stats {{
                 gap: 20px;
+                flex-wrap: wrap;
+            }}
+            .frontpage-headline {{
+                font-size: 1.3em;
+            }}
+        }}
+
+        @media print {{
+            .floating-nav {{
+                display: none;
             }}
         }}
     </style>
 </head>
 <body>
-    <!-- 魔法粒子背景 -->
-    <div class="magic-particles" id="particles"></div>
-
-    <!-- 报纸刊头 -->
-    <header class="newspaper-header">
-        <div class="newspaper-masthead">
-            <h1 class="newspaper-title">📰 预言家财经日报</h1>
-            <p class="newspaper-subtitle">THE DAILY PROPHET FINANCIAL</p>
-            <div class="newspaper-meta">
+    <!-- 报纸刊头 - 预言家日报风格 -->
+    <header class="masthead">
+        <div class="masthead-inner">
+            <h1 class="paper-title">预言家日报</h1>
+            <p class="paper-subtitle">THE DAILY PROPHET · FINANCIAL EDITION</p>
+            <div class="paper-edition">
                 <span>📅 {self.date_str} {self.weekday}</span>
                 <span>🧙 第 {self.issue_no} 期</span>
-                <span class="weather-widget">🌤️ 魔法市场晴</span>
-                <span>📍 霍格沃茨财经版</span>
+                <span>🌡️ 今日宜投资</span>
+                <span class="edition-price">💰 售价：5 西可</span>
+                <span>📍 霍格沃茨出版社</span>
             </div>
         </div>
     </header>
 
     <!-- 头版头条 -->
-    <section class="headline-section">
+    <section class="frontpage">
         {headline_html}
+        <div class="second-row">
+            {second_headline_html}
+            <div style="border-left: 1px solid var(--paper-dark); padding-left: 24px;">
+                <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 8px;">📜 魔法部每日提示</div>
+                <p style="font-size: 0.8em; color: var(--ink-light); line-height: 1.7;">
+                    🔮 市场有风险，投资需谨慎。魔法部投资保护投资者保护投资者保护<br>
+                    📜 本报内容仅供参考，不构成施法建议<br>
+                    ⚡ 如遇市场波动，请保持镇定，勿慌张施法
+                </p>
+            </div>
+        </div>
     </section>
 
     <!-- 市场情绪魔镜 -->
     <section class="mood-section">
-        <div class="mood-mirror">
+        <div class="mood-box">
             <div class="mood-score">{mood_emoji} {self.mood_score}</div>
-            <div class="mood-label">{mood_label}</div>
+            <div class="mood-label">今日市场情绪：{mood_label}</div>
             <div class="mood-stats">
-                <span>📰 {total_news} 条新闻</span>
-                <span>🏛️ {len(self.stocks)} 只精选</span>
+                <span>📰 {total_news} 条要闻</span>
+                <span>📈 {len(self.stocks)} 只精选</span>
                 <span>🔮 魔法增强版</span>
             </div>
         </div>
     </section>
 
     <!-- 魔法股票行情 -->
-    <section class="stocks-section">
-        <div class="section-header">
-            <span class="section-icon">📈</span>
-            <h2 class="section-title">今日魔法股票</h2>
-            <div class="section-rule"></div>
+    <section class="markets-section">
+        <div class="markets-title">
+            <span>📈</span>
+            <span>今日魔法市场行情</span>
         </div>
-        <table class="stock-table">
+        <table class="market-table">
             <thead>
                 <tr>
                     <th>代码</th>
@@ -915,45 +1100,43 @@ class MagicNewspaper:
     <!-- 各板块新闻 -->
     {news_sections_html}
 
-    <!-- 报纸底部 -->
-    <footer class="newspaper-footer">
-        <p>⚠️ 免责声明：本报由占卜课教授监制，预言仅供参考，不构成投资建议</p>
-        <p>📰 预言家财经日报 · 魔法部认证 · 第 {self.issue_no} 期</p>
-        <p class="magic-quote">✨ "当你真正想要做一件事的时候，整个宇宙都会联合起来帮你完成" — 保罗·科艾略</p>
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>魔法部出版署批准 · 统一刊号：HGW-1991-777</p>
+        <p>本报由猫头鹰投递 · 古灵阁担保发行</p>
+        <p>© {self.date.year} 预言家日报社 保留所有权利</p>
+        <p class="footer-quote">不要怜悯死者，哈利。怜悯活着的人，最重要的是，怜悯那些生活中没有爱的人</p>
+        <p style="margin-top: 4px;">— 阿不思·邓布利多</p>
     </footer>
 
     <!-- 悬浮导航 -->
     <nav class="floating-nav">
-        <a href="#" class="nav-item active">🏠 首页</a>
+        <a href="#" class="nav-item active">🏠 第1版</a>
         {nav_html}
     </nav>
 
     <script>
-        // 生成魔法粒子
-        function createParticles() {{
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 30; i++) {{
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 3 + 's';
-                particle.style.animationDuration = (2 + Math.random() * 2) + 's';
-                container.appendChild(particle);
+        // 头版文章展开
+        function openMagicArticle(newsId, btn) {{
+            const content = document.getElementById(newsId);
+            content.classList.toggle('open');
+            
+            if (content.classList.contains('open')) {{
+                btn.textContent = '▲ 收起';
+            }} else {{
+                btn.textContent = '▶ 继续阅读第2版';
             }}
         }}
-        createParticles();
 
-        // 魔法展开新闻
+        // 新闻展开/收起
         function toggleMagicNews(newsId, btn) {{
             const content = document.getElementById(newsId);
             content.classList.toggle('open');
             
             if (content.classList.contains('open')) {{
-                btn.textContent = '📜 收起';
-                // 魔法音效可以在这里加
+                btn.textContent = '[ 收起 ]';
             }} else {{
-                btn.textContent = '✨ 继续阅读';
+                btn.textContent = '[ 继续阅读 ]';
             }}
         }}
 
@@ -976,8 +1159,8 @@ class MagicNewspaper:
             }});
         }});
 
-        console.log('✨ 预言家财经日报魔法加载完成！');
-        console.log('📰 哈利波特魔法报纸风格');
+        console.log('📰 预言家日报严肃版已加载完成');
+        console.log('🧙 哈利波特魔法报纸风格 · 黑白严肃版');
     </script>
 </body>
 </html>
@@ -989,11 +1172,11 @@ class MagicNewspaper:
         html = self.generate_html()
         with open(os.path.join(CONFIG["output_dir"], "index.html"), "w", encoding="utf-8") as f:
             f.write(html)
-        print("✅ 魔法报纸已保存！")
+        print("✅ 严肃版魔法报纸已保存！")
 
     async def run(self):
         print("=" * 70)
-        print("📰 预言家财经日报 v5.0 (哈利波特魔法报纸风格)")
+        print("📰 预言家日报 v5.1 (严肃黑白版 + 更多哈利波特元素)")
         print("=" * 70)
         
         self.prepare_news_data()
@@ -1001,7 +1184,7 @@ class MagicNewspaper:
         self.save()
         
         print("\n" + "=" * 70)
-        print("✨ 魔法报纸生成完成！")
+        print("🧙 严肃魔法报纸生成完成！")
         print("=" * 70)
 
 

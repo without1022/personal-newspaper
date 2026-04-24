@@ -1104,9 +1104,10 @@
 function updateCurrentDate() {
     const now = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    document.getElementById('current-date').textContent = '📅 ' + now.toLocaleDateString('zh-CN', options);
+    document.getElementById('current-date').textContent = '📅 ' + now.toLocaleDateString('zh-CN', options) + ' ' + now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
 }
 updateCurrentDate();
+setInterval(updateCurrentDate, 60000); // 每分钟更新一次
 
 console.log('🔮 星象日报高级特效版已加载！');
         console.log(`✨ 已验证预言: ${Object.keys(verifiedProphecies).length} 个`);

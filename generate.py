@@ -1102,6 +1102,7 @@ class MagicNewspaper:
 
     <!-- 页脚 -->
     <footer class="footer">
+        <p>📦 版本 v5.2 · 最后魔法更新：{self.date_str} {datetime.now().strftime('%H:%M')}</p>
         <p>魔法部出版署批准 · 统一刊号：HGW-1991-777</p>
         <p>本报由猫头鹰投递 · 古灵阁担保发行</p>
         <p>© {self.date.year} 预言家日报社 保留所有权利</p>

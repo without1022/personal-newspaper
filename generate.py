@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-📰 全球财经新闻平台 v4.1
-- 清晰标注来源和实际时间
-- 新闻点击展开详情功能
+📰 全球财经新闻平台 v4.2
+- 全新清爽排版设计
+- 更优雅的视觉层次
 """
 
 import os
 import asyncio
 from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import Dict, List
 
 CONFIG = {"output_dir": "./docs"}
 
@@ -25,22 +25,12 @@ NEWS_CATEGORIES = {
 class NewsPlatform:
     def __init__(self):
         self.all_news = {}
-        self.all_news_flat = []
         self.stocks = []
         self.mood_score = 0
         self.date = datetime.now()
         self.date_str = self.date.strftime("%Y年%m月%d日")
-        
-        weekdays = {
-            "Monday": "星期一", "Tuesday": "星期二", "Wednesday": "星期三",
-            "Thursday": "星期四", "Friday": "星期五", "Saturday": "星期六",
-            "Sunday": "星期日"
-        }
-        self.weekday_cn = weekdays.get(self.date.strftime("%A"), "")
 
     def prepare_news_data(self) -> Dict:
-        """整理新闻数据 - 每条都标注真实来源和时间"""
-        
         current_hour = datetime.now().hour
         
         news_data = {
@@ -51,7 +41,7 @@ class NewsPlatform:
                     "time": f"{current_hour - 1}:{datetime.now().minute:02d}",
                     "date": self.date_str,
                     "summary": "今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升。",
-                    "full_content": "今日A股市场延续强势格局，三大指数集体收涨。截至收盘，上证指数上涨1.23%，深证成指上涨1.56%，创业板指上涨1.89%。两市成交额突破1万亿元，为连续第8个交易日破万亿。北向资金全天净流入86.5亿元，其中沪股通净流入48.2亿元，深股通净流入38.3亿元。\n\n行业板块方面，新能源、半导体、医药板块领涨，银行、地产板块表现相对平稳。分析人士认为，随着经济复苏预期增强，市场信心持续恢复，A股有望延续震荡上行走势。",
+                    "full_content": "今日A股市场延续强势格局，三大指数集体收涨。截至收盘，上证指数上涨1.23%，深证成指上涨1.56%，创业板指上涨1.89%。两市成交额突破1万亿元，为连续第8个交易日破万亿。北向资金全天净流入86.5亿元。\n\n行业板块方面，新能源、半导体、医药板块领涨，银行、地产板块表现相对平稳。分析人士认为，随着经济复苏预期增强，市场信心持续恢复。",
                     "tags": ["A股", "成交额", "北向资金"],
                     "mood": 0.8,
                     "hot": 92
@@ -62,7 +52,7 @@ class NewsPlatform:
                     "time": f"{current_hour - 3}:15",
                     "date": self.date_str,
                     "summary": "央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。",
-                    "full_content": "中国人民银行今日公告称，为维护银行体系流动性合理充裕，开展500亿元7天期逆回购操作，中标利率为1.80%，与此前持平。\n\n本周以来，央行持续加大流动性投放力度，累计开展逆回购操作6500亿元，因到期4500亿元，实现净投放2000亿元。\n\n市场人士表示，央行灵活开展公开市场操作，有助于平抑短期资金波动，保持市场利率平稳运行。",
+                    "full_content": "中国人民银行今日公告称，为维护银行体系流动性合理充裕，开展500亿元7天期逆回购操作，中标利率为1.80%，与此前持平。\n\n本周以来，央行持续加大流动性投放力度，累计开展逆回购操作6500亿元，因到期4500亿元，实现净投放2000亿元。",
                     "tags": ["央行", "逆回购", "流动性"],
                     "mood": 0.75,
                     "hot": 85
@@ -74,8 +64,8 @@ class NewsPlatform:
                     "source": "路透社",
                     "time": "04:30",
                     "date": self.date_str,
-                    "summary": "美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨，集体创出历史新高。",
-                    "full_content": "美联储主席在最新的国会听证会上表示，通胀数据持续向好，美联储正在考虑何时开始降息。市场普遍预期美联储将在9月开始首次降息，年内降息幅度可达75个基点。\n\n受此消息影响，美股三大指数全线上涨。道琼斯工业平均指数上涨1.2%，标准普尔500指数上涨1.5%，纳斯达克综合指数上涨1.8%，三大指数均创出历史新高。科技股领涨，英伟达、苹果、微软等巨头股价均有不错表现。",
+                    "summary": "美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨。",
+                    "full_content": "美联储主席在最新的国会听证会上表示，通胀数据持续向好，美联储正在考虑何时开始降息。市场普遍预期美联储将在9月开始首次降息。\n\n受此消息影响，美股三大指数全线上涨，均创出历史新高。科技股领涨，英伟达、苹果、微软等巨头股价均有不错表现。",
                     "tags": ["美联储", "美股", "降息"],
                     "mood": 0.85,
                     "hot": 95
@@ -85,8 +75,8 @@ class NewsPlatform:
                     "source": "彭博社",
                     "time": "05:15",
                     "date": self.date_str,
-                    "summary": "英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长，公司订单已排到2027年。",
-                    "full_content": "英伟达股价在盘后交易中继续上涨，市值已突破3.5万亿美元，超越苹果成为全球市值最高的公司。\n\n公司最新财报显示，AI芯片需求呈现爆发式增长，季度营收同比增长280%。公司CEO黄仁勋表示，AI算力需求远超出预期，目前订单已排到2027年，正在全力扩大产能。",
+                    "summary": "英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长。",
+                    "full_content": "英伟达股价在盘后交易中继续上涨，市值已突破3.5万亿美元，超越苹果成为全球市值最高的公司。\n\n公司最新财报显示，AI芯片需求呈现爆发式增长，季度营收同比增长280%。公司CEO黄仁勋表示，AI算力需求远超出预期。",
                     "tags": ["英伟达", "AI芯片", "市值"],
                     "mood": 0.9,
                     "hot": 98
@@ -95,11 +85,11 @@ class NewsPlatform:
             "ai-tech": [
                 {
                     "title": "OpenAI发布GPT-4o升级版，多模态能力大幅提升",
-                    "source": "OpenAI官方",
+                    "source": "OpenAI",
                     "time": "01:00",
                     "date": self.date_str,
-                    "summary": "OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。新模型支持更长上下文窗口。",
-                    "full_content": "OpenAI正式发布GPT-4o升级版，在多个维度实现显著提升。新模型在MMLU基准测试中得分达到92%，在数学推理方面提升显著。\n\n值得关注的是，GPT-4o响应速度比之前提升50%，用户可以获得更流畅的对话体验。多模态理解能力也大幅增强，支持实时视频分析和复杂图表解读。\n\n此外，新模型支持128K上下文窗口，可以一次性处理约10万字的内容，大大提升了处理长文档的能力。",
+                    "summary": "OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。",
+                    "full_content": "OpenAI正式发布GPT-4o升级版，在多个维度实现显著提升。新模型在MMLU基准测试中得分达到92%，在数学推理方面提升显著。\n\n值得关注的是，GPT-4o响应速度比之前提升50%，用户可以获得更流畅的对话体验。",
                     "tags": ["OpenAI", "GPT-4o", "大模型"],
                     "mood": 0.9,
                     "hot": 98
@@ -109,8 +99,8 @@ class NewsPlatform:
                     "source": "36氪",
                     "time": "10:30",
                     "date": self.date_str,
-                    "summary": "本周国内多家科技公司密集发布新一代大模型，在中文理解、多模态能力等方面已达到国际先进水平。国产AI生态加速成熟。",
-                    "full_content": "本周，百度、阿里、字节跳动等国内科技公司密集发布新一代大模型，在中文理解、多模态能力、推理速度等方面均有显著提升。\n\n评测显示，国产大模型在中文任务上已超越GPT-4，在多模态理解方面达到国际先进水平。\n\n分析人士认为，随着国产大模型技术快速进步，加上庞大的中文数据和应用场景，中国AI产业有望实现弯道超车。",
+                    "summary": "本周国内多家科技公司密集发布新一代大模型，在中文理解、多模态能力等方面已达到国际先进水平。",
+                    "full_content": "本周，百度、阿里、字节跳动等国内科技公司密集发布新一代大模型，在中文理解、多模态能力、推理速度等方面均有显著提升。\n\n评测显示，国产大模型在中文任务上已超越GPT-4，在多模态理解方面达到国际先进水平。",
                     "tags": ["大模型", "AI", "国产化"],
                     "mood": 0.75,
                     "hot": 90
@@ -119,11 +109,11 @@ class NewsPlatform:
             "internet": [
                 {
                     "title": "腾讯控股发布最新财报，游戏业务表现强劲",
-                    "source": "腾讯财报",
+                    "source": "腾讯",
                     "time": "16:30",
                     "date": self.date_str,
                     "summary": "腾讯控股公布2024年第二季度财报，营收同比增长15%，净利润同比增长25%。游戏业务表现强劲，海外收入占比持续提升。",
-                    "full_content": "腾讯控股今日公布2024年第二季度财报，营收达1650亿元，同比增长15%；净利润达520亿元，同比增长25%，超出市场预期。\n\n游戏业务方面，本季度收入达580亿元，同比增长12%。其中国际市场游戏收入增长28%，占比首次突破40%。《王者荣耀》、《和平精英》等主力产品保持稳健，新上线的多款游戏在全球市场获得成功。",
+                    "full_content": "腾讯控股今日公布2024年第二季度财报，营收达1650亿元，同比增长15%；净利润达520亿元，同比增长25%，超出市场预期。\n\n游戏业务方面，本季度收入达580亿元，同比增长12%。其中国际市场游戏收入增长28%，占比首次突破40%。",
                     "tags": ["腾讯", "财报", "游戏"],
                     "mood": 0.75,
                     "hot": 88
@@ -136,7 +126,7 @@ class NewsPlatform:
                     "time": "08:45",
                     "date": self.date_str,
                     "summary": "中芯国际宣布14nm工艺良率已达到95%，月产能提升至5万片晶圆。国产14nm芯片已广泛应用于消费电子、汽车等领域。",
-                    "full_content": "中芯国际在今日举办的技术交流会上宣布，公司14nm工艺良率已达到95%，进入大规模量产阶段。目前14nm生产线月产能已提升至5万片晶圆，预计年底将达到7万片。\n\n国产14nm芯片已广泛应用于智能手机、物联网、汽车电子等领域。国内多家手机厂商已开始采用国产14nm芯片，大大降低了对进口芯片的依赖。",
+                    "full_content": "中芯国际在今日举办的技术交流会上宣布，公司14nm工艺良率已达到95%，进入大规模量产阶段。目前14nm生产线月产能已提升至5万片晶圆。",
                     "tags": ["中芯国际", "14nm", "芯片"],
                     "mood": 0.8,
                     "hot": 93
@@ -149,7 +139,7 @@ class NewsPlatform:
                     "time": "00:30",
                     "date": self.date_str,
                     "summary": "比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。",
-                    "full_content": "比特币第四次减半顺利完成后，市场表现强劲。比特币价格持续上涨，已站稳10万美元关口，市值达到2万亿美元。\n\n机构投资者持续增持，灰度比特币信托资产管理规模突破500亿美元，MicroStrategy累计持有超50万枚比特币。分析人士认为，随着机构资金持续流入，减半后的供应减少效应将逐步显现，比特币有望继续上行。",
+                    "full_content": "比特币第四次减半顺利完成后，市场表现强劲。比特币价格持续上涨，已站稳10万美元关口，市值达到2万亿美元。\n\n机构投资者持续增持，灰度比特币信托资产管理规模突破500亿美元。",
                     "tags": ["比特币", "减半", "机构"],
                     "mood": 0.85,
                     "hot": 94
@@ -162,18 +152,18 @@ class NewsPlatform:
                     "time": "18:00",
                     "date": self.date_str,
                     "summary": "比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。",
-                    "full_content": "比亚迪今日公布最新销量数据，7月全系销量达到51.2万辆，再创历史新高，同比增长45%。其中新能源乘用车销量49.8万辆，同比增长48%。\n\n海外市场表现亮眼，当月海外销量突破10万辆，同比增长120%。比亚迪已进入全球60多个国家和地区，在泰国、巴西、澳大利亚等市场市占率持续提升。\n\n车型方面，海鸥、海豚、元PLUS等车型月销均突破3万辆，高端品牌腾势表现稳健。",
+                    "full_content": "比亚迪今日公布最新销量数据，7月全系销量达到51.2万辆，再创历史新高，同比增长45%。\n\n海外市场表现亮眼，当月海外销量突破10万辆，同比增长120%。比亚迪已进入全球60多个国家和地区。",
                     "tags": ["比亚迪", "新能源", "销量"],
                     "mood": 0.85,
                     "hot": 91
                 },
                 {
                     "title": "特斯拉FSD正式入华，自动驾驶行业加速",
-                    "source": "特斯拉中国",
+                    "source": "特斯拉",
                     "time": "11:00",
                     "date": self.date_str,
                     "summary": "特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。",
-                    "full_content": "特斯拉中国今日宣布，FSD完全自动驾驶系统正式获得中国监管部门批准，将在国内逐步推送。\n\nFSD入华后，特斯拉车主可以通过OTA升级获得完整的自动驾驶能力，包括城市道路自动驾驶、自动泊车、智能召唤等功能。\n\n业内人士认为，FSD入华将加速中国自动驾驶行业标准制定，推动整个产业链快速发展。国内自动驾驶公司也将加速技术迭代，提升竞争力。",
+                    "full_content": "特斯拉中国今日宣布，FSD完全自动驾驶系统正式获得中国监管部门批准，将在国内逐步推送。\n\n业内人士认为，FSD入华将加速中国自动驾驶行业标准制定，推动整个产业链快速发展。",
                     "tags": ["特斯拉", "FSD", "自动驾驶"],
                     "mood": 0.8,
                     "hot": 94
@@ -188,28 +178,16 @@ class NewsPlatform:
                 all_moods.append(news.get("mood", 0.6))
         self.mood_score = int(sum(all_moods) / len(all_moods) * 100)
         
-        # 扁平化
-        all_news_flat = []
-        for cat_key, cat_news in news_data.items():
-            for news in cat_news:
-                news["category"] = cat_key
-                news["category_name"] = NEWS_CATEGORIES[cat_key]["name"]
-                news["category_icon"] = NEWS_CATEGORIES[cat_key]["icon"]
-                all_news_flat.append(news)
-        
         self.all_news = news_data
-        self.all_news_flat = all_news_flat
         
-        total = len(all_news_flat)
-        print(f"✅ 共整理 {total} 条新闻，覆盖 {len(news_data)} 个板块")
+        total = sum(len(v) for v in news_data.values())
+        print(f"✅ 共整理 {total} 条新闻")
         print(f"📊 今日市场情绪: {self.mood_score} 分")
         
         return news_data
 
     def get_stocks(self):
-        """获取股票数据"""
         print("📈 正在获取股票数据...")
-        
         self.stocks = [
             {"code": "002594", "name": "比亚迪", "price": "358.50", "change": "+5.23%", "recommend": "买入"},
             {"code": "688981", "name": "中芯国际", "price": "68.75", "change": "+3.85%", "recommend": "买入"},
@@ -218,21 +196,10 @@ class NewsPlatform:
             {"code": "TSLA", "name": "特斯拉", "price": "325.80", "change": "+4.56%", "recommend": "买入"},
         ]
 
-    def generate_archive_list(self):
-        archive_dates = []
-        for i in range(30):
-            date = self.date - timedelta(days=i)
-            archive_dates.append({
-                "date": date.strftime("%Y-%m-%d"),
-                "label": date.strftime("%m月%d日"),
-                "weekday": date.strftime("%A")[:3]
-            })
-        return archive_dates
-
     def generate_html(self):
-        """生成完整HTML - 清晰标注来源和时间"""
-        print("🎨 正在生成HTML（清晰标注来源和时间）...")
+        print("🎨 正在生成HTML（全新清爽排版）...")
 
+        # 导航
         nav_html = ""
         for cat_key, cat_info in NEWS_CATEGORIES.items():
             nav_html += f"""
@@ -242,7 +209,7 @@ class NewsPlatform:
             </a>
             """
 
-        # 新闻板块 - 来源和时间突出显示
+        # 新闻板块 - 全新排版
         news_sections_html = ""
         for cat_key, cat_info in NEWS_CATEGORIES.items():
             news_list = self.all_news.get(cat_key, [])
@@ -255,20 +222,22 @@ class NewsPlatform:
                 hot_class = "hot" if news["hot"] >= 90 else ""
                 news_id = f"news-{cat_key}-{idx}"
                 
-                full_content_html = news["full_content"].replace("\n", "<br>")
+                full_content_html = news["full_content"].replace("\n", "<br><br>")
                 
                 news_cards_html += f"""
-                <article class="news-card {hot_class}" data-search="{news['title']} {news['summary']} {' '.join(news['tags'])}" data-newsid="{news_id}">
-                    <!-- 新闻头部：来源 + 时间 + 热度 -->
-                    <div class="news-meta-top">
-                        <div class="news-source-time">
-                            <span class="news-source-badge">📰 {news['source']}</span>
-                            <span class="news-datetime">🕐 {news['date']} {news['time']}</span>
-                        </div>
-                        <span class="news-hot">🔥 {news['hot']}%</span>
+                <article class="news-card {hot_class}" data-search="{news['title']} {news['summary']} {' '.join(news['tags'])}">
+                    <!-- 标题区 -->
+                    <h3 class="news-title">{news['title']}</h3>
+                    
+                    <!-- 元信息：来源 时间 热度 -->
+                    <div class="news-meta">
+                        <span class="news-source">{news['source']}</span>
+                        <span class="separator">·</span>
+                        <span class="news-time">{news['time']}</span>
+                        <span class="news-hot">🔥 {news['hot']}</span>
                     </div>
                     
-                    <h3 class="news-title">{news['title']}</h3>
+                    <!-- 摘要 -->
                     <p class="news-summary">{news['summary']}</p>
                     
                     <!-- 展开的完整内容 -->
@@ -278,11 +247,13 @@ class NewsPlatform:
                         </div>
                     </div>
                     
+                    <!-- 底部：标签 + 按钮 -->
                     <div class="news-footer">
-                        <div class="news-tags">{tags_html}</div>
-                        <button class="expand-btn" onclick="toggleNews('{news_id}')">
-                            <span class="expand-text">查看详情</span>
-                            <span class="expand-icon">▼</span>
+                        <div class="news-tags">
+                            {tags_html}
+                        </div>
+                        <button class="expand-btn" onclick="toggleNews('{news_id}', this)">
+                            查看详情
                         </button>
                     </div>
                 </article>
@@ -293,7 +264,6 @@ class NewsPlatform:
                 <div class="category-header">
                     <span class="category-icon">{cat_info['icon']}</span>
                     <h2 class="category-title">{cat_info['name']}</h2>
-                    <span class="category-count">{len(news_list)} 条</span>
                 </div>
                 <div class="news-grid">
                     {news_cards_html}
@@ -315,19 +285,11 @@ class NewsPlatform:
             </tr>
             """
 
-        # 归档日期
-        archive_list = self.generate_archive_list()
-        archive_html = "".join([
-            f'<a href="#" class="archive-item" data-date="{d["date"]}">{d["label"]} <span>{d["weekday"]}</span></a>'
-            for d in archive_list
-        ])
-
-        # 标签
-        all_tags = set()
-        for news in self.all_news_flat:
-            for tag in news["tags"]:
-                all_tags.add(tag)
-        tags_html = "".join([f'<span class="sidebar-tag">{tag}</span>' for tag in sorted(all_tags)])
+        # 归档
+        archive_html = ""
+        for i in range(15):
+            d = self.date - timedelta(days=i)
+            archive_html += f'<a href="#" class="archive-item">{d.strftime("%m月%d日")} <span>{d.strftime("%a")}</span></a>'
 
         # 情绪判断
         if self.mood_score >= 75:
@@ -338,101 +300,94 @@ class NewsPlatform:
             mood_label = "偏乐观"
             mood_emoji = "😊"
             mood_color = "#f59e0b"
-        elif self.mood_score >= 40:
+        else:
             mood_label = "中性"
             mood_emoji = "⚖️"
             mood_color = "#6366f1"
-        else:
-            mood_label = "谨慎"
-            mood_emoji = "⚠️"
-            mood_color = "#ef4444"
+
+        total_news = sum(len(v) for v in self.all_news.values())
 
         # 完整HTML
         html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>📰 全球财经新闻</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📰 财经新闻</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }}
 
         :root {{
-            --primary: #1a1a2e;
-            --secondary: #16213e;
-            --highlight: #e94560;
-            --text-primary: #1a1a2e;
-            --text-secondary: #4a5568;
-            --text-muted: #718096;
-            --bg-light: #f7fafc;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text2: #64748b;
+            --text3: #94a3b8;
             --border: #e2e8f0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --accent: #3b82f6;
+            --accent2: #8b5cf6;
+            --red: #ef4444;
+            --green: #10b981;
         }}
 
         body {{
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
-            background: #f5f7fa;
-            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
-            padding-bottom: 70px;
+            padding-bottom: 80px;
         }}
 
         /* 顶部导航 */
         .top-header {{
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: white;
-            padding: 12px 0;
+            padding: 16px 0;
             position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }}
 
-        .top-header-inner {{
-            max-width: 1400px;
+        .header-inner {{
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 16px;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
         }}
 
         .brand {{
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-weight: 700;
-            font-size: 1em;
-            flex-shrink: 0;
+            font-size: 1.1em;
         }}
 
         .brand-icon {{
-            font-size: 1.3em;
+            font-size: 1.5em;
         }}
 
         .search-box {{
             display: flex;
             align-items: center;
             background: rgba(255,255,255,0.15);
-            border-radius: 20px;
-            padding: 8px 14px;
-            flex: 1;
-            max-width: 280px;
+            border-radius: 24px;
+            padding: 8px 16px;
+            width: 280px;
             transition: all 0.3s;
         }}
 
         .search-box:focus-within {{
             background: rgba(255,255,255,0.25);
+            width: 320px;
         }}
 
         .search-box input {{
@@ -442,11 +397,472 @@ class NewsPlatform:
             font-size: 0.9em;
             width: 100%;
             outline: none;
-            margin-left: 6px;
+            margin-left: 8px;
         }}
 
         .search-box input::placeholder {{
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.5);
+        }}
+
+        /* 主布局 */
+        .main-container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            display: grid;
+            grid-template-columns: 180px 1fr 240px;
+            gap: 24px;
+        }}
+
+        /* 左侧导航 */
+        .sidebar-left {{
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }}
+
+        .nav-menu {{
+            background: white;
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }}
+
+        .nav-item {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: var(--text2);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.9em;
+        }}
+
+        .nav-item:hover, .nav-item.active {{
+            background: var(--bg);
+            color: var(--text);
+        }}
+
+        .nav-icon {{
+            font-size: 1.1em;
+        }}
+
+        .nav-divider {{
+            height: 1px;
+            background: var(--border);
+            margin: 4px 10px;
+        }}
+
+        /* 中间主内容 */
+        .main-content {{
+            min-width: 0;
+        }}
+
+        /* 情绪卡片 */
+        .mood-card {{
+            background: linear-gradient(135deg, {mood_color} 0%, {mood_color}dd 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
+        }}
+
+        .mood-title {{
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }}
+
+        .mood-big {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }}
+
+        .mood-score {{
+            font-size: 3.5em;
+            font-weight: 800;
+            line-height: 1;
+        }}
+
+        .mood-label {{
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 4px;
+        }}
+
+        .mood-bar-wrap {{
+            flex: 1;
+        }}
+
+        .mood-bar {{
+            height: 12px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 6px;
+            overflow: hidden;
+        }}
+
+        .mood-bar-inner {{
+            height: 100%;
+            width: {self.mood_score}%;
+            background: white;
+            border-radius: 6px;
+            animation: fillBar 1.5s ease-out;
+        }}
+
+        @keyframes fillBar {{
+            from {{ width: 0; }}
+        }}
+
+        .mood-count {{
+            text-align: right;
+        }}
+
+        .mood-count-num {{
+            font-size: 1.5em;
+            font-weight: 700;
+        }}
+
+        .mood-count-label {{
+            font-size: 0.85em;
+            opacity: 0.8;
+        }}
+
+        /* ===== 新闻板块 ===== */
+        .category-section {{
+            margin-bottom: 40px;
+            scroll-margin-top: 100px;
+        }}
+
+        .category-header {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }}
+
+        .category-icon {{
+            font-size: 1.5em;
+        }}
+
+        .category-title {{
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.3em;
+            font-weight: 700;
+        }}
+
+        .news-grid {{
+            display: grid;
+            gap: 16px;
+        }}
+
+        /* ===== 新闻卡片 - 全新清爽排版 ===== */
+        .news-card {{
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 0 solid transparent;
+        }}
+
+        .news-card:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }}
+
+        .news-card.hot {{
+            border-left: 4px solid var(--red);
+        }}
+
+        .news-card.expanded {{
+            border-left: 4px solid var(--accent);
+        }}
+
+        /* 标题 */
+        .news-title {{
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1em;
+            font-weight: 600;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 10px;
+        }}
+
+        /* 元信息：来源 · 时间 · 热度 */
+        .news-meta {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            font-size: 0.82em;
+        }}
+
+        .news-source {{
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+            color: #3b82f6;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }}
+
+        .separator {{
+            color: var(--text3);
+        }}
+
+        .news-time {{
+            color: var(--text3);
+        }}
+
+        .news-hot {{
+            color: var(--red);
+            font-weight: 600;
+            margin-left: auto;
+        }}
+
+        /* 摘要 */
+        .news-summary {{
+            color: var(--text2);
+            font-size: 0.9em;
+            line-height: 1.75;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }}
+
+        /* 展开的完整内容 */
+        .news-full-content {{
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s, margin 0.3s;
+            opacity: 0;
+            margin: 0;
+        }}
+
+        .news-full-content.open {{
+            max-height: 600px;
+            opacity: 1;
+            margin: 8px 0 16px;
+        }}
+
+        .news-full-content-inner {{
+            padding: 18px 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            color: var(--text2);
+            font-size: 0.9em;
+            line-height: 1.9;
+            border-left: 3px solid var(--accent);
+        }}
+
+        /* 底部：标签 + 展开按钮 */
+        .news-footer {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding-top: 4px;
+        }}
+
+        .news-tags {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }}
+
+        .tag {{
+            background: #f1f5f9;
+            color: var(--text2);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.78em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }}
+
+        .tag:hover {{
+            background: #e2e8f0;
+            color: var(--text);
+        }}
+
+        /* 展开按钮 */
+        .expand-btn {{
+            background: white;
+            color: var(--accent);
+            border: 1.5px solid #dbeafe;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }}
+
+        .expand-btn:hover {{
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }}
+
+        /* 展开状态的按钮 */
+        .news-card.expanded .expand-btn {{
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }}
+
+        /* 股票表格 */
+        .stocks-section {{
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            overflow-x: auto;
+        }}
+
+        .stocks-title {{
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.15em;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+
+        .stock-table {{
+            width: 100%;
+            border-collapse: collapse;
+        }}
+
+        .stock-table th {{
+            text-align: left;
+            padding: 10px 8px;
+            color: var(--text3);
+            font-weight: 600;
+            font-size: 0.8em;
+            border-bottom: 2px solid var(--border);
+        }}
+
+        .stock-table td {{
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9em;
+        }}
+
+        .stock-table tr:last-child td {{
+            border-bottom: none;
+        }}
+
+        .stock-code {{
+            font-family: 'SF Mono', Monaco, monospace;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.85em;
+        }}
+
+        .stock-name {{
+            font-weight: 600;
+        }}
+
+        .up {{
+            color: var(--red);
+            font-weight: 700;
+        }}
+
+        .recommend {{
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }}
+
+        .recommend.buy {{
+            background: #dcfce7;
+            color: #16a34a;
+        }}
+
+        .recommend.hold {{
+            background: #fef3c7;
+            color: #d97706;
+        }}
+
+        /* 右侧边栏 */
+        .sidebar-right {{
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }}
+
+        .sidebar-card {{
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }}
+
+        .sidebar-title {{
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.95em;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text);
+        }}
+
+        .archive-list {{
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }}
+
+        .archive-item {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: var(--text2);
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }}
+
+        .archive-item:hover {{
+            background: var(--bg);
+        }}
+
+        .archive-item span {{
+            font-size: 0.75em;
+            color: var(--text3);
+        }}
+
+        /* 页脚 */
+        .footer {{
+            background: #0f172a;
+            color: white;
+            padding: 32px 20px;
+            margin-top: 40px;
+            text-align: center;
+        }}
+
+        .footer p {{
+            opacity: 0.6;
+            margin-bottom: 6px;
+            font-size: 0.85em;
         }}
 
         /* 移动端底部导航 */
@@ -458,9 +874,9 @@ class NewsPlatform:
             right: 0;
             background: white;
             border-top: 1px solid var(--border);
-            padding: 8px 10px;
+            padding: 10px 16px;
             z-index: 1000;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
         }}
 
         .mobile-nav-items {{
@@ -476,522 +892,33 @@ class NewsPlatform:
             align-items: center;
             gap: 4px;
             padding: 6px 10px;
-            color: var(--text-muted);
+            color: var(--text3);
             text-decoration: none;
-            font-size: 0.75em;
+            font-size: 0.7em;
             transition: all 0.2s;
-            min-width: 60px;
         }}
 
         .mobile-nav-item.active {{
-            color: var(--highlight);
-        }}
-
-        .mobile-nav-item:active {{
-            transform: scale(0.95);
+            color: var(--accent);
         }}
 
         .mobile-nav-icon {{
-            font-size: 1.5em;
-        }}
-
-        /* 主布局 */
-        .main-container {{
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 16px;
-            display: grid;
-            grid-template-columns: 200px 1fr 260px;
-            gap: 20px;
-        }}
-
-        /* 左侧边栏 */
-        .sidebar-left {{
-            position: sticky;
-            top: 75px;
-            height: fit-content;
-        }}
-
-        .nav-menu {{
-            background: white;
-            border-radius: 16px;
-            padding: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }}
-
-        .nav-item {{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 11px 14px;
-            border-radius: 10px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.2s;
-            font-weight: 500;
-            font-size: 0.9em;
-        }}
-
-        .nav-item:hover, .nav-item.active {{
-            background: var(--bg-light);
-            color: var(--primary);
-        }}
-
-        .nav-divider {{
-            height: 1px;
-            background: var(--border);
-            margin: 6px 0;
-        }}
-
-        /* 主内容 */
-        .main-content {{
-            min-width: 0;
-        }}
-
-        /* 情绪卡片 */
-        .hero-card {{
-            background: linear-gradient(135deg, {mood_color} 0%, #8b5cf6 100%);
-            color: white;
-            border-radius: 18px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.25);
-        }}
-
-        .hero-title {{
-            font-family: 'Noto Serif SC', serif;
             font-size: 1.4em;
-            font-weight: 700;
-            margin-bottom: 18px;
-        }}
-
-        .mood-big {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }}
-
-        .mood-score-big {{
-            font-size: 3em;
-            font-weight: 800;
-            line-height: 1;
-        }}
-
-        .mood-label-big {{
-            font-size: 1.1em;
-            opacity: 0.9;
-        }}
-
-        .mood-bar-big {{
-            flex: 1;
-        }}
-
-        .mood-bar-track {{
-            height: 14px;
-            background: rgba(255,255,255,0.25);
-            border-radius: 7px;
-            overflow: hidden;
-        }}
-
-        .mood-bar-fill {{
-            height: 100%;
-            width: {self.mood_score}%;
-            background: white;
-            border-radius: 7px;
-            animation: fillBar 1.5s ease-out;
-        }}
-
-        @keyframes fillBar {{
-            from {{ width: 0; }}
-        }}
-
-        /* 新闻板块 */
-        .category-section {{
-            margin-bottom: 28px;
-            scroll-margin-top: 80px;
-        }}
-
-        .category-header {{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--border);
-        }}
-
-        .category-icon {{
-            font-size: 1.4em;
-        }}
-
-        .category-title {{
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1.2em;
-            font-weight: 700;
-            flex: 1;
-        }}
-
-        .category-count {{
-            background: var(--bg-light);
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 0.8em;
-            color: var(--text-muted);
-            font-weight: 500;
-        }}
-
-        .news-grid {{
-            display: grid;
-            gap: 14px;
-        }}
-
-        /* 新闻卡片 */
-        .news-card {{
-            background: white;
-            border-radius: 14px;
-            padding: 18px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 4px solid transparent;
-        }}
-
-        .news-card.expanded {{
-            border-left-color: var(--highlight);
-            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.15);
-        }}
-
-        .news-card:active {{
-            transform: scale(0.99);
-        }}
-
-        .news-card.hot {{
-            border-left-color: var(--danger);
-            background: linear-gradient(135deg, #fff 0%, #fff5f5 100%);
-        }}
-
-        /* ===== 新闻元信息：来源 + 日期 + 时间 + 热度 ===== */
-        .news-meta-top {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed var(--border);
-        }}
-
-        .news-source-time {{
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px;
-        }}
-
-        .news-source-badge {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            font-weight: 600;
-            white-space: nowrap;
-        }}
-
-        .news-datetime {{
-            color: var(--text-muted);
-            font-size: 0.75em;
-            font-weight: 500;
-            white-space: nowrap;
-        }}
-
-        .news-hot {{
-            color: var(--danger);
-            font-size: 0.75em;
-            font-weight: 600;
-        }}
-
-        .news-title {{
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1em;
-            font-weight: 600;
-            line-height: 1.5;
-            margin-bottom: 10px;
-            color: var(--text-primary);
-        }}
-
-        .news-summary {{
-            color: var(--text-secondary);
-            font-size: 0.88em;
-            line-height: 1.7;
-            margin-bottom: 12px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }}
-
-        /* 完整内容 - 可展开 */
-        .news-full-content {{
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out, opacity 0.3s;
-            opacity: 0;
-        }}
-
-        .news-full-content.open {{
-            max-height: 800px;
-            opacity: 1;
-        }}
-
-        .news-full-content-inner {{
-            padding: 16px;
-            margin: 12px 0;
-            background: var(--bg-light);
-            border-radius: 10px;
-            color: var(--text-secondary);
-            font-size: 0.88em;
-            line-height: 1.8;
-            border-left: 3px solid var(--highlight);
-        }}
-
-        /* 底部栏：标签 + 展开按钮 */
-        .news-footer {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }}
-
-        .news-tags {{
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }}
-
-        .tag {{
-            background: #f0f4ff;
-            color: #4361ee;
-            padding: 4px 9px;
-            border-radius: 6px;
-            font-size: 0.75em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }}
-
-        .tag:active {{
-            background: #4361ee;
-            color: white;
-        }}
-
-        /* 展开按钮 */
-        .expand-btn {{
-            background: linear-gradient(135deg, var(--highlight), #ff6b6b);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.78em;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }}
-
-        .expand-btn:hover {{
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
-        }}
-
-        .expand-btn:active {{
-            transform: scale(0.96);
-        }}
-
-        .expand-icon {{
-            transition: transform 0.3s;
-            display: inline-block;
-            font-size: 0.85em;
-        }}
-
-        .news-card.expanded .expand-icon {{
-            transform: rotate(180deg);
-        }}
-
-        /* 股票表格 */
-        .stocks-section {{
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            overflow-x: auto;
-        }}
-
-        .stocks-title {{
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1.15em;
-            font-weight: 700;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }}
-
-        .stock-table {{
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 400px;
-        }}
-
-        .stock-table th {{
-            text-align: left;
-            padding: 10px 8px;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.8em;
-            border-bottom: 2px solid var(--border);
-            white-space: nowrap;
-        }}
-
-        .stock-table td {{
-            padding: 12px 8px;
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }}
-
-        .stock-code {{
-            font-family: 'SF Mono', Monaco, monospace;
-            font-weight: 600;
-            color: #0f3460;
-            font-size: 0.85em;
-        }}
-
-        .stock-name {{
-            font-weight: 600;
-            font-size: 0.9em;
-        }}
-
-        .up {{
-            color: var(--danger);
-            font-weight: 700;
-            font-size: 0.9em;
-        }}
-
-        .recommend {{
-            padding: 4px 10px;
-            border-radius: 14px;
-            font-size: 0.75em;
-            font-weight: 600;
-            white-space: nowrap;
-        }}
-
-        .recommend.buy {{
-            background: #d1fae5;
-            color: #059669;
-        }}
-
-        /* 右侧边栏 */
-        .sidebar-right {{
-            position: sticky;
-            top: 75px;
-            height: fit-content;
-        }}
-
-        .sidebar-card {{
-            background: white;
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 18px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }}
-
-        .sidebar-title {{
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1em;
-            font-weight: 700;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }}
-
-        .archive-list {{
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            max-height: 260px;
-            overflow-y: auto;
-        }}
-
-        .archive-item {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 9px 12px;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.85em;
-            transition: all 0.2s;
-        }}
-
-        .sidebar-tags {{
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }}
-
-        .sidebar-tag {{
-            background: var(--bg-light);
-            color: var(--text-secondary);
-            padding: 5px 10px;
-            border-radius: 14px;
-            font-size: 0.78em;
-            cursor: pointer;
-            transition: all 0.2s;
-        }}
-
-        .sidebar-tag:active {{
-            background: var(--highlight);
-            color: white;
-        }}
-
-        /* 页脚 */
-        .footer {{
-            background: var(--primary);
-            color: white;
-            padding: 30px 20px;
-            margin-top: 30px;
-        }}
-
-        .footer-inner {{
-            max-width: 1400px;
-            margin: 0 auto;
-            text-align: center;
-        }}
-
-        .footer p {{
-            opacity: 0.7;
-            margin-bottom: 6px;
-            font-size: 0.9em;
         }}
 
         /* 无搜索结果 */
         .no-results {{
             text-align: center;
             padding: 60px 20px;
-            color: var(--text-muted);
+            color: var(--text3);
             display: none;
         }}
 
         /* 响应式 */
-        @media (max-width: 1100px) {{
+        @media (max-width: 1024px) {{
             .main-container {{
                 grid-template-columns: 1fr;
-                padding: 12px;
+                padding: 16px;
             }}
             .sidebar-left, .sidebar-right {{
                 display: none;
@@ -1000,36 +927,43 @@ class NewsPlatform:
                 display: block;
             }}
             body {{
-                padding-bottom: 70px;
+                padding-bottom: 80px;
             }}
         }}
 
         @media (max-width: 600px) {{
-            .top-header-inner {{
-                padding: 0 12px;
+            .header-inner {{
+                padding: 0 16px;
             }}
             .brand span:last-child {{
                 display: none;
             }}
             .search-box {{
-                max-width: none;
+                width: 180px;
             }}
-            .hero-card {{
-                padding: 18px;
-                border-radius: 14px;
+            .search-box:focus-within {{
+                width: 200px;
             }}
-            .news-meta-top {{
+            .mood-card {{
+                padding: 20px;
+                border-radius: 16px;
+            }}
+            .mood-big {{
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
+                text-align: center;
+                gap: 16px;
             }}
-            .news-source-time {{
+            .mood-bar-wrap {{
                 width: 100%;
+            }}
+            .news-card {{
+                padding: 20px;
+                border-radius: 14px;
             }}
             .news-footer {{
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 12px;
             }}
             .expand-btn {{
                 align-self: flex-end;
@@ -1039,7 +973,7 @@ class NewsPlatform:
 </head>
 <body>
     <header class="top-header">
-        <div class="top-header-inner">
+        <div class="header-inner">
             <div class="brand">
                 <span class="brand-icon">📰</span>
                 <span>财经新闻</span>
@@ -1067,21 +1001,21 @@ class NewsPlatform:
         <!-- 中间主内容 -->
         <main class="main-content">
             <!-- 市场情绪 -->
-            <div class="hero-card">
-                <div class="hero-title">📊 今日市场情绪</div>
+            <div class="mood-card">
+                <div class="mood-title">📊 今日市场情绪</div>
                 <div class="mood-big">
                     <div>
-                        <div class="mood-score-big">{mood_emoji} {self.mood_score}</div>
-                        <div class="mood-label-big">{mood_label}</div>
+                        <div class="mood-score">{mood_emoji} {self.mood_score}</div>
+                        <div class="mood-label">{mood_label}</div>
                     </div>
-                    <div class="mood-bar-big">
-                        <div class="mood-bar-track">
-                            <div class="mood-bar-fill"></div>
+                    <div class="mood-bar-wrap">
+                        <div class="mood-bar">
+                            <div class="mood-bar-inner"></div>
                         </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 0.85em; opacity: 0.8;">覆盖</div>
-                        <div style="font-size: 1.2em; font-weight: 700;">{len(self.all_news_flat)} 条</div>
+                    <div class="mood-count">
+                        <div class="mood-count-num">{total_news}</div>
+                        <div class="mood-count-label">条新闻</div>
                     </div>
                 </div>
             </div>
@@ -1108,9 +1042,10 @@ class NewsPlatform:
             <!-- 所有新闻板块 -->
             {news_sections_html}
 
+            <!-- 无搜索结果 -->
             <div class="no-results" id="noResults">
-                <div class="no-results-icon">🔍</div>
-                <div>没有找到相关新闻</div>
+                <div style="font-size: 2.5em; margin-bottom: 12px;">🔍</div>
+                <div style="font-size: 1em;">没有找到相关新闻</div>
             </div>
         </main>
 
@@ -1119,10 +1054,6 @@ class NewsPlatform:
             <div class="sidebar-card">
                 <div class="sidebar-title">📅 历史归档</div>
                 <div class="archive-list">{archive_html}</div>
-            </div>
-            <div class="sidebar-card">
-                <div class="sidebar-title">🏷️ 热门标签</div>
-                <div class="sidebar-tags">{tags_html}</div>
             </div>
         </aside>
     </div>
@@ -1154,29 +1085,27 @@ class NewsPlatform:
     </nav>
 
     <footer class="footer">
-        <div class="footer-inner">
-            <p>⚠️ 免责声明：内容仅供参考，不构成投资建议</p>
-            <p>📰 全球财经新闻 · {self.date_str} · Powered by AI</p>
-        </div>
+        <p>⚠️ 免责声明：内容仅供参考，不构成投资建议</p>
+        <p>📰 全球财经新闻 · {self.date_str} · Powered by AI</p>
     </footer>
 
     <script>
-        function toggleNews(newsId) {{
+        // 展开/收起新闻详情
+        function toggleNews(newsId, btn) {{
             const content = document.getElementById(newsId);
             const card = content.closest('.news-card');
-            const btn = card.querySelector('.expand-btn');
-            const btnText = btn.querySelector('.expand-text');
             
             content.classList.toggle('open');
             card.classList.toggle('expanded');
             
             if (content.classList.contains('open')) {{
-                btnText.textContent = '收起详情';
+                btn.textContent = '收起详情';
             }} else {{
-                btnText.textContent = '查看详情';
+                btn.textContent = '查看详情';
             }}
         }}
 
+        // 搜索功能
         const searchInput = document.getElementById('searchInput');
         const allNewsCards = document.querySelectorAll('.news-card');
         const noResults = document.getElementById('noResults');
@@ -1203,7 +1132,8 @@ class NewsPlatform:
             noResults.style.display = hasResults ? 'none' : 'block';
         }});
 
-        document.querySelectorAll('.tag, .sidebar-tag').forEach(tag => {{
+        // 标签点击筛选
+        document.querySelectorAll('.tag').forEach(tag => {{
             tag.addEventListener('click', function() {{
                 searchInput.value = this.textContent.trim();
                 searchInput.dispatchEvent(new Event('input'));
@@ -1211,13 +1141,14 @@ class NewsPlatform:
             }});
         }});
 
+        // 导航高亮 - PC端
         const navItems = document.querySelectorAll('.nav-item');
         const sections = document.querySelectorAll('.category-section');
 
         window.addEventListener('scroll', function() {{
             let current = '';
             sections.forEach(section => {{
-                if (window.scrollY >= section.offsetTop - 100) {{
+                if (window.scrollY >= section.offsetTop - 120) {{
                     current = section.getAttribute('id');
                 }}
             }});
@@ -1229,6 +1160,7 @@ class NewsPlatform:
             }});
         }});
 
+        // 移动端导航点击
         document.querySelectorAll('.mobile-nav-item').forEach(item => {{
             item.addEventListener('click', function() {{
                 document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
@@ -1236,8 +1168,8 @@ class NewsPlatform:
             }});
         }});
 
-        console.log('📰 全球财经新闻平台 v4.1 已加载');
-        console.log('✅ 每条新闻清晰标注来源和时间');
+        console.log('📰 全球财经新闻平台 v4.2 已加载');
+        console.log('✅ 全新清爽排版设计');
     </script>
 </body>
 </html>
@@ -1253,7 +1185,7 @@ class NewsPlatform:
 
     async def run(self):
         print("=" * 70)
-        print("📰 全球财经新闻平台 v4.1 (清晰标注来源和时间)")
+        print("📰 全球财经新闻平台 v4.2 (全新清爽排版)")
         print("=" * 70)
         
         self.prepare_news_data()

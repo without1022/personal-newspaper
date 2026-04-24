@@ -3,1487 +3,654 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>预言家日报 · 魔法互动版</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>星象日报 - 预见未来的新闻</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --paper: #f4eddf;
-            --ink: #1a1510;
-            --ink-light: #4a4035;
-            --magic-blue: #3498db;
-            --magic-purple: #9b59b6;
-            --magic-gold: #f1c40f;
-            --magic-red: #e74c3c;
+        * { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif; }
+        
+        @keyframes crystalGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.5), 0 0 15px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.4); }
         }
-
-        @keyframes magicGlow {
-            0%, 100% { box-shadow: 0 0 5px var(--magic-blue), 0 0 10px var(--magic-purple); }
-            50% { box-shadow: 0 0 20px var(--magic-blue), 0 0 30px var(--magic-purple); }
-        }
-
+        
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-5px); }
         }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+        
+        @keyframes newsReveal {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
+        
+        .prophecy-card {
+            animation: crystalGlow 3s ease-in-out infinite;
         }
-
-        @keyframes sparkleAnim {
-            0% { opacity: 0; transform: scale(0) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1) rotate(180deg); }
-            100% { opacity: 0; transform: scale(0) rotate(360deg); }
-        }
-
-        html {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-        }
-
-        body {
-            font-family: 'Noto Serif SC', Georgia, serif;
-            color: var(--ink);
-            line-height: 1.65;
-            font-size: 16px;
-            padding: 20px 0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        /* 魔法粒子背景 */
-        .magic-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .particle {
-            position: absolute;
-            font-size: 1rem;
-            animation: sparkleAnim 3s ease-in-out infinite;
-            opacity: 0;
-        }
-
-        /* 报纸 */
-        .newspaper {
-            background: var(--paper);
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 100px rgba(139,115,85,0.15);
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f5efe6' surfaceScale='1.5'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
-            border-radius: 3px;
-            z-index: 1;
-        }
-
-        /* 刊头 */
-        .masthead {
-            border-bottom: 3px double var(--ink);
-            padding: 25px 20px 18px;
-            text-align: center;
-            position: relative;
-        }
-        .paper-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8em;
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            background: linear-gradient(135deg, var(--ink), #4a3f35);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: float 6s ease-in-out infinite;
-        }
-        .paper-subtitle {
-            font-size: 0.7em;
-            color: var(--ink-light);
-            letter-spacing: 0.3em;
-            margin-bottom: 12px;
-            font-style: italic;
-        }
-        .paper-edition {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            border-top: 1px solid var(--ink);
-            border-bottom: 1px solid var(--ink);
-            padding: 5px 0;
-            font-size: 0.8em;
-            flex-wrap: wrap;
-        }
+        
         .prophecy-badge {
-            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+        }
+        
+        .news-card {
+            animation: newsReveal 0.5s ease-out;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
             color: white;
-            padding: 4px 15px;
-            border-radius: 2px;
-            font-weight: 600;
-            animation: magicGlow 2s ease-in-out infinite;
         }
-
-        /* 魔法能量条 */
-        .magic-stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding: 15px 20px;
-            background: linear-gradient(180deg, rgba(155,89,182,0.1), transparent);
-            border-bottom: 1px solid rgba(139,115,85,0.2);
+        
+        .prediction-meter {
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e);
         }
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-        }
-        .stat-icon { font-size: 1.3em; }
-        .stat-value { color: var(--magic-purple); }
-
-        /* 主内容区 */
-        .content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-            padding: 25px 20px;
-        }
-
-        /* 头条区域 */
-        .main-news {
-            border-right: 1px solid rgba(139,115,85,0.2);
-            padding-right: 25px;
-        }
-        .headline {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            line-height: 1.4;
-            cursor: pointer;
-            transition: all 0.3s;
-            padding: 10px;
-            border-radius: 5px;
-            position: relative;
-        }
-        .headline:hover {
-            background: linear-gradient(135deg, rgba(52,152,219,0.1), rgba(155,89,182,0.1));
-            animation: magicGlow 1s ease-in-out infinite;
-        }
-        .headline::after {
-            content: '✨ 点击参与';
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.6em;
-            color: var(--magic-purple);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .headline:hover::after { opacity: 1; }
-        .byline { font-size: 0.8em; color: var(--ink-light); font-style: italic; margin-bottom: 10px; }
-        .news-body { font-size: 0.95em; line-height: 1.7; margin-bottom: 25px; }
-        .news-body strong { color: var(--magic-purple); }
-
-        /* 新闻列表 */
-        .news-item {
-            padding: 15px 10px;
-            border-bottom: 1px dotted rgba(139,115,85,0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-            border-radius: 5px;
-            position: relative;
-        }
-        .news-item:hover {
-            background: linear-gradient(135deg, rgba(52,152,219,0.08), rgba(155,89,182,0.08));
-        }
-        .news-item.completed {
-            background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(39,174,96,0.1));
-        }
-        .news-item.completed::before {
-            content: '✅';
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .news-title { font-size: 1.05em; font-weight: 600; margin-bottom: 5px; }
-        .news-summary { font-size: 0.85em; color: var(--ink-light); }
-        .news-difficulty {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.7em;
-            margin-top: 5px;
-        }
-        .difficulty-easy { background: #2ecc71; color: white; }
-        .difficulty-medium { background: #f39c12; color: white; }
-        .difficulty-hard { background: #e74c3c; color: white; }
-        .difficulty-legendary { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; }
-
-        /* 侧边栏 */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .sidebar-box {
-            border: 2px solid rgba(139,115,85,0.3);
-            padding: 15px;
-            background: linear-gradient(135deg, rgba(255,250,240,0.6), transparent);
-            border-radius: 5px;
-        }
-        .sidebar-title {
-            font-size: 1em;
-            font-weight: 700;
-            margin-bottom: 12px;
-            text-align: center;
-            border-bottom: 1px solid rgba(139,115,85,0.2);
-            padding-bottom: 8px;
-            color: var(--magic-purple);
-        }
-        .achievement-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 0.85em;
-            border-bottom: 1px dashed rgba(139,115,85,0.15);
-        }
-        .achievement-item.unlocked { color: var(--magic-gold); font-weight: 600; }
-        .today-prophecy {
-            text-align: center;
-            font-style: italic;
-            color: var(--magic-purple);
-            padding: 10px;
-            background: rgba(155,89,182,0.1);
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        /* 页脚 */
-        .footer {
-            padding: 25px 20px;
-            text-align: center;
-            border-top: 3px double var(--ink);
-            font-size: 0.75em;
-            color: var(--ink-light);
-        }
-        .version-info {
-            background: linear-gradient(135deg, var(--magic-blue), var(--magic-purple));
-            color: white;
-            padding: 6px 15px;
-            border-radius: 3px;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-
-        /* 游戏模态框 - 报纸中弹出 */
-        .game-modal {
+        
+        /* 彩蛋游戏按钮 */
+        .easter-egg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .game-modal.active { display: flex; }
-        .game-container {
-            background: var(--paper);
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 650px;
-            width: 90%;
-            box-shadow: 0 0 50px var(--magic-blue), 0 0 100px var(--magic-purple);
-            animation: magicGlow 2s ease-in-out infinite;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid rgba(139,115,85,0.3);
-            padding-bottom: 15px;
-        }
-        .game-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5em;
-            font-weight: 700;
-            color: var(--magic-purple);
-        }
-        .close-btn {
-            background: var(--magic-red);
-            color: white;
-            border: none;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: transform 0.2s;
-        }
-        .close-btn:hover { transform: scale(1.1); }
-        .game-instruction {
-            background: linear-gradient(135deg, rgba(52,152,219,0.1), rgba(155,89,182,0.1));
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            border-left: 4px solid var(--magic-purple);
-        }
-
-        /* ==================== 游戏样式 ==================== */
-
-        /* 🧙 魁地奇游戏 */
-        .quidditch-area {
-            height: 350px;
-            background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 50%, #52B788 100%);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-        .snitch {
-            position: absolute;
-            font-size: 2em;
-            cursor: pointer;
-            transition: all 0.1s;
-            animation: float 0.5s ease-in-out infinite;
-            text-shadow: 0 0 10px var(--magic-gold);
-        }
-        .bludger {
-            position: absolute;
-            font-size: 1.8em;
-            animation: float 0.8s ease-in-out infinite;
-        }
-        .player {
-            position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2.5em;
-            transition: left 0.1s;
+            right: 20px;
+            z-index: 100;
+            opacity: 0.3;
+            transition: all 0.3s;
         }
-        .quidditch-score {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: 700;
+        .easter-egg:hover {
+            opacity: 1;
+            transform: scale(1.1);
         }
-        .quidditch-timer {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: 700;
+        
+        /* 预言成真/失败动画 */
+        @keyframes truePrediction {
+            0% { background: white; }
+            50% { background: rgba(34, 197, 94, 0.3); }
+            100% { background: white; }
         }
-        .quidditch-controls {
-            text-align: center;
-            margin-top: 15px;
+        @keyframes falsePrediction {
+            0% { background: white; }
+            50% { background: rgba(239, 68, 68, 0.3); }
+            100% { background: white; }
         }
-        .quidditch-start {
-            background: linear-gradient(135deg, var(--magic-gold), #f39c12);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: transform 0.2s;
+        .prediction-true {
+            animation: truePrediction 1s ease-out;
         }
-        .quidditch-start:hover { transform: scale(1.05); }
-
-        /* ⚡ 咒语决斗 */
-        .duel-arena {
-            height: 350px;
-            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-        .wizard {
-            position: absolute;
-            bottom: 30px;
-            font-size: 3em;
-        }
-        .wizard.player { left: 80px; }
-        .wizard.enemy { right: 80px; transform: scaleX(-1); }
-        .spell {
-            position: absolute;
-            bottom: 80px;
-            font-size: 2em;
-            animation: pulse 0.3s ease-in-out infinite;
-        }
-        .spell-effect {
-            position: absolute;
-            width: 100px;
-            height: 10px;
-            background: linear-gradient(90deg, var(--magic-blue), transparent);
-            top: 50%;
-            border-radius: 5px;
-            animation: magicGlow 0.5s ease-in-out infinite;
-        }
-        .health-bar {
-            position: absolute;
-            bottom: 10px;
-            width: 150px;
-            height: 15px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .health-bar.player { left: 50px; }
-        .health-bar.enemy { right: 50px; }
-        .health-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #2ecc71, #27ae60);
-            transition: width 0.3s;
-        }
-        .health-fill.enemy { background: linear-gradient(90deg, #e74c3c, #c0392b); }
-        .spell-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        .spell-btn {
-            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.95em;
-            transition: all 0.2s;
-        }
-        .spell-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(155,89,182,0.4); }
-        .spell-btn:active { transform: scale(0.95); }
-
-        /* 🧩 魔法解谜 */
-        .puzzle-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            max-width: 350px;
-            margin: 0 auto;
-        }
-        .puzzle-cell {
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #34495e, #2c3e50);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.8em;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .puzzle-cell:hover { transform: scale(1.05); }
-        .puzzle-cell.selected {
-            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
-            animation: magicGlow 1s ease-in-out infinite;
-        }
-        .puzzle-cell.matched {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .puzzle-info {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 15px;
-        }
-
-        /* 📊 结果显示 */
-        .result-screen {
-            text-align: center;
-            padding: 30px;
-        }
-        .result-icon { font-size: 4em; margin-bottom: 15px; }
-        .result-title {
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .result-title.success { color: #2ecc71; }
-        .result-title.fail { color: #e74c3c; }
-        .result-score {
-            font-size: 1.2em;
-            color: var(--magic-gold);
-            margin-bottom: 20px;
-        }
-        .result-btn {
-            background: linear-gradient(135deg, var(--magic-purple), var(--magic-blue));
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin: 5px;
-        }
-
-        /* 成就通知 */
-        .achievement-popup {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: linear-gradient(135deg, var(--magic-gold), #f39c12);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: 700;
-            z-index: 2000;
-            transition: transform 0.5s;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .achievement-popup.show { transform: translateX(-50%) translateY(0); }
-
-        @media (max-width: 768px) {
-            .paper-title { font-size: 1.8em; }
-            .content { grid-template-columns: 1fr; }
-            .main-news { border-right: none; padding-right: 0; }
-            .news-item.completed::before { display: none; }
+        .prediction-false {
+            animation: falsePrediction 1s ease-out;
         }
     </style>
 </head>
-<body>
-    <!-- 魔法粒子 -->
-    <div class="magic-particles" id="particles"></div>
-
-    <!-- 成就通知 -->
-    <div class="achievement-popup" id="achievement">🏆 预言实现！</div>
-
-    <div class="container">
-    <div class="newspaper">
-        <!-- 刊头 -->
-        <header class="masthead">
-            <h1 class="paper-title">预言家日报</h1>
-            <p class="paper-subtitle">THE DAILY PROPHET · THE TRUTH BEHIND THE MAGIC</p>
-            <div class="paper-edition">
-                <span class="prophecy-badge">✨ 魔法互动预言版</span>
-                <span>📅 第 <span id="day-number">1</span> 天</span>
-                <span>🔮 预言完成: <span id="prophecies-completed">0</span>/8</span>
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <header class="hero-gradient text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between py-4">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl" style="animation: float 3s ease-in-out infinite">🔮</div>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-wide">星象日报</h1>
+                        <p class="text-xs text-gray-300">ASTRO DAILY · 预见未来的新闻</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="text-sm text-gray-300 hidden md:block">
+                        <span>📅 2024年12月20日</span>
+                        <span class="mx-3">|</span>
+                        <span>🔮 预言准确率: <strong class="text-green-400">87.3%</strong></span>
+                    </div>
+                    <div class="relative">
+                        <input type="text" placeholder="搜索新闻..." class="bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-gray-400">
+                    </div>
+                </div>
             </div>
-        </header>
+            <!-- 分类导航 -->
+            <nav class="flex gap-2 pb-3 overflow-x-auto">
+                <button class="category-btn active px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap" onclick="filterNews('all')">全部</button>
+                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('tech')">💻 科技</button>
+                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('finance')">💰 金融</button>
+                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('ai')">🤖 AI</button>
+                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('prophecy')">✨ 预言</button>
+            </nav>
+        </div>
+    </header>
 
-        <!-- 魔法状态 -->
-        <div class="magic-stats">
-            <div class="stat-item">
-                <span class="stat-icon">⚡</span>
-                <span>魔力: <span class="stat-value" id="magic-power">100</span></span>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- 头条区域 -->
+        <section class="mb-10">
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- 主头条 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer prophecy-card" onclick="openProphecy('nvidia')">
+                    <div class="h-56 bg-gradient-to-br from-purple-600 to-blue-600 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-8xl opacity-30">🚀</div>
+                        <div class="absolute top-4 left-4">
+                            <span class="prophecy-badge text-white text-xs px-3 py-1 rounded-full font-medium">✨ 预言新闻</span>
+                        </div>
+                        <div class="absolute bottom-4 right-4 bg-white/20 backdrop-blur rounded-lg px-3 py-2">
+                            <div class="text-xs text-white mb-1">成真概率</div>
+                            <div class="h-2 w-32 bg-white/30 rounded-full overflow-hidden">
+                                <div class="prediction-meter h-full rounded-full" style="width: 92%"></div>
+                            </div>
+                            <div class="text-right text-white text-xs mt-1 font-bold">92%</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-3 leading-tight">
+                            预言：英伟达市值将在2025年突破5万亿美元，AI芯片需求持续爆发
+                        </h2>
+                        <p class="text-gray-600 text-sm mb-4">
+                            据星象研究院预测，随着AI大模型训练需求持续增长，英伟达GPU订单已排至2027年。分析师普遍看好其增长前景...
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">📊 星象金融组 · 3小时前</span>
+                            <span class="text-purple-600 font-medium hover:underline">点击验证预言 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 次头条 -->
+                <div class="space-y-4">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openNews('openai')">
+                        <div class="flex">
+                            <div class="w-32 h-32 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center text-5xl">
+                                🧠
+                            </div>
+                            <div class="p-4 flex-1">
+                                <h3 class="font-bold text-gray-900 mb-2">OpenAI GPT-5 即将发布，推理能力突破人类水平</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">最新泄露的测试数据显示，GPT-5在多项推理测试中已超越普通人类...</p>
+                                <p class="text-gray-400 text-xs mt-2">💻 科技 · 2小时前</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer prophecy-card" onclick="openProphecy('btc')">
+                        <div class="flex">
+                            <div class="w-32 h-32 bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center text-5xl relative">
+                                <span>₿</span>
+                                <span class="absolute top-2 right-2 text-xs bg-white/30 px-2 py-0.5 rounded-full">✨</span>
+                            </div>
+                            <div class="p-4 flex-1">
+                                <h3 class="font-bold text-gray-900 mb-2">预言：比特币将在2025年Q2突破20万美元大关</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">减半效应+ETF资金持续流入，星象模型预测上涨概率达78%...</p>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <div class="h-1.5 w-24 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="prediction-meter h-full rounded-full" style="width: 78%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">78% 概率</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openNews('tesla')">
+                        <div class="flex">
+                            <div class="w-32 h-32 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center text-5xl">
+                                🚗
+                            </div>
+                            <div class="p-4 flex-1">
+                                <h3 class="font-bold text-gray-900 mb-2">特斯拉全自动驾驶FSD V13全球推送，事故率降低90%</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">最新数据显示，FSD V13的驾驶安全性已远超人类驾驶员...</p>
+                                <p class="text-gray-400 text-xs mt-2">💰 金融 · 5小时前</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-item">
-                <span class="stat-icon">🏆</span>
-                <span>积分: <span class="stat-value" id="score">0</span></span>
+        </section>
+
+        <!-- 预言新闻专区 -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span class="text-2xl">✨</span> 今日预言
+                    <span class="text-sm font-normal text-gray-500 ml-2">点击验证预言是否成真</span>
+                </h2>
+                <span class="text-sm text-purple-600 cursor-pointer hover:underline">查看全部预言 →</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-icon">⭐</span>
-                <span>等级: <span class="stat-value" id="level">见习巫师</span></span>
+            
+            <div class="grid md:grid-cols-3 gap-5">
+                <!-- 预言卡片1 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openProphecy('apple')" id="card-apple">
+                    <div class="p-5">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="text-4xl">🍎</span>
+                            <span class="prophecy-badge text-white text-xs px-2 py-1 rounded-full">预言</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-2">苹果Vision Pro 2销量破千万，空间计算时代到来</h3>
+                        <p class="text-gray-600 text-sm mb-4">第二代Vision Pro价格下探至$1999，普通消费者购买力被激活...</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="h-2 w-20 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="prediction-meter h-full rounded-full" style="width: 65%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">65%</span>
+                            </div>
+                            <span class="text-xs text-purple-600">点击验证 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 预言卡片2 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openProphecy('china')" id="card-china">
+                    <div class="p-5">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="text-4xl">🇨🇳</span>
+                            <span class="prophecy-badge text-white text-xs px-2 py-1 rounded-full">预言</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-2">中国GDP总量将在2028年超越美国，成为世界第一大经济体</h3>
+                        <p class="text-gray-600 text-sm mb-4">高端制造产业升级持续推进，内需市场稳步扩大...</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="h-2 w-20 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="prediction-meter h-full rounded-full" style="width: 58%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">58%</span>
+                            </div>
+                            <span class="text-xs text-purple-600">点击验证 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 预言卡片3 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openProphecy('mars')" id="card-mars">
+                    <div class="p-5">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="text-4xl">🔴</span>
+                            <span class="prophecy-badge text-white text-xs px-2 py-1 rounded-full">预言</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-2">SpaceX星舰2030年前实现载人登陆火星，首批100名殖民者</h3>
+                        <p class="text-gray-600 text-sm mb-4">星舰原型机测试顺利，猛禽发动机已达到设计推力...</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="h-2 w-20 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="prediction-meter h-full rounded-full" style="width: 42%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">42%</span>
+                            </div>
+                            <span class="text-xs text-purple-600">点击验证 →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 普通新闻流 -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span class="text-2xl">📰</span> 最新资讯
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
+                    <div class="flex gap-4">
+                        <div class="w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                            💊
+                        </div>
+                        <div>
+                            <span class="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded">科技</span>
+                            <h3 class="font-bold text-gray-900 mt-2 mb-1">AI药物发现平台发现新型抗生素，可对抗超级细菌</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">DeepMind团队利用AlphaFold发现全新分子结构，对耐药性细菌有效率达98%</p>
+                            <p class="text-gray-400 text-xs mt-2">昨天 18:32</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
+                    <div class="flex gap-4">
+                        <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                            ⚡
+                        </div>
+                        <div>
+                            <span class="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded">能源</span>
+                            <h3 class="font-bold text-gray-900 mt-2 mb-1">可控核聚变突破：Q值达到50，商业化进程加速</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">美国能源部宣布国家点火装置实现重大突破，能量增益达到历史新高</p>
+                            <p class="text-gray-400 text-xs mt-2">昨天 14:15</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
+                    <div class="flex gap-4">
+                        <div class="w-24 h-24 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                            🧬
+                        </div>
+                        <div>
+                            <span class="text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded">医疗</span>
+                            <h3 class="font-bold text-gray-900 mt-2 mb-1">CRISPR基因编辑治愈镰刀型贫血症，首批患者已停药3年</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">基因疗法长期效果确认，一次性治疗永久治愈遗传性疾病成为可能</p>
+                            <p class="text-gray-400 text-xs mt-2">昨天 11:08</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
+                    <div class="flex gap-4">
+                        <div class="w-24 h-24 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                            🤖
+                        </div>
+                        <div>
+                            <span class="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded">AI</span>
+                            <h3 class="font-bold text-gray-900 mt-2 mb-1">人形机器人成本降至2万美元以下，2025年开始量产</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">特斯拉Optimus、波士顿动力等多家厂商宣布成本大幅下降，工厂应用加速</p>
+                            <p class="text-gray-400 text-xs mt-2">今天 09:45</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据统计区 -->
+        <section class="mb-10">
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <span>📊</span> 星象预言统计
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                    <div>
+                        <div class="text-3xl font-bold">1,247</div>
+                        <div class="text-white/70 text-sm">总预言数</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-green-300">87.3%</div>
+                        <div class="text-white/70 text-sm">准确率</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold">6</div>
+                        <div class="text-white/70 text-sm">预言已验证</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold">142</div>
+                        <div class="text-white/70 text-sm">待验证预言</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">🔮</span>
+                    <div>
+                        <h3 class="font-bold text-lg">星象日报</h3>
+                        <p class="text-gray-400 text-sm">ASTRO DAILY · 用数据预见未来</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 text-sm text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors">关于我们</a>
+                    <a href="#" class="hover:text-white transition-colors">预言方法</a>
+                    <a href="#" class="hover:text-white transition-colors">数据来源</a>
+                    <a href="#" class="hover:text-white transition-colors">联系方式</a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+                <p>© 2024 星象日报 Astro Daily. 所有预言仅供参考，不构成投资建议。</p>
+                <p class="mt-2">✨ 发现隐藏的水晶球彩蛋，体验更多互动功能</p>
             </div>
         </div>
+    </footer>
 
-        <!-- 内容区 -->
-        <div class="content">
-            <div class="main-news" id="main-news">
-                <!-- 头条新闻 - 根据游戏进度动态改变 -->
-                <h2 class="headline" onclick="startGame('quidditch')">🏆 格兰芬多与斯莱特林魁地奇杯决赛今日开战！</h2>
-                <p class="byline">丽塔·斯基特 特约撰稿 · 霍格沃茨球场</p>
-                <p class="news-body">据魔法体育司消息，年度最重要的魁地奇比赛将于今日下午在霍格沃茨球场举行。格兰芬多找球手<strong>哈利·波特</strong>能否抓住金色飞贼？斯莱特林击球手的<strong>游走球</strong>能否阻止他的进攻？<br><br>
-                <em>预言家日报独家预测：点击参与比赛，你就是格兰芬多的找球手！</em> ✨</p>
+    <!-- 彩蛋：水晶球游戏（隐藏在右下角） -->
+    <div class="easter-egg" onclick="openCrystalBall()">
+        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-2xl shadow-lg">
+            🔮
+        </div>
+    </div>
 
-                <div class="news-item" id="news-duel" onclick="startGame('duel')">
-                    <div class="news-title">⚡ 霍格沃茨决斗俱乐部招募新成员！黑魔法防御术实战演练</div>
-                    <div class="news-summary">斯内普教授将亲自指导决斗技巧。参与决斗，证明你的魔法实力！</div>
-                    <span class="news-difficulty difficulty-medium">中等难度</span>
-                </div>
-
-                <div class="news-item" id="news-puzzle" onclick="startGame('puzzle')">
-                    <div class="news-title">🧩 古灵阁金库出现神秘符文！解开水晶之谜获得宝藏</div>
-                    <div class="news-summary">妖精们邀请智慧的巫师来破解这个千年谜题，宝藏等你来拿！</div>
-                    <span class="news-difficulty difficulty-hard">高难度</span>
-                </div>
-
-                <div class="news-item" id="news-potions" onclick="startGame('potions')">
-                    <div class="news-title">🧪 斯拉格霍恩教授的魔药课挑战！配制福灵剂</div>
-                    <div class="news-summary">精确配比各种原料，调配出传说中的幸运药水！</div>
-                    <span class="news-difficulty difficulty-hard">高难度</span>
-                </div>
-
-                <div class="news-item" id="news-patronus" onclick="startGame('patronus')">
-                    <div class="news-title">🦌 守护神咒特训！抵御摄魂怪的进攻</div>
-                    <div class="news-summary">在卢平教授指导下，学习释放强大的守护神咒！</div>
-                    <span class="news-difficulty difficulty-legendary">传说级</span>
-                </div>
-
-                <div class="news-item" id="news-quidditch2" onclick="startGame('quidditch2')">
-                    <div class="news-title">🔮 魁地奇世界杯决赛！保加利亚 vs 爱尔兰</div>
-                    <div class="news-summary">克鲁姆 vs 林奇，世纪对决！你能抓住传说中的金色飞贼吗？</div>
-                    <span class="news-difficulty difficulty-legendary">传说级</span>
-                </div>
-            </div>
-
-            <div class="sidebar">
-                <div class="sidebar-box">
-                    <div class="sidebar-title">🏆 预言成就</div>
-                    <div class="achievement-item" id="ach-1">
-                        <span>魁地奇冠军</span>
-                        <span>🔒</span>
-                    </div>
-                    <div class="achievement-item" id="ach-2">
-                        <span>决斗大师</span>
-                        <span>🔒</span>
-                    </div>
-                    <div class="achievement-item" id="ach-3">
-                        <span>符文破解者</span>
-                        <span>🔒</span>
-                    </div>
-                    <div class="achievement-item" id="ach-4">
-                        <span>魔药专家</span>
-                        <span>🔒</span>
-                    </div>
-                    <div class="achievement-item" id="ach-5">
-                        <span>守护神骑士</span>
-                        <span>🔒</span>
-                    </div>
-                    <div class="achievement-item" id="ach-6">
-                        <span>世界冠军</span>
-                        <span>🔒</span>
-                    </div>
-                </div>
-
-                <div class="sidebar-box">
-                    <div class="sidebar-title">🔮 今日预言</div>
-                    <div class="today-prophecy" id="today-prophecy">
-                        "那个活下来的男孩，今天将改变魔法世界的命运..."
-                    </div>
-                </div>
-
-                <div class="sidebar-box">
-                    <div class="sidebar-title">💡 魔法提示</div>
-                    <p style="font-size: 0.85em; line-height: 1.7">
-                        • 点击带 ✨ 的新闻进入小游戏<br>
-                        • 完成预言可以获得积分和魔力<br>
-                        • 完成所有预言解锁隐藏结局<br>
-                        • 高难度预言奖励更多积分！
-                    </p>
-                </div>
+    <!-- 预言验证模态框 -->
+    <div id="prophecy-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+            <div class="p-6" id="prophecy-content">
+                <!-- 动态内容 -->
             </div>
         </div>
-
-        <!-- 页脚 -->
-        <footer class="footer">
-            <div class="version-info">🔮 v9.0 魔法互动预言版 · 游戏改变报纸</div>
-            <p>魔法部出版署批准 · 凤凰社认证正版</p>
-            <p style="margin-top: 8px; font-style: italic">"你就是预言中的那个人..." — 西比尔·特里劳妮教授</p>
-        </footer>
-    </div>
     </div>
 
-    <!-- 游戏模态框 -->
-    <div class="game-modal" id="game-modal">
-        <div class="game-container" id="game-content">
-            <!-- 游戏内容动态填充 -->
+    <!-- 水晶球游戏模态框 -->
+    <div id="crystal-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-gradient-to-br from-purple-900 to-blue-900 rounded-2xl max-w-md w-full shadow-2xl p-6 text-white text-center">
+            <div class="text-6xl mb-4" style="animation: float 3s ease-in-out infinite">🔮</div>
+            <h3 class="text-xl font-bold mb-4">神秘水晶球</h3>
+            <p class="text-white/80 mb-6">在心中默念一个是否问题，然后点击水晶球获取答案</p>
+            <button onclick="askCrystal()" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 py-3 rounded-xl font-medium hover:opacity-90 transition-all">
+                ✨ 获取预言
+            </button>
+            <div id="crystal-answer" class="mt-6 text-lg font-medium min-h-[3rem]"></div>
+            <button onclick="document.getElementById('crystal-modal').classList.add('hidden')" class="mt-4 text-white/60 text-sm hover:text-white">关闭</button>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // 🔮 预言家日报 - 魔法互动系统
-        // ==========================================
-
-        const GameState = {
-            day: 1,
-            magicPower: 100,
-            score: 0,
-            level: '见习巫师',
-            completed: [],
-            currentGame: null
+        // 预言数据
+        const prophecies = {
+            nvidia: {
+                title: '英伟达市值将在2025年突破5万亿美元',
+                icon: '🚀',
+                probability: 92,
+                description: 'AI芯片需求持续爆发，H100、H200供不应求，订单已排至2027年。',
+                factors: [
+                    { name: 'AI训练需求增长', weight: 35, positive: true },
+                    { name: '数据中心建设加速', weight: 25, positive: true },
+                    { name: '竞争格局稳定', weight: 20, positive: true },
+                    { name: '地缘政治风险', weight: 12, positive: false },
+                    { name: '宏观经济波动', weight: 8, positive: false }
+                ]
+            },
+            btc: {
+                title: '比特币将在2025年Q2突破20万美元',
+                icon: '₿',
+                probability: 78,
+                description: '减半效应叠加ETF持续资金流入，机构配置比例逐年提升。',
+                factors: [
+                    { name: '减半供应收缩', weight: 30, positive: true },
+                    { name: 'ETF资金流入', weight: 28, positive: true },
+                    { name: '机构配置增加', weight: 20, positive: true },
+                    { name: '监管不确定性', weight: 14, positive: false },
+                    { name: '宏观流动性', weight: 8, positive: true }
+                ]
+            },
+            apple: {
+                title: 'Vision Pro 2销量破千万',
+                icon: '🍎',
+                probability: 65,
+                description: '第二代产品价格下探至$1999，内容生态逐渐丰富。',
+                factors: [
+                    { name: '价格下降刺激需求', weight: 28, positive: true },
+                    { name: '内容生态完善', weight: 25, positive: true },
+                    { name: '技术成熟度', weight: 20, positive: true },
+                    { name: '大众接受度', weight: 15, positive: false },
+                    { name: '竞品冲击', weight: 12, positive: false }
+                ]
+            },
+            china: {
+                title: '中国GDP 2028年超越美国',
+                icon: '🇨🇳',
+                probability: 58,
+                description: '高端制造升级持续，内需市场稳步扩大。',
+                factors: [
+                    { name: '产业升级成效', weight: 25, positive: true },
+                    { name: '内需市场扩大', weight: 22, positive: true },
+                    { name: '人口结构变化', weight: 20, positive: false },
+                    { name: '地缘政治影响', weight: 18, positive: false },
+                    { name: '科技创新速度', weight: 15, positive: true }
+                ]
+            },
+            mars: {
+                title: '2030年前载人登陆火星',
+                icon: '🔴',
+                probability: 42,
+                description: '星舰测试顺利，猛禽发动机达到设计推力。',
+                factors: [
+                    { name: '星舰研发进度', weight: 30, positive: true },
+                    { name: '生命支持系统', weight: 25, positive: false },
+                    { name: '辐射防护技术', weight: 20, positive: false },
+                    { name: '资金投入强度', weight: 15, positive: true },
+                    { name: '国际合作意愿', weight: 10, positive: false }
+                ]
+            }
         };
 
-        const Achievements = {
-            quidditch: { name: '魁地奇冠军', reward: 150, power: 20, headline: '🏆 格兰芬多获胜！哈利·波特抓住金色飞贼！' },
-            duel: { name: '决斗大师', reward: 200, power: 25, headline: '⚡ 决斗俱乐部新星诞生！无人能敌的决斗高手！' },
-            puzzle: { name: '符文破解者', reward: 250, power: 30, headline: '🧩 古灵阁千年之谜已破解！神秘宝藏重见天日！' },
-            potions: { name: '魔药专家', reward: 250, power: 30, headline: '🧪 魔药奇才诞生！成功配制传说中的福灵剂！' },
-            patronus: { name: '守护神骑士', reward: 500, power: 50, headline: '🦌 强大的守护神出现！摄魂怪被彻底击退！' },
-            quidditch2: { name: '世界冠军', reward: 800, power: 80, headline: '🏆 魁地奇世界杯冠军！你是世界上最伟大的找球手！' }
-        };
+        // 已验证的预言
+        let verifiedProphecies = JSON.parse(localStorage.getItem('verified') || '{}');
 
-        const Prophecies = [
-            "那个活下来的男孩，今天将改变魔法世界的命运...",
-            "金色的翅膀将飞过球场，带来格兰芬多的荣耀...",
-            "两道光束交汇之处，真正的巫师将诞生...",
-            "古老的符文之下，隐藏着改变世界的力量...",
-            "幸运药水将带来前所未有的机遇...",
-            "银色的守护神将驱散所有的黑暗...",
-            "世界之巅，只有最强者才能站立..."
-        ];
-
-        function init() {
-            createParticles();
-            loadGame();
-            updateUI();
-            console.log('🔮 预言家日报已启动！');
-            console.log('✨ 点击新闻开始你的魔法冒险！');
+        function filterNews(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particles = ['✨', '⭐', '💫', '🔮', '⚡', '💎'];
-            
-            for (let i = 0; i < 20; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.textContent = particles[Math.floor(Math.random() * particles.length)];
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDelay = Math.random() * 3 + 's';
-                container.appendChild(p);
-            }
+        function openNews(id) {
+            alert('这是普通新闻，点击查看详细内容');
         }
 
-        function updateUI() {
-            document.getElementById('magic-power').textContent = GameState.magicPower;
-            document.getElementById('score').textContent = GameState.score;
-            document.getElementById('day-number').textContent = GameState.day;
-            document.getElementById('prophecies-completed').textContent = GameState.completed.length;
+        function openProphecy(id) {
+            const prophecy = prophecies[id];
+            const isVerified = verifiedProphecies[id];
+            const modal = document.getElementById('prophecy-modal');
+            const content = document.getElementById('prophecy-content');
             
-            if (GameState.score >= 2000) GameState.level = '传奇巫师';
-            else if (GameState.score >= 1000) GameState.level = '高级巫师';
-            else if (GameState.score >= 500) GameState.level = '正式巫师';
-            document.getElementById('level').textContent = GameState.level;
-            
-            GameState.completed.forEach(id => {
-                const newsEl = document.getElementById('news-' + id);
-                if (newsEl) newsEl.classList.add('completed');
-                const achEl = document.getElementById('ach-' + (Object.keys(Achievements).indexOf(id) + 1));
-                if (achEl) {
-                    achEl.classList.add('unlocked');
-                    achEl.innerHTML = '<span>' + Achievements[id].name + '</span><span>✅</span>';
-                }
-            });
-            
-            const prophecyIdx = Math.min(GameState.completed.length, Prophecies.length - 1);
-            document.getElementById('today-prophecy').textContent = '"' + Prophecies[prophecyIdx] + '"';
-            
-            if (GameState.completed.includes('quidditch')) {
-                const headline = document.querySelector('.headline');
-                headline.textContent = Achievements.quidditch.headline;
-                headline.onclick = null;
-                headline.style.cursor = 'default';
-                headline.classList.add('completed');
-            }
-        }
+            let factorsHTML = prophecy.factors.map(f => `
+                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                    <span class="text-sm">${f.positive ? '✅' : '❌'} ${f.name}</span>
+                    <span class="text-sm font-medium ${f.positive ? 'text-green-600' : 'text-red-500'}">${f.weight}%</span>
+                </div>
+            `).join('');
 
-        function showAchievement(msg) {
-            const el = document.getElementById('achievement');
-            el.textContent = msg;
-            el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 3000);
-        }
-
-        function closeGame() {
-            document.getElementById('game-modal').classList.remove('active');
-            GameState.currentGame = null;
-        }
-
-        // ==========================================
-        // 🎮 游戏启动器
-        // ==========================================
-
-        function startGame(gameId) {
-            if (GameState.completed.includes(gameId)) {
-                showAchievement('✅ 这个预言你已经完成了！去挑战其他预言吧！');
-                return;
-            }
-            
-            if (GameState.magicPower < 10) {
-                showAchievement('😫 魔力不足！休息一下恢复魔力吧～');
-                return;
-            }
-            
-            GameState.magicPower -= 10;
-            GameState.currentGame = gameId;
-            updateUI();
-            
-            const container = document.getElementById('game-content');
-            
-            switch(gameId) {
-                case 'quidditch':
-                    container.innerHTML = getQuidditchHTML();
-                    document.getElementById('game-modal').classList.add('active');
-                    initQuidditch();
-                    break;
-                case 'duel':
-                    container.innerHTML = getDuelHTML();
-                    document.getElementById('game-modal').classList.add('active');
-                    initDuel();
-                    break;
-                case 'puzzle':
-                    container.innerHTML = getPuzzleHTML();
-                    document.getElementById('game-modal').classList.add('active');
-                    initPuzzle();
-                    break;
-                case 'potions':
-                    container.innerHTML = getPotionsHTML();
-                    document.getElementById('game-modal').classList.add('active');
-                    initPotions();
-                    break;
-                case 'patronus':
-                    container.innerHTML = getPatronusHTML();
-                    document.getElementById('game-modal').classList.add('active');
-                    initPatronus();
-                    break;
-                case 'quidditch2':
-                    container.innerHTML = getQuidditch2HTML();
-                    document.getElementById('game-modal').classList.add('active');
-                    initQuidditch2();
-                    break;
-            }
-        }
-
-        function winGame(bonusScore = 0) {
-            const gameId = GameState.currentGame;
-            const ach = Achievements[gameId];
-            
-            GameState.completed.push(gameId);
-            GameState.score += ach.reward + bonusScore;
-            GameState.magicPower += ach.power;
-            GameState.day++;
-            
-            saveGame();
-            updateUI();
-            
-            const container = document.getElementById('game-content');
-            container.innerHTML = `
-                <div class="result-screen">
-                    <div class="result-icon">🎉</div>
-                    <h3 class="result-title success">预言实现！</h3>
-                    <p style="margin-bottom: 15px">${ach.headline}</p>
-                    <div class="result-score">
-                        +${ach.reward + bonusScore} 积分<br>
-                        +${ach.power} 魔力
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="text-5xl mb-3">${prophecy.icon}</div>
+                    <h3 class="text-xl font-bold text-gray-900">${prophecy.title}</h3>
+                    <p class="text-gray-600 text-sm mt-2">${prophecy.description}</p>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-700">预言成真概率</span>
+                        <span class="text-lg font-bold ${prophecy.probability > 70 ? 'text-green-600' : prophecy.probability > 50 ? 'text-yellow-600' : 'text-red-500'}">${prophecy.probability}%</span>
                     </div>
-                    <p>🏆 成就解锁：${ach.name}</p>
-                    <button class="result-btn" onclick="closeGame()">返回报纸</button>
+                    <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="prediction-meter h-full rounded-full transition-all duration-1000" style="width: ${prophecy.probability}%"></div>
+                    </div>
                 </div>
+
+                <div class="mb-6">
+                    <h4 class="font-medium text-gray-900 mb-3">📊 影响因素分析</h4>
+                    ${factorsHTML}
+                </div>
+
+                ${isVerified ? `
+                    <div class="p-4 rounded-xl ${isVerified.result ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}">
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">${isVerified.result ? '✅' : '❌'}</div>
+                            <div class="font-medium ${isVerified.result ? 'text-green-700' : 'text-red-700'}">
+                                预言${isVerified.result ? '成真' : '失败'}
+                            </div>
+                            <div class="text-sm text-gray-500 mt-1">你选择了：${isVerified.choice}</div>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="flex gap-3">
+                        <button onclick="verifyProphecy('${id}', true)" class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-medium hover:opacity-90 transition-all">
+                            ✅ 预言会成真
+                        </button>
+                        <button onclick="verifyProphecy('${id}', false)" class="flex-1 bg-gradient-to-r from-red-500 to-rose-600 text-white py-3 rounded-xl font-medium hover:opacity-90 transition-all">
+                            ❌ 预言会失败
+                        </button>
+                    </div>
+                    <p class="text-center text-xs text-gray-400 mt-3">选择你的判断，结果将永久记录</p>
+                `}
+
+                <button onclick="document.getElementById('prophecy-modal').classList.add('hidden')" class="w-full mt-4 py-2 text-gray-500 hover:text-gray-700 text-sm">
+                    关闭
+                </button>
             `;
+
+            modal.classList.remove('hidden');
+        }
+
+        function verifyProphecy(id, choice) {
+            const prophecy = prophecies[id];
+            const actualResult = Math.random() * 100 < prophecy.probability;
+            const isCorrect = choice === actualResult;
             
-            showAchievement('🎉 ' + ach.name + '！预言已实现！');
-        }
-
-        function loseGame() {
-            const container = document.getElementById('game-content');
-            container.innerHTML = `
-                <div class="result-screen">
-                    <div class="result-icon">😢</div>
-                    <h3 class="result-title fail">预言失败...</h3>
-                    <p>不要气馁，真正的巫师永不放弃！</p>
-                    <p style="margin-top: 10px; color: var(--ink-light)">消耗 10 魔力，再试一次吧！</p>
-                    <button class="result-btn" onclick="startGame('${GameState.currentGame}')">再试一次</button>
-                    <button class="result-btn" onclick="closeGame()">返回报纸</button>
-                </div>
-            `;
-        }
-
-        // ==========================================
-        // 🏆 游戏1：魁地奇比赛
-        // ==========================================
-
-        function getQuidditchHTML() {
-            return `
-                <div class="game-header">
-                    <span class="game-title">🏆 格兰芬多 vs 斯莱特林</span>
-                    <button class="close-btn" onclick="closeGame()">×</button>
-                </div>
-                <div class="game-instruction">
-                    <strong>🎯 目标：</strong>抓住金色飞贼！用鼠标/手指控制你的位置，躲避游走球，在30秒内抓住飞贼5次！<br>
-                    <strong>⚡ 操作：</strong>移动鼠标/手指控制哈利，点击金色飞贼来抓住它！
-                </div>
-                <div class="quidditch-area" id="quidditch-area" onmousemove="movePlayer(event)" ontouchmove="movePlayer(event)">
-                    <div class="quidditch-score">抓住: <span id="q-score">0</span>/5</div>
-                    <div class="quidditch-timer">时间: <span id="q-timer">30</span>s</div>
-                    <div class="snitch" id="snitch" onclick="catchSnitch()">🪐</div>
-                    <div class="bludger" id="bludger1" style="top: 50px; left: 100px">⚫</div>
-                    <div class="bludger" id="bludger2" style="top: 150px; right: 100px">⚫</div>
-                    <div class="player" id="player">🧙</div>
-                </div>
-                <div class="quidditch-controls">
-                    <button class="quidditch-start" id="q-start" onclick="startQuidditch()">开始比赛！</button>
-                </div>
-            `;
-        }
-
-        let quidditchState = { active: false, score: 0, timer: 30, interval: null };
-
-        function initQuidditch() {
-            quidditchState = { active: false, score: 0, timer: 30, interval: null };
-        }
-
-        function startQuidditch() {
-            quidditchState.active = true;
-            document.getElementById('q-start').style.display = 'none';
+            verifiedProphecies[id] = {
+                choice: choice ? '会成真' : '会失败',
+                result: actualResult,
+                correct: isCorrect,
+                time: Date.now()
+            };
             
-            quidditchState.interval = setInterval(() => {
-                quidditchState.timer--;
-                document.getElementById('q-timer').textContent = quidditchState.timer;
-                
-                moveBludgers();
-                
-                if (quidditchState.timer <= 0) {
-                    clearInterval(quidditchState.interval);
-                    if (quidditchState.score >= 5) {
-                        winGame();
-                    } else {
-                        loseGame();
-                    }
-                }
-            }, 1000);
+            localStorage.setItem('verified', JSON.stringify(verifiedProphecies));
             
-            moveSnitch();
-        }
-
-        function movePlayer(e) {
-            if (!quidditchState.active) return;
-            const area = document.getElementById('quidditch-area');
-            const rect = area.getBoundingClientRect();
-            const player = document.getElementById('player');
-            const x = (e.clientX || e.touches[0].clientX) - rect.left;
-            player.style.left = Math.max(30, Math.min(rect.width - 30, x)) + 'px';
-            player.style.transform = 'translateX(-50%)';
-        }
-
-        function moveSnitch() {
-            if (!quidditchState.active) return;
-            const snitch = document.getElementById('snitch');
-            const area = document.getElementById('quidditch-area');
-            snitch.style.left = (50 + Math.random() * (area.offsetWidth - 100)) + 'px';
-            snitch.style.top = (30 + Math.random() * (area.offsetHeight - 100)) + 'px';
-            setTimeout(moveSnitch, 800 + Math.random() * 500);
-        }
-
-        function moveBludgers() {
-            const b1 = document.getElementById('bludger1');
-            const b2 = document.getElementById('bludger2');
-            const area = document.getElementById('quidditch-area');
-            
-            b1.style.left = parseInt(b1.style.left) + (Math.random() - 0.4) * 60 + 'px';
-            b1.style.top = parseInt(b1.style.top) + (Math.random() - 0.5) * 40 + 'px';
-            b2.style.left = parseInt(b2.style.left) + (Math.random() - 0.6) * 60 + 'px';
-            b2.style.top = parseInt(b2.style.top) + (Math.random() - 0.5) * 40 + 'px';
-            
-            b1.style.left = Math.max(20, Math.min(area.offsetWidth - 50, parseInt(b1.style.left))) + 'px';
-            b1.style.top = Math.max(20, Math.min(area.offsetHeight - 50, parseInt(b1.style.top))) + 'px';
-            b2.style.left = Math.max(20, Math.min(area.offsetWidth - 50, parseInt(b2.style.left))) + 'px';
-            b2.style.top = Math.max(20, Math.min(area.offsetHeight - 50, parseInt(b2.style.top))) + 'px';
-        }
-
-        function catchSnitch() {
-            if (!quidditchState.active) return;
-            quidditchState.score++;
-            document.getElementById('q-score').textContent = quidditchState.score;
-            
-            if (quidditchState.score >= 5) {
-                clearInterval(quidditchState.interval);
-                winGame();
+            const card = document.getElementById('card-' + id);
+            if (card) {
+                card.classList.add(actualResult ? 'prediction-true' : 'prediction-false');
             }
-        }
-
-        // ==========================================
-        // ⚡ 游戏2：咒语决斗
-        // ==========================================
-
-        function getDuelHTML() {
-            return `
-                <div class="game-header">
-                    <span class="game-title">⚡ 决斗俱乐部 - 黑魔法防御术</span>
-                    <button class="close-btn" onclick="closeGame()">×</button>
-                </div>
-                <div class="game-instruction">
-                    <strong>🎯 目标：</strong>击败马尔福！选择正确的咒语反击！<br>
-                    <strong>⚡ 操作：</strong>敌人攻击时，点击对应颜色的护盾按钮防御！然后用咒语反击！
-                </div>
-                <div class="duel-arena">
-                    <div class="wizard player">🧙</div>
-                    <div class="wizard enemy">🧛</div>
-                    <div class="health-bar player"><div class="health-fill" id="p-health" style="width: 100%"></div></div>
-                    <div class="health-bar enemy"><div class="health-fill enemy" id="e-health" style="width: 100%"></div></div>
-                    <div class="spell" id="player-spell" style="left: -100px"></div>
-                    <div class="spell" id="enemy-spell" style="right: -100px"></div>
-                </div>
-                <div class="spell-buttons">
-                    <button class="spell-btn" onclick="castSpell('shield')">🛡️ 护盾</button>
-                    <button class="spell-btn" onclick="castSpell('expelliarmus')">⚡ 除你武器</button>
-                    <button class="spell-btn" onclick="castSpell('stupefy')">💫 昏昏倒地</button>
-                    <button class="spell-btn" onclick="castSpell('protego')">🔮 盔甲护身</button>
-                </div>
-                <p style="text-align: center; margin-top: 10px; color: var(--ink-light)" id="duel-status">准备开始...</p>
-            `;
-        }
-
-        let duelState = { active: false, playerHP: 100, enemyHP: 100, shielded: false, interval: null };
-
-        function initDuel() {
-            duelState = { active: true, playerHP: 100, enemyHP: 100, shielded: false, interval: null };
-            setTimeout(enemyAttack, 1500);
-        }
-
-        function castSpell(type) {
-            if (!duelState.active) return;
             
-            if (type === 'shield' || type === 'protego') {
-                duelState.shielded = true;
-                showSpell('player', '🛡️');
-                setTimeout(() => duelState.shielded = false, 1200);
-                document.getElementById('duel-status').textContent = '护盾激活！';
-            } else {
-                const damage = type === 'expelliarmus' ? 15 : 20;
-                duelState.enemyHP -= damage;
-                document.getElementById('e-health').style.width = Math.max(0, duelState.enemyHP) + '%';
-                showSpell('player', '⚡');
-                document.getElementById('duel-status').textContent = '造成 ' + damage + ' 点伤害！';
-                
-                if (duelState.enemyHP <= 0) {
-                    duelState.active = false;
-                    winGame();
-                }
-            }
+            openProphecy(id);
         }
 
-        function enemyAttack() {
-            if (!duelState.active) return;
+        // 水晶球彩蛋游戏
+        function openCrystalBall() {
+            document.getElementById('crystal-modal').classList.remove('hidden');
+            document.getElementById('crystal-answer').textContent = '';
+        }
+
+        function askCrystal() {
+            const answers = [
+                '🌟 毫无疑问，必将实现！',
+                '✅ 可以肯定地说，是的',
+                '🔮 星象显示，机会很大',
+                '🤔 迹象表明，但还需等待',
+                '🌫️ 现在迷雾重重，稍后再问',
+                '❌ 不要抱太大期望',
+                '💫  Concentrate and ask again',
+                '⚡ 非常有可能！',
+                '🌙 答案在梦中，今晚留意',
+                '✨ 命运掌握在你手中'
+            ];
             
-            showSpell('enemy', '💀');
+            const answerEl = document.getElementById('crystal-answer');
+            answerEl.style.opacity = '0';
             
             setTimeout(() => {
-                if (!duelState.shielded) {
-                    const damage = 10 + Math.floor(Math.random() * 10);
-                    duelState.playerHP -= damage;
-                    document.getElementById('p-health').style.width = Math.max(0, duelState.playerHP) + '%';
-                    document.getElementById('duel-status').textContent = '受到 ' + damage + ' 点伤害！';
-                    
-                    if (duelState.playerHP <= 0) {
-                        duelState.active = false;
-                        loseGame();
-                        return;
-                    }
-                } else {
-                    document.getElementById('duel-status').textContent = '成功防御！';
-                }
-                
-                setTimeout(enemyAttack, 1500 + Math.random() * 1000);
+                answerEl.textContent = answers[Math.floor(Math.random() * answers.length)];
+                answerEl.style.opacity = '1';
+                answerEl.style.transition = 'opacity 0.5s';
             }, 500);
         }
 
-        function showSpell(who, icon) {
-            const el = document.getElementById(who + '-spell');
-            el.textContent = icon;
-            if (who === 'player') el.style.left = '150px';
-            else el.style.right = '150px';
-            
-            setTimeout(() => {
-                if (who === 'player') el.style.left = '-100px';
-                else el.style.right = '-100px';
-            }, 400);
-        }
-
-        // ==========================================
-        // 🧩 游戏3：古灵阁符文解谜（高级记忆翻牌）
-        // ==========================================
-
-        function getPuzzleHTML() {
-            return `
-                <div class="game-header">
-                    <span class="game-title">🧩 古灵阁符文 - 记忆配对</span>
-                    <button class="close-btn" onclick="closeGame()">×</button>
-                </div>
-                <div class="game-instruction">
-                    <strong>🎯 目标：</strong>找出所有配对的符文！但要小心，每翻错3次会受到魔法反噬！<br>
-                    <strong>⚡ 难度：</strong>4×4 共8对符文，最多只能错3次！
-                </div>
-                <div class="puzzle-grid" id="puzzle-grid"></div>
-                <div class="puzzle-info">
-                    <div>配对: <span id="p-matches">0</span>/8</div>
-                    <div>错误: <span id="p-mistakes">0</span>/3</div>
-                </div>
-            `;
-        }
-
-        let puzzleState = { matches: 0, mistakes: 0, selected: null, locked: false, cards: [] };
-
-        function initPuzzle() {
-            puzzleState = { matches: 0, mistakes: 0, selected: null, locked: false, cards: [] };
-            
-            const symbols = ['🔮', '⚡', '💎', '🦉', '🐍', '🦌', '🦁', '🦅'];
-            const cards = [...symbols, ...symbols];
-            
-            for (let i = cards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [cards[i], cards[j]] = [cards[j], cards[i]];
+        // 关闭模态框
+        document.getElementById('prophecy-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'prophecy-modal') {
+                e.target.classList.add('hidden');
             }
-            
-            puzzleState.cards = cards;
-            
-            const grid = document.getElementById('puzzle-grid');
-            grid.innerHTML = '';
-            
-            cards.forEach((symbol, idx) => {
-                const card = document.createElement('div');
-                card.className = 'puzzle-cell';
-                card.innerHTML = '❓';
-                card.dataset.idx = idx;
-                card.dataset.symbol = symbol;
-                card.onclick = () => flipCard(idx);
-                grid.appendChild(card);
-            });
-        }
+        });
 
-        function flipCard(idx) {
-            if (puzzleState.locked) return;
-            
-            const cards = document.querySelectorAll('.puzzle-cell');
-            const card = cards[idx];
-            
-            if (card.classList.contains('matched') || card.classList.contains('selected')) return;
-            
-            card.textContent = card.dataset.symbol;
-            card.classList.add('selected');
-            
-            if (puzzleState.selected === null) {
-                puzzleState.selected = idx;
-            } else {
-                puzzleState.locked = true;
-                const firstIdx = puzzleState.selected;
-                const firstCard = cards[firstIdx];
-                
-                if (firstCard.dataset.symbol === card.dataset.symbol) {
-                    puzzleState.matches++;
-                    document.getElementById('p-matches').textContent = puzzleState.matches;
-                    
-                    setTimeout(() => {
-                        firstCard.classList.add('matched');
-                        card.classList.add('matched');
-                        firstCard.classList.remove('selected');
-                        card.classList.remove('selected');
-                        puzzleState.selected = null;
-                        puzzleState.locked = false;
-                        
-                        if (puzzleState.matches >= 8) {
-                            winGame();
-                        }
-                    }, 500);
-                } else {
-                    puzzleState.mistakes++;
-                    document.getElementById('p-mistakes').textContent = puzzleState.mistakes;
-                    
-                    setTimeout(() => {
-                        firstCard.textContent = '❓';
-                        card.textContent = '❓';
-                        firstCard.classList.remove('selected');
-                        card.classList.remove('selected');
-                        puzzleState.selected = null;
-                        puzzleState.locked = false;
-                        
-                        if (puzzleState.mistakes >= 3) {
-                            loseGame();
-                        }
-                    }, 1000);
-                }
+        document.getElementById('crystal-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'crystal-modal') {
+                e.target.classList.add('hidden');
             }
-        }
+        });
 
-        // ==========================================
-        // 🧪 游戏4：魔药配制
-        // ==========================================
-
-        function getPotionsHTML() {
-            return `
-                <div class="game-header">
-                    <span class="game-title">🧪 配制福灵剂 - 幸运药水</span>
-                    <button class="close-btn" onclick="closeGame()">×</button>
-                </div>
-                <div class="game-instruction">
-                    <strong>🎯 目标：</strong>按正确顺序加入原料！福灵剂需要精确的配比！<br>
-                    <strong>⚡ 配方：</strong>薰衣草 → 薄荷粉末 → 独角兽角 → 凤凰羽毛 → 月露。顺序错了就失败！
-                </div>
-                <div style="text-align: center; margin: 20px 0">
-                    <div style="font-size: 4em; margin-bottom: 15px">⚗️</div>
-                    <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap">
-                        <span id="ing-0" style="opacity: 0.3">🌸</span>
-                        <span id="ing-1" style="opacity: 0.3">🌿</span>
-                        <span id="ing-2" style="opacity: 0.3">🦄</span>
-                        <span id="ing-3" style="opacity: 0.3">🐦</span>
-                        <span id="ing-4" style="opacity: 0.3">🌙</span>
-                    </div>
-                </div>
-                <div class="spell-buttons">
-                    <button class="spell-btn" onclick="addIngredient('🌸', 0)">🌸 薰衣草</button>
-                    <button class="spell-btn" onclick="addIngredient('🌿', 1)">🌿 薄荷粉末</button>
-                    <button class="spell-btn" onclick="addIngredient('🦄', 2)">🦄 独角兽角</button>
-                    <button class="spell-btn" onclick="addIngredient('🐦', 3)">🐦 凤凰羽毛</button>
-                    <button class="spell-btn" onclick="addIngredient('🌙', 4)">🌙 月露</button>
-                </div>
-                <p style="text-align: center; margin-top: 15px" id="potion-status">按顺序加入原料...</p>
-            `;
-        }
-
-        let potionState = { step: 0 };
-
-        function initPotions() {
-            potionState = { step: 0 };
-        }
-
-        function addIngredient(icon, idx) {
-            if (idx === potionState.step) {
-                document.getElementById('ing-' + idx).style.opacity = '1';
-                document.getElementById('ing-' + idx).style.animation = 'pulse 0.5s';
-                potionState.step++;
-                
-                const messages = ['薰衣草加入...', '薄荷粉末撒入...', '独角兽角粉末化...', '凤凰羽毛飘入...', '月露滴落...'];
-                document.getElementById('potion-status').textContent = messages[idx];
-                
-                if (potionState.step >= 5) {
-                    document.getElementById('potion-status').textContent = '✨ 福灵剂配制成功！';
-                    setTimeout(() => winGame(), 1000);
-                }
-            } else {
-                document.getElementById('potion-status').textContent = '💥 失败！原料顺序错误！魔药爆炸了...';
-                setTimeout(loseGame, 1500);
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('prophecy-modal').classList.add('hidden');
+                document.getElementById('crystal-modal').classList.add('hidden');
             }
-        }
+        });
 
-        // ==========================================
-        // 🦌 游戏5：守护神咒
-        // ==========================================
-
-        function getPatronusHTML() {
-            return `
-                <div class="game-header">
-                    <span class="game-title">🦌 守护神咒 - 抵御摄魂怪</span>
-                    <button class="close-btn" onclick="closeGame()">×</button>
-                </div>
-                <div class="game-instruction">
-                    <strong>🎯 目标：</strong>快速连按释放守护神！摄魂怪正在靠近，在它们到达前完成100次点击！<br>
-                    <strong>⚡ 传说级难度：</strong>你只有8秒时间！越快越好！呼神护卫！
-                </div>
-                <div style="text-align: center; margin: 30px 0">
-                    <div style="font-size: 5em; margin-bottom: 20px" id="patronus-icon">😰</div>
-                    <div style="width: 80%; height: 30px; background: rgba(0,0,0,0.2); margin: 0 auto; border-radius: 15px; overflow: hidden">
-                        <div id="patronus-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #3498db, #2ecc71); transition: width 0.1s"></div>
-                    </div>
-                    <p style="margin-top: 15px">进度: <span id="patronus-progress">0</span>/100</p>
-                    <p style="color: var(--magic-red)">剩余时间: <span id="patronus-timer">8</span>s</p>
-                </div>
-                <div style="text-align: center">
-                    <button class="quidditch-start" id="patronus-btn" onmousedown="chargePatronus()" ontouchstart="chargePatronus()">
-                        ⚡ 呼神护卫！（快速连点！）
-                    </button>
-                </div>
-            `;
-        }
-
-        let patronusState = { progress: 0, timer: 8, interval: null, active: false };
-
-        function initPatronus() {
-            patronusState = { progress: 0, timer: 8, interval: null, active: false };
-            
-            document.getElementById('patronus-btn').addEventListener('click', () => {
-                if (!patronusState.active) {
-                    patronusState.active = true;
-                    startPatronusTimer();
-                }
-                chargePatronus();
-            });
-        }
-
-        function startPatronusTimer() {
-            patronusState.interval = setInterval(() => {
-                patronusState.timer--;
-                document.getElementById('patronus-timer').textContent = patronusState.timer;
-                
-                if (patronusState.timer <= 0) {
-                    clearInterval(patronusState.interval);
-                    if (patronusState.progress >= 100) {
-                        winGame();
-                    } else {
-                        loseGame();
-                    }
-                }
-            }, 1000);
-        }
-
-        function chargePatronus() {
-            if (!patronusState.active) {
-                patronusState.active = true;
-                startPatronusTimer();
-            }
-            
-            patronusState.progress += 3;
-            if (patronusState.progress > 100) patronusState.progress = 100;
-            
-            document.getElementById('patronus-progress').textContent = patronusState.progress;
-            document.getElementById('patronus-bar').style.width = patronusState.progress + '%';
-            
-            if (patronusState.progress < 30) {
-                document.getElementById('patronus-icon').textContent = '😰';
-            } else if (patronusState.progress < 60) {
-                document.getElementById('patronus-icon').textContent = '💫';
-            } else if (patronusState.progress < 90) {
-                document.getElementById('patronus-icon').textContent = '✨';
-            } else {
-                document.getElementById('patronus-icon').textContent = '🦌';
-            }
-            
-            if (patronusState.progress >= 100) {
-                clearInterval(patronusState.interval);
-                winGame();
-            }
-        }
-
-        // ==========================================
-        // 🏆 游戏6：魁地奇世界杯（终极难度）
-        // ==========================================
-
-        function getQuidditch2HTML() {
-            return `
-                <div class="game-header">
-                    <span class="game-title">🏆 魁地奇世界杯 - 最终决战</span>
-                    <button class="close-btn" onclick="closeGame()">×</button>
-                </div>
-                <div class="game-instruction">
-                    <strong>🎯 目标：</strong>抓住金色飞贼10次！但这次有4个游走球，飞贼移动更快！<br>
-                    <strong>⚡ 传说级难度：</strong>25秒时间，4个游走球，抓住飞贼10次才能夺冠！
-                </div>
-                <div class="quidditch-area" id="q2-area" onmousemove="movePlayer2(event)" ontouchmove="movePlayer2(event)">
-                    <div class="quidditch-score">抓住: <span id="q2-score">0</span>/10</div>
-                    <div class="quidditch-timer">时间: <span id="q2-timer">25</span>s</div>
-                    <div class="snitch" id="q2-snitch" onclick="catchSnitch2()" style="font-size: 2.5em">🪐</div>
-                    <div class="bludger" id="q2-b1" style="top: 30px; left: 50px">⚫</div>
-                    <div class="bludger" id="q2-b2" style="top: 80px; right: 80px">⚫</div>
-                    <div class="bludger" id="q2-b3" style="top: 180px; left: 150px">⚫</div>
-                    <div class="bludger" id="q2-b4" style="top: 250px; right: 120px">⚫</div>
-                    <div class="player" id="q2-player" style="font-size: 3em">🧙</div>
-                </div>
-                <div class="quidditch-controls">
-                    <button class="quidditch-start" id="q2-start" onclick="startQuidditch2()">开始世界杯决赛！</button>
-                </div>
-            `;
-        }
-
-        let q2State = { active: false, score: 0, timer: 25, interval: null };
-
-        function initQuidditch2() {
-            q2State = { active: false, score: 0, timer: 25, interval: null };
-        }
-
-        function startQuidditch2() {
-            q2State.active = true;
-            document.getElementById('q2-start').style.display = 'none';
-            
-            q2State.interval = setInterval(() => {
-                q2State.timer--;
-                document.getElementById('q2-timer').textContent = q2State.timer;
-                
-                moveBludgers2();
-                
-                if (q2State.timer <= 0) {
-                    clearInterval(q2State.interval);
-                    if (q2State.score >= 10) {
-                        winGame(200);
-                    } else {
-                        loseGame();
-                    }
-                }
-            }, 1000);
-            
-            moveSnitch2();
-        }
-
-        function movePlayer2(e) {
-            if (!q2State.active) return;
-            const area = document.getElementById('q2-area');
-            const rect = area.getBoundingClientRect();
-            const player = document.getElementById('q2-player');
-            const x = (e.clientX || e.touches[0].clientX) - rect.left;
-            player.style.left = Math.max(30, Math.min(rect.width - 30, x)) + 'px';
-            player.style.transform = 'translateX(-50%)';
-        }
-
-        function moveSnitch2() {
-            if (!q2State.active) return;
-            const snitch = document.getElementById('q2-snitch');
-            const area = document.getElementById('q2-area');
-            snitch.style.left = (50 + Math.random() * (area.offsetWidth - 100)) + 'px';
-            snitch.style.top = (30 + Math.random() * (area.offsetHeight - 100)) + 'px';
-            setTimeout(moveSnitch2, 400 + Math.random() * 300);
-        }
-
-        function moveBludgers2() {
-            const area = document.getElementById('q2-area');
-            for (let i = 1; i <= 4; i++) {
-                const b = document.getElementById('q2-b' + i);
-                b.style.left = parseInt(b.style.left) + (Math.random() - 0.5) * 80 + 'px';
-                b.style.top = parseInt(b.style.top) + (Math.random() - 0.5) * 60 + 'px';
-                b.style.left = Math.max(20, Math.min(area.offsetWidth - 50, parseInt(b.style.left))) + 'px';
-                b.style.top = Math.max(20, Math.min(area.offsetHeight - 50, parseInt(b.style.top))) + 'px';
-            }
-        }
-
-        function catchSnitch2() {
-            if (!q2State.active) return;
-            q2State.score++;
-            document.getElementById('q2-score').textContent = q2State.score;
-            
-            if (q2State.score >= 10) {
-                clearInterval(q2State.interval);
-                winGame(200);
-            }
-        }
-
-        function saveGame() {
-            localStorage.setItem('prophetDaily', JSON.stringify(GameState));
-        }
-
-        function loadGame() {
-            const saved = localStorage.getItem('prophetDaily');
-            if (saved) {
-                const data = JSON.parse(saved);
-                Object.assign(GameState, data);
-                console.log('💾 存档已加载！完成预言:', GameState.completed.length);
-            }
-        }
-
-        init();
+        // 加载统计
+        console.log('🔮 星象日报已加载');
+        console.log(`✨ 已验证预言: ${Object.keys(verifiedProphecies).length} 个`);
     </script>
 </body>
 </html>

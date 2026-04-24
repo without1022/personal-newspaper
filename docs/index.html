@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📰 财经新闻</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>📰 预言家财经日报</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* ===== 魔法报纸基础样式 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,455 +14,398 @@
         }
 
         :root {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #1e293b;
-            --text2: #64748b;
-            --text3: #94a3b8;
-            --border: #e2e8f0;
-            --accent: #3b82f6;
-            --accent2: #8b5cf6;
-            --red: #ef4444;
-            --green: #10b981;
+            --paper: #f5f0e6;
+            --paper-dark: #e8e0d0;
+            --ink: #1a1a1a;
+            --ink-light: #4a4a4a;
+            --ink-faint: #7a7a7a;
+            --gold: #b8860b;
+            --gold-light: #daa520;
+            --magic: #6366f1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes shimmer {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.3; }
+        }
+
+        @keyframes magicGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.4); }
+        }
+
+        @keyframes inkSpread {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            padding-bottom: 80px;
+            font-family: 'Noto Serif SC', 'Playfair Display', Georgia, serif;
+            background: var(--paper);
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            color: var(--ink);
+            line-height: 1.7;
         }
 
-        /* 顶部导航 */
-        .top-header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            color: white;
-            padding: 16px 0;
-            position: sticky;
+        /* ===== 魔法粒子背景 ===== */
+        .magic-particles {
+            position: fixed;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        .header-inner {
-            max-width: 1200px;
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: shimmer 3s infinite;
+        }
+
+        /* ===== 报纸刊头 ===== */
+        .newspaper-header {
+            background: var(--paper);
+            border-bottom: 4px double var(--ink);
+            padding: 30px 20px 20px;
+            position: relative;
+        }
+
+        .newspaper-masthead {
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 20px;
+            text-align: center;
+        }
+
+        .newspaper-title {
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            font-size: 3.5em;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            animation: float 4s ease-in-out infinite;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .newspaper-subtitle {
+            font-size: 0.95em;
+            color: var(--ink-light);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .newspaper-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-top: 1px solid var(--ink-faint);
+            border-bottom: 1px solid var(--ink-faint);
+            padding: 8px 0;
+            font-size: 0.85em;
+            color: var(--ink-light);
         }
 
-        .brand {
+        .weather-widget {
+            font-size: 1.2em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ===== 头版头条 ===== */
+        .headline-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            border-bottom: 2px solid var(--ink);
+        }
+
+        .headline-article {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .headline-image {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+        }
+
+        .magic-emoji {
+            font-size: 5em;
+            animation: float 3s ease-in-out infinite, magicGlow 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(218, 165, 32, 0.5));
+        }
+
+        .magic-emoji-small {
+            font-size: 2.5em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .headline-location {
+            font-size: 0.8em;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+
+        .headline-title {
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            font-size: 1.8em;
             font-weight: 700;
-            font-size: 1.1em;
+            line-height: 1.4;
+            margin-bottom: 12px;
         }
 
-        .brand-icon {
-            font-size: 1.5em;
+        .headline-lead {
+            font-size: 1.05em;
+            color: var(--ink-light);
+            line-height: 1.8;
+            margin-bottom: 12px;
         }
 
-        .search-box {
+        .headline-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ===== 板块标题 ===== */
+        .news-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--ink-faint);
+        }
+
+        .section-header {
             display: flex;
             align-items: center;
-            background: rgba(255,255,255,0.15);
-            border-radius: 24px;
-            padding: 8px 16px;
-            width: 280px;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            font-size: 1.5em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', 'Noto Serif SC', serif;
+            font-size: 1.3em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .section-rule {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--ink) 0%, transparent 100%);
+        }
+
+        .section-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        /* ===== 新闻文章 - 报纸风格 ===== */
+        .news-article {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px dotted var(--ink-faint);
             transition: all 0.3s;
         }
 
-        .search-box:focus-within {
-            background: rgba(255,255,255,0.25);
-            width: 320px;
+        .news-article:last-child {
+            border-bottom: none;
         }
 
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 0.9em;
-            width: 100%;
-            outline: none;
-            margin-left: 8px;
+        .news-article:hover {
+            background: rgba(184, 134, 11, 0.05);
+            margin: 0 -10px;
+            padding: 16px 10px;
+            border-radius: 8px;
         }
 
-        .search-box input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* 主布局 */
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px 20px;
-            display: grid;
-            grid-template-columns: 180px 1fr 240px;
-            gap: 24px;
-        }
-
-        /* 左侧导航 */
-        .sidebar-left {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-
-        .nav-menu {
-            background: white;
-            border-radius: 16px;
-            padding: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-        }
-
-        .nav-item {
+        .article-image {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 14px;
-            border-radius: 10px;
-            color: var(--text2);
-            text-decoration: none;
-            transition: all 0.2s;
-            font-weight: 500;
-            font-size: 0.9em;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 4px;
         }
 
-        .nav-item:hover, .nav-item.active {
-            background: var(--bg);
-            color: var(--text);
+        .article-meta {
+            font-size: 0.75em;
+            color: var(--ink-faint);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
-        .nav-icon {
-            font-size: 1.1em;
+        .article-location::after {
+            content: " — ";
         }
 
-        .nav-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 4px 10px;
-        }
-
-        /* 中间主内容 */
-        .main-content {
-            min-width: 0;
-        }
-
-        /* 情绪卡片 */
-        .mood-card {
-            background: linear-gradient(135deg, #10b981 0%, #10b981dd 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 28px;
-            margin-bottom: 28px;
-            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
-        }
-
-        .mood-title {
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 20px;
-            opacity: 0.95;
-        }
-
-        .mood-big {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-        }
-
-        .mood-score {
-            font-size: 3.5em;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .mood-label {
-            font-size: 1.1em;
-            opacity: 0.9;
-            margin-top: 4px;
-        }
-
-        .mood-bar-wrap {
-            flex: 1;
-        }
-
-        .mood-bar {
-            height: 12px;
-            background: rgba(255,255,255,0.25);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .mood-bar-inner {
-            height: 100%;
-            width: 81%;
-            background: white;
-            border-radius: 6px;
-            animation: fillBar 1.5s ease-out;
-        }
-
-        @keyframes fillBar {
-            from { width: 0; }
-        }
-
-        .mood-count {
-            text-align: right;
-        }
-
-        .mood-count-num {
-            font-size: 1.5em;
-            font-weight: 700;
-        }
-
-        .mood-count-label {
-            font-size: 0.85em;
-            opacity: 0.8;
-        }
-
-        /* ===== 新闻板块 ===== */
-        .category-section {
-            margin-bottom: 40px;
-            scroll-margin-top: 100px;
-        }
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .category-icon {
-            font-size: 1.5em;
-        }
-
-        .category-title {
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1.3em;
-            font-weight: 700;
-        }
-
-        .news-grid {
-            display: grid;
-            gap: 16px;
-        }
-
-        /* ===== 新闻卡片 - 全新清爽排版 ===== */
-        .news-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 0 solid transparent;
-        }
-
-        .news-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        }
-
-        .news-card.hot {
-            border-left: 4px solid var(--red);
-        }
-
-        .news-card.expanded {
-            border-left: 4px solid var(--accent);
-        }
-
-        /* 标题 */
-        .news-title {
+        .article-title {
             font-family: 'Noto Serif SC', serif;
             font-size: 1.1em;
             font-weight: 600;
-            line-height: 1.6;
-            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+
+        .news-article:hover .article-title {
+            color: var(--gold);
+        }
+
+        .article-summary {
+            font-size: 0.9em;
+            color: var(--ink-light);
+            line-height: 1.7;
             margin-bottom: 10px;
         }
 
-        /* 元信息：来源 · 时间 · 热度 */
-        .news-meta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 14px;
-            font-size: 0.82em;
-        }
-
-        .news-source {
-            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
-            color: #3b82f6;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        .separator {
-            color: var(--text3);
-        }
-
-        .news-time {
-            color: var(--text3);
-        }
-
-        .news-hot {
-            color: var(--red);
-            font-weight: 600;
-            margin-left: auto;
-        }
-
-        /* 摘要 */
-        .news-summary {
-            color: var(--text2);
-            font-size: 0.9em;
-            line-height: 1.75;
-            margin-bottom: 16px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* 展开的完整内容 */
-        .news-full-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out, opacity 0.3s, margin 0.3s;
-            opacity: 0;
-            margin: 0;
-        }
-
-        .news-full-content.open {
-            max-height: 600px;
-            opacity: 1;
-            margin: 8px 0 16px;
-        }
-
-        .news-full-content-inner {
-            padding: 18px 20px;
-            background: #f8fafc;
-            border-radius: 12px;
-            color: var(--text2);
-            font-size: 0.9em;
-            line-height: 1.9;
-            border-left: 3px solid var(--accent);
-        }
-
-        /* 底部：标签 + 展开按钮 */
-        .news-footer {
+        .article-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
-            padding-top: 4px;
         }
 
-        .news-tags {
+        .article-tags {
             display: flex;
-            flex-wrap: wrap;
             gap: 6px;
         }
 
         .tag {
-            background: #f1f5f9;
-            color: var(--text2);
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.78em;
-            font-weight: 500;
-            cursor: pointer;
+            background: var(--paper-dark);
+            color: var(--ink-light);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-family: 'Inter', sans-serif;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .tag:hover {
-            background: #e2e8f0;
-            color: var(--text);
+            background: var(--gold);
+            color: white;
         }
 
-        /* 展开按钮 */
-        .expand-btn {
-            background: white;
-            color: var(--accent);
-            border: 1.5px solid #dbeafe;
-            padding: 8px 18px;
+        /* ===== 魔法展开按钮 ===== */
+        .article-expand {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .expand-btn:hover {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-            transform: translateY(-1px);
-        }
-
-        /* 展开状态的按钮 */
-        .news-card.expanded .expand-btn {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* 股票表格 */
-        .stocks-section {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 28px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            overflow-x: auto;
-        }
-
-        .stocks-title {
+            font-size: 0.75em;
             font-family: 'Noto Serif SC', serif;
-            font-size: 1.15em;
-            font-weight: 700;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .article-expand:hover {
+            background: var(--gold);
+            color: white;
+            box-shadow: 0 0 15px rgba(184, 134, 11, 0.4);
+        }
+
+        /* ===== 魔法展开内容 ===== */
+        .article-full {
+            grid-column: 1 / -1;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, margin 0.3s;
+        }
+
+        .article-full.open {
+            max-height: 300px;
+            margin-top: 16px;
+        }
+
+        .article-full-inner {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(218, 165, 32, 0.05) 100%);
+            border-left: 3px solid var(--gold);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            animation: inkSpread 0.5s ease-out;
+        }
+
+        .article-full-inner p {
+            margin-bottom: 10px;
+            color: var(--ink-light);
+            font-size: 0.9em;
+        }
+
+        .magic-sign {
+            text-align: right;
+            font-style: italic;
+            color: var(--gold) !important;
+            margin-top: 12px;
+        }
+
+        /* ===== 魔法股票行情 ===== */
+        .stocks-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--ink);
         }
 
         .stock-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.9em;
         }
 
         .stock-table th {
             text-align: left;
             padding: 10px 8px;
-            color: var(--text3);
+            border-bottom: 2px solid var(--ink);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             font-size: 0.8em;
-            border-bottom: 2px solid var(--border);
         }
 
         .stock-table td {
             padding: 12px 8px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9em;
+            border-bottom: 1px solid var(--paper-dark);
         }
 
-        .stock-table tr:last-child td {
-            border-bottom: none;
+        .stock-table tr:hover {
+            background: rgba(184, 134, 11, 0.05);
         }
 
         .stock-code {
-            font-family: 'SF Mono', Monaco, monospace;
+            font-family: 'Courier New', monospace;
             font-weight: 600;
-            color: var(--accent);
-            font-size: 0.85em;
+            color: var(--gold);
         }
 
         .stock-name {
@@ -469,15 +413,16 @@
         }
 
         .up {
-            color: var(--red);
+            color: #b45309;
             font-weight: 700;
         }
 
         .recommend {
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 12px;
             font-size: 0.75em;
             font-weight: 600;
+            font-family: 'Inter', sans-serif;
         }
 
         .recommend.buy {
@@ -485,303 +430,235 @@
             color: #16a34a;
         }
 
-        .recommend.hold {
-            background: #fef3c7;
-            color: #d97706;
-        }
-
-        /* 右侧边栏 */
-        .sidebar-right {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-
-        .sidebar-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        }
-
-        .sidebar-title {
-            font-family: 'Noto Serif SC', serif;
-            font-size: 0.95em;
-            font-weight: 700;
-            margin-bottom: 14px;
-            color: var(--text);
-        }
-
-        .archive-list {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .archive-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            border-radius: 8px;
-            color: var(--text2);
-            text-decoration: none;
-            font-size: 0.85em;
-            transition: all 0.2s;
-        }
-
-        .archive-item:hover {
-            background: var(--bg);
-        }
-
-        .archive-item span {
-            font-size: 0.75em;
-            color: var(--text3);
-        }
-
-        /* 页脚 */
-        .footer {
-            background: #0f172a;
-            color: white;
-            padding: 32px 20px;
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        .footer p {
-            opacity: 0.6;
-            margin-bottom: 6px;
-            font-size: 0.85em;
-        }
-
-        /* 移动端底部导航 */
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid var(--border);
-            padding: 10px 16px;
-            z-index: 1000;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-        }
-
-        .mobile-nav-items {
-            display: flex;
-            justify-content: space-around;
-            max-width: 500px;
+        /* ===== 市场情绪魔镜 ===== */
+        .mood-section {
+            max-width: 1000px;
             margin: 0 auto;
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--ink);
         }
 
-        .mobile-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 10px;
-            color: var(--text3);
-            text-decoration: none;
-            font-size: 0.7em;
-            transition: all 0.2s;
-        }
-
-        .mobile-nav-item.active {
-            color: var(--accent);
-        }
-
-        .mobile-nav-icon {
-            font-size: 1.4em;
-        }
-
-        /* 无搜索结果 */
-        .no-results {
+        .mood-mirror {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%);
+            border-radius: 20px;
+            padding: 24px;
             text-align: center;
-            padding: 60px 20px;
-            color: var(--text3);
-            display: none;
+            box-shadow: 
+                0 0 30px rgba(251, 191, 36, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: magicGlow 3s ease-in-out infinite;
         }
 
-        /* 响应式 */
-        @media (max-width: 1024px) {
-            .main-container {
+        .mood-score {
+            font-size: 4em;
+            font-weight: 900;
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            text-shadow: 2px 2px 10px rgba(184, 134, 11, 0.3);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .mood-label {
+            font-size: 1.2em;
+            color: var(--ink);
+            margin-top: 8px;
+        }
+
+        .mood-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 16px;
+            font-size: 0.9em;
+            color: var(--ink-light);
+        }
+
+        /* ===== 报纸底部 ===== */
+        .newspaper-footer {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 4px double var(--ink);
+            font-size: 0.85em;
+            color: var(--ink-faint);
+        }
+
+        .newspaper-footer p {
+            margin-bottom: 6px;
+        }
+
+        .magic-quote {
+            font-style: italic;
+            color: var(--gold);
+            margin-top: 12px;
+            font-size: 0.95em;
+        }
+
+        /* ===== 悬浮导航 ===== */
+        .floating-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--paper);
+            border: 2px solid var(--gold);
+            border-radius: 30px;
+            padding: 10px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 14px;
+            border-radius: 20px;
+            color: var(--ink-light);
+            text-decoration: none;
+            font-size: 0.8em;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--gold);
+            color: white;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .newspaper-title {
+                font-size: 2em;
+            }
+            .newspaper-subtitle {
+                font-size: 0.7em;
+                letter-spacing: 0.1em;
+            }
+            .headline-article {
                 grid-template-columns: 1fr;
-                padding: 16px;
-            }
-            .sidebar-left, .sidebar-right {
-                display: none;
-            }
-            .mobile-nav {
-                display: block;
-            }
-            body {
-                padding-bottom: 80px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .header-inner {
-                padding: 0 16px;
-            }
-            .brand span:last-child {
-                display: none;
-            }
-            .search-box {
-                width: 180px;
-            }
-            .search-box:focus-within {
-                width: 200px;
-            }
-            .mood-card {
-                padding: 20px;
-                border-radius: 16px;
-            }
-            .mood-big {
-                flex-direction: column;
                 text-align: center;
-                gap: 16px;
             }
-            .mood-bar-wrap {
-                width: 100%;
+            .headline-image {
+                justify-content: center;
             }
-            .news-card {
-                padding: 20px;
-                border-radius: 14px;
+            .news-article {
+                grid-template-columns: 1fr;
             }
-            .news-footer {
+            .article-image {
+                display: none;
+            }
+            .floating-nav {
+                padding: 8px 12px;
+                gap: 4px;
+            }
+            .nav-item {
+                padding: 6px 10px;
+                font-size: 0.7em;
+            }
+            .article-footer {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
+                gap: 10px;
             }
-            .expand-btn {
+            .article-expand {
                 align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .floating-nav {
+                bottom: 10px;
+                padding: 6px 8px;
+            }
+            .nav-item {
+                padding: 5px 8px;
+                font-size: 0.65em;
+            }
+            .mood-score {
+                font-size: 2.5em;
+            }
+            .mood-stats {
+                gap: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <header class="top-header">
-        <div class="header-inner">
-            <div class="brand">
-                <span class="brand-icon">📰</span>
-                <span>财经新闻</span>
-            </div>
-            <div class="search-box">
-                <span>🔍</span>
-                <input type="text" id="searchInput" placeholder="搜索新闻...">
+    <!-- 魔法粒子背景 -->
+    <div class="magic-particles" id="particles"></div>
+
+    <!-- 报纸刊头 -->
+    <header class="newspaper-header">
+        <div class="newspaper-masthead">
+            <h1 class="newspaper-title">📰 预言家财经日报</h1>
+            <p class="newspaper-subtitle">THE DAILY PROPHET FINANCIAL</p>
+            <div class="newspaper-meta">
+                <span>📅 2026年04月24日 Friday</span>
+                <span>🧙 第 1868 期</span>
+                <span class="weather-widget">🌤️ 魔法市场晴</span>
+                <span>📍 霍格沃茨财经版</span>
             </div>
         </div>
     </header>
 
-    <div class="main-container">
-        <!-- 左侧导航 -->
-        <aside class="sidebar-left">
-            <nav class="nav-menu">
-                <a href="#" class="nav-item active">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-text">首页</span>
-                </a>
-                <div class="nav-divider"></div>
-                
-            <a href="#domestic" class="nav-item" data-category="domestic">
-                <span class="nav-icon">🇨🇳</span>
-                <span class="nav-text">国内财经</span>
-            </a>
-            
-            <a href="#international" class="nav-item" data-category="international">
-                <span class="nav-icon">🌍</span>
-                <span class="nav-text">国际财经</span>
-            </a>
-            
-            <a href="#ai-tech" class="nav-item" data-category="ai-tech">
-                <span class="nav-icon">🤖</span>
-                <span class="nav-text">AI科技</span>
-            </a>
-            
-            <a href="#internet" class="nav-item" data-category="internet">
-                <span class="nav-icon">💻</span>
-                <span class="nav-text">互联网</span>
-            </a>
-            
-            <a href="#semiconductor" class="nav-item" data-category="semiconductor">
-                <span class="nav-icon">🔬</span>
-                <span class="nav-text">半导体</span>
-            </a>
-            
-            <a href="#crypto" class="nav-item" data-category="crypto">
-                <span class="nav-icon">💰</span>
-                <span class="nav-text">加密货币</span>
-            </a>
-            
-            <a href="#ev" class="nav-item" data-category="ev">
-                <span class="nav-icon">🚗</span>
-                <span class="nav-text">新能源汽车</span>
-            </a>
-            
-            </nav>
-        </aside>
-
-        <!-- 中间主内容 -->
-        <main class="main-content">
-            <!-- 市场情绪 -->
-            <div class="mood-card">
-                <div class="mood-title">📊 今日市场情绪</div>
-                <div class="mood-big">
-                    <div>
-                        <div class="mood-score">🚀 81</div>
-                        <div class="mood-label">非常乐观</div>
-                    </div>
-                    <div class="mood-bar-wrap">
-                        <div class="mood-bar">
-                            <div class="mood-bar-inner"></div>
-                        </div>
-                    </div>
-                    <div class="mood-count">
-                        <div class="mood-count-num">11</div>
-                        <div class="mood-count-label">条新闻</div>
-                    </div>
+    <!-- 头版头条 -->
+    <section class="headline-section">
+        
+        <div class="headline-article">
+            <div class="headline-image">
+                <span class="magic-emoji">🗽</span>
+            </div>
+            <div class="headline-content">
+                <div class="headline-location">纽约 · 路透社</div>
+                <h1 class="headline-title">美联储释放鸽派信号，美股三大指数创历史新高</h1>
+                <p class="headline-lead">美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨，集体创出历史新高。</p>
+                <div class="headline-tags">
+                    <span class="tag">美联储</span><span class="tag">美股</span><span class="tag">降息</span>
                 </div>
             </div>
+        </div>
+        
+    </section>
 
-            <!-- 股票推荐 -->
-            <section class="stocks-section">
-                <div class="stocks-title">📈 今日精选</div>
-                <table class="stock-table">
-                    <thead>
-                        <tr>
-                            <th>代码</th>
-                            <th>名称</th>
-                            <th>现价</th>
-                            <th>涨跌</th>
-                            <th>评级</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
+    <!-- 市场情绪魔镜 -->
+    <section class="mood-section">
+        <div class="mood-mirror">
+            <div class="mood-score">🌟 83</div>
+            <div class="mood-label">魔法旺盛 ✨</div>
+            <div class="mood-stats">
+                <span>📰 8 条新闻</span>
+                <span>🏛️ 3 只精选</span>
+                <span>🔮 魔法增强版</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 魔法股票行情 -->
+    <section class="stocks-section">
+        <div class="section-header">
+            <span class="section-icon">📈</span>
+            <h2 class="section-title">今日魔法股票</h2>
+            <div class="section-rule"></div>
+        </div>
+        <table class="stock-table">
+            <thead>
+                <tr>
+                    <th>代码</th>
+                    <th>名称</th>
+                    <th>现价</th>
+                    <th>涨跌</th>
+                    <th>评级</th>
+                </tr>
+            </thead>
+            <tbody>
+                
             <tr>
                 <td class="stock-code">002594</td>
                 <td class="stock-name">比亚迪</td>
                 <td class="stock-price">358.50</td>
                 <td class="up">+5.23%</td>
                 <td><span class="recommend buy">买入</span></td>
-            </tr>
-            
-            <tr>
-                <td class="stock-code">688981</td>
-                <td class="stock-name">中芯国际</td>
-                <td class="stock-price">68.75</td>
-                <td class="up">+3.85%</td>
-                <td><span class="recommend buy">买入</span></td>
-            </tr>
-            
-            <tr>
-                <td class="stock-code">00700</td>
-                <td class="stock-name">腾讯控股</td>
-                <td class="stock-price">485.60</td>
-                <td class="up">+2.15%</td>
-                <td><span class="recommend hold">持有</span></td>
             </tr>
             
             <tr>
@@ -800,439 +677,293 @@
                 <td><span class="recommend buy">买入</span></td>
             </tr>
             
-                    </tbody>
-                </table>
-            </section>
+            </tbody>
+        </table>
+    </section>
 
-            <!-- 所有新闻板块 -->
-            
-            <section id="domestic" class="category-section">
-                <div class="category-header">
-                    <span class="category-icon">🇨🇳</span>
-                    <h2 class="category-title">国内财经</h2>
+    <!-- 各板块新闻 -->
+    
+            <section id="domestic" class="news-section">
+                <div class="section-header">
+                    <span class="section-icon">🇨🇳</span>
+                    <h2 class="section-title">国内财经</h2>
+                    <div class="section-rule"></div>
                 </div>
-                <div class="news-grid">
+                <div class="section-grid">
                     
-                <article class="news-card hot" data-search="A股三大指数集体收涨，成交额突破万亿元 今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升。 A股 成交额 北向资金">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">A股三大指数集体收涨，成交额突破万亿元</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">证券时报</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">13:26</span>
-                        <span class="news-hot">🔥 92</span>
+                <article class="news-article" data-newsid="news-domestic-0">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">📈</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-domestic-0">
-                        <div class="news-full-content-inner">
-                            今日A股市场延续强势格局，三大指数集体收涨。截至收盘，上证指数上涨1.23%，深证成指上涨1.56%，创业板指上涨1.89%。两市成交额突破1万亿元，为连续第8个交易日破万亿。北向资金全天净流入86.5亿元。<br><br><br><br>行业板块方面，新能源、半导体、医药板块领涨，银行、地产板块表现相对平稳。分析人士认为，随着经济复苏预期增强，市场信心持续恢复。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">上海</span>
+                            <span class="article-source">证券时报</span>
+                        </div>
+                        <h3 class="article-title">A股三大指数集体收涨，成交额突破万亿元大关</h3>
+                        <p class="article-summary">今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升，市场信心稳步恢复。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">A股</span><span class="tag">成交额</span><span class="tag">北向资金</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-domestic-0', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">A股</span><span class="tag">成交额</span><span class="tag">北向资金</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-domestic-0">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升，市场信心稳步恢复。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-domestic-0', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
-                <article class="news-card " data-search="央行开展500亿元逆回购操作，维护流动性合理充裕 央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。 央行 逆回购 流动性">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">央行开展500亿元逆回购操作，维护流动性合理充裕</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">中国人民银行</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">11:15</span>
-                        <span class="news-hot">🔥 85</span>
+                <article class="news-article" data-newsid="news-domestic-1">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">🏦</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-domestic-1">
-                        <div class="news-full-content-inner">
-                            中国人民银行今日公告称，为维护银行体系流动性合理充裕，开展500亿元7天期逆回购操作，中标利率为1.80%，与此前持平。<br><br><br><br>本周以来，央行持续加大流动性投放力度，累计开展逆回购操作6500亿元，因到期4500亿元，实现净投放2000亿元。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">北京</span>
+                            <span class="article-source">中国人民银行</span>
+                        </div>
+                        <h3 class="article-title">央行开展500亿元逆回购操作，维护流动性合理充裕</h3>
+                        <p class="article-summary">央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">央行</span><span class="tag">逆回购</span><span class="tag">流动性</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-domestic-1', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">央行</span><span class="tag">逆回购</span><span class="tag">流动性</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-domestic-1">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-domestic-1', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
                 </div>
             </section>
             
-            <section id="international" class="category-section">
-                <div class="category-header">
-                    <span class="category-icon">🌍</span>
-                    <h2 class="category-title">国际财经</h2>
+            <section id="international" class="news-section">
+                <div class="section-header">
+                    <span class="section-icon">🌍</span>
+                    <h2 class="section-title">国际财经</h2>
+                    <div class="section-rule"></div>
                 </div>
-                <div class="news-grid">
+                <div class="section-grid">
                     
-                <article class="news-card hot" data-search="美联储释放鸽派信号，美股三大指数创历史新高 美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨。 美联储 美股 降息">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">美联储释放鸽派信号，美股三大指数创历史新高</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">路透社</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">04:30</span>
-                        <span class="news-hot">🔥 95</span>
+                <article class="news-article" data-newsid="news-international-0">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">🗽</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-international-0">
-                        <div class="news-full-content-inner">
-                            美联储主席在最新的国会听证会上表示，通胀数据持续向好，美联储正在考虑何时开始降息。市场普遍预期美联储将在9月开始首次降息。<br><br><br><br>受此消息影响，美股三大指数全线上涨，均创出历史新高。科技股领涨，英伟达、苹果、微软等巨头股价均有不错表现。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">纽约</span>
+                            <span class="article-source">路透社</span>
+                        </div>
+                        <h3 class="article-title">美联储释放鸽派信号，美股三大指数创历史新高</h3>
+                        <p class="article-summary">美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨，集体创出历史新高。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">美联储</span><span class="tag">美股</span><span class="tag">降息</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-international-0', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">美联储</span><span class="tag">美股</span><span class="tag">降息</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-international-0">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨，集体创出历史新高。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-international-0', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
-                <article class="news-card hot" data-search="英伟达市值突破3.5万亿美元，AI芯片需求持续火爆 英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长。 英伟达 AI芯片 市值">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">英伟达市值突破3.5万亿美元，AI芯片需求持续火爆</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">彭博社</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">05:15</span>
-                        <span class="news-hot">🔥 98</span>
+                <article class="news-article" data-newsid="news-international-1">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">🚀</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-international-1">
-                        <div class="news-full-content-inner">
-                            英伟达股价在盘后交易中继续上涨，市值已突破3.5万亿美元，超越苹果成为全球市值最高的公司。<br><br><br><br>公司最新财报显示，AI芯片需求呈现爆发式增长，季度营收同比增长280%。公司CEO黄仁勋表示，AI算力需求远超出预期。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">硅谷</span>
+                            <span class="article-source">彭博社</span>
+                        </div>
+                        <h3 class="article-title">英伟达市值突破3.5万亿美元，AI芯片需求持续火爆</h3>
+                        <p class="article-summary">英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长，公司订单已排到2027年。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">英伟达</span><span class="tag">AI芯片</span><span class="tag">市值</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-international-1', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">英伟达</span><span class="tag">AI芯片</span><span class="tag">市值</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-international-1">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长，公司订单已排到2027年。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-international-1', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
                 </div>
             </section>
             
-            <section id="ai-tech" class="category-section">
-                <div class="category-header">
-                    <span class="category-icon">🤖</span>
-                    <h2 class="category-title">AI科技</h2>
+            <section id="ai-tech" class="news-section">
+                <div class="section-header">
+                    <span class="section-icon">✨</span>
+                    <h2 class="section-title">魔法科技</h2>
+                    <div class="section-rule"></div>
                 </div>
-                <div class="news-grid">
+                <div class="section-grid">
                     
-                <article class="news-card hot" data-search="OpenAI发布GPT-4o升级版，多模态能力大幅提升 OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。 OpenAI GPT-4o 大模型">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">OpenAI发布GPT-4o升级版，多模态能力大幅提升</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">OpenAI</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">01:00</span>
-                        <span class="news-hot">🔥 98</span>
+                <article class="news-article" data-newsid="news-ai-tech-0">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">🤖</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-ai-tech-0">
-                        <div class="news-full-content-inner">
-                            OpenAI正式发布GPT-4o升级版，在多个维度实现显著提升。新模型在MMLU基准测试中得分达到92%，在数学推理方面提升显著。<br><br><br><br>值得关注的是，GPT-4o响应速度比之前提升50%，用户可以获得更流畅的对话体验。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">旧金山</span>
+                            <span class="article-source">魔法部公告</span>
+                        </div>
+                        <h3 class="article-title">OpenAI发布GPT-4o升级版，多模态能力大幅提升</h3>
+                        <p class="article-summary">OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。新模型支持更长上下文窗口。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">OpenAI</span><span class="tag">GPT-4o</span><span class="tag">大模型</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-ai-tech-0', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">OpenAI</span><span class="tag">GPT-4o</span><span class="tag">大模型</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-ai-tech-0">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。新模型支持更长上下文窗口。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-ai-tech-0', this)">
-                            查看详情
-                        </button>
-                    </div>
-                </article>
-                
-                <article class="news-card hot" data-search="国产大模型密集发布，中国AI实力快速追赶 本周国内多家科技公司密集发布新一代大模型，在中文理解、多模态能力等方面已达到国际先进水平。 大模型 AI 国产化">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">国产大模型密集发布，中国AI实力快速追赶</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">36氪</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">10:30</span>
-                        <span class="news-hot">🔥 90</span>
-                    </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">本周国内多家科技公司密集发布新一代大模型，在中文理解、多模态能力等方面已达到国际先进水平。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-ai-tech-1">
-                        <div class="news-full-content-inner">
-                            本周，百度、阿里、字节跳动等国内科技公司密集发布新一代大模型，在中文理解、多模态能力、推理速度等方面均有显著提升。<br><br><br><br>评测显示，国产大模型在中文任务上已超越GPT-4，在多模态理解方面达到国际先进水平。
-                        </div>
-                    </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">大模型</span><span class="tag">AI</span><span class="tag">国产化</span>
-                        </div>
-                        <button class="expand-btn" onclick="toggleNews('news-ai-tech-1', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
                 </div>
             </section>
             
-            <section id="internet" class="category-section">
-                <div class="category-header">
-                    <span class="category-icon">💻</span>
-                    <h2 class="category-title">互联网</h2>
+            <section id="crypto" class="news-section">
+                <div class="section-header">
+                    <span class="section-icon">🪙</span>
+                    <h2 class="section-title">加密金币</h2>
+                    <div class="section-rule"></div>
                 </div>
-                <div class="news-grid">
+                <div class="section-grid">
                     
-                <article class="news-card " data-search="腾讯控股发布最新财报，游戏业务表现强劲 腾讯控股公布2024年第二季度财报，营收同比增长15%，净利润同比增长25%。游戏业务表现强劲，海外收入占比持续提升。 腾讯 财报 游戏">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">腾讯控股发布最新财报，游戏业务表现强劲</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">腾讯</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">16:30</span>
-                        <span class="news-hot">🔥 88</span>
+                <article class="news-article" data-newsid="news-crypto-0">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">🪙</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">腾讯控股公布2024年第二季度财报，营收同比增长15%，净利润同比增长25%。游戏业务表现强劲，海外收入占比持续提升。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-internet-0">
-                        <div class="news-full-content-inner">
-                            腾讯控股今日公布2024年第二季度财报，营收达1650亿元，同比增长15%；净利润达520亿元，同比增长25%，超出市场预期。<br><br><br><br>游戏业务方面，本季度收入达580亿元，同比增长12%。其中国际市场游戏收入增长28%，占比首次突破40%。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">加密世界</span>
+                            <span class="article-source">CoinDesk</span>
+                        </div>
+                        <h3 class="article-title">比特币减半后持续走强，站稳10万美元关口</h3>
+                        <p class="article-summary">比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">比特币</span><span class="tag">减半</span><span class="tag">机构</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-crypto-0', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">腾讯</span><span class="tag">财报</span><span class="tag">游戏</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-crypto-0">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-internet-0', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
                 </div>
             </section>
             
-            <section id="semiconductor" class="category-section">
-                <div class="category-header">
-                    <span class="category-icon">🔬</span>
-                    <h2 class="category-title">半导体</h2>
+            <section id="ev" class="news-section">
+                <div class="section-header">
+                    <span class="section-icon">🧹</span>
+                    <h2 class="section-title">魔法飞毯</h2>
+                    <div class="section-rule"></div>
                 </div>
-                <div class="news-grid">
+                <div class="section-grid">
                     
-                <article class="news-card hot" data-search="中芯国际14nm工艺良率突破95%，进入大规模量产 中芯国际宣布14nm工艺良率已达到95%，月产能提升至5万片晶圆。国产14nm芯片已广泛应用于消费电子、汽车等领域。 中芯国际 14nm 芯片">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">中芯国际14nm工艺良率突破95%，进入大规模量产</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">中芯国际</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">08:45</span>
-                        <span class="news-hot">🔥 93</span>
+                <article class="news-article" data-newsid="news-ev-0">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">🚗</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">中芯国际宣布14nm工艺良率已达到95%，月产能提升至5万片晶圆。国产14nm芯片已广泛应用于消费电子、汽车等领域。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-semiconductor-0">
-                        <div class="news-full-content-inner">
-                            中芯国际在今日举办的技术交流会上宣布，公司14nm工艺良率已达到95%，进入大规模量产阶段。目前14nm生产线月产能已提升至5万片晶圆。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">深圳</span>
+                            <span class="article-source">比亚迪</span>
+                        </div>
+                        <h3 class="article-title">比亚迪月销量突破50万辆，创历史新高</h3>
+                        <p class="article-summary">比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">比亚迪</span><span class="tag">新能源</span><span class="tag">销量</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-ev-0', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">中芯国际</span><span class="tag">14nm</span><span class="tag">芯片</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-ev-0">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-semiconductor-0', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
-                </div>
-            </section>
-            
-            <section id="crypto" class="category-section">
-                <div class="category-header">
-                    <span class="category-icon">💰</span>
-                    <h2 class="category-title">加密货币</h2>
-                </div>
-                <div class="news-grid">
-                    
-                <article class="news-card hot" data-search="比特币减半后持续走强，站稳10万美元关口 比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。 比特币 减半 机构">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">比特币减半后持续走强，站稳10万美元关口</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">CoinDesk</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">00:30</span>
-                        <span class="news-hot">🔥 94</span>
+                <article class="news-article" data-newsid="news-ev-1">
+                    <div class="article-image">
+                        <span class="magic-emoji-small">⚡</span>
                     </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-crypto-0">
-                        <div class="news-full-content-inner">
-                            比特币第四次减半顺利完成后，市场表现强劲。比特币价格持续上涨，已站稳10万美元关口，市值达到2万亿美元。<br><br><br><br>机构投资者持续增持，灰度比特币信托资产管理规模突破500亿美元。
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-location">上海</span>
+                            <span class="article-source">特斯拉中国</span>
+                        </div>
+                        <h3 class="article-title">特斯拉FSD正式入华，自动驾驶行业加速</h3>
+                        <p class="article-summary">特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。</p>
+                        <div class="article-footer">
+                            <div class="article-tags"><span class="tag">特斯拉</span><span class="tag">FSD</span><span class="tag">自动驾驶</span></div>
+                            <button class="article-expand" onclick="toggleMagicNews('news-ev-1', this)">
+                                ✨ 继续阅读
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">比特币</span><span class="tag">减半</span><span class="tag">机构</span>
+                    <!-- 魔法展开内容 -->
+                    <div class="article-full" id="news-ev-1">
+                        <div class="article-full-inner">
+                            <p>📜 据魔法部可靠消息人士透露...</p>
+                            <p>特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。</p>
+                            <p>🔮 占星师预测：此消息将在未来几周持续影响市场情绪。</p>
+                            <p class="magic-sign">— 预言家日报特派记者</p>
                         </div>
-                        <button class="expand-btn" onclick="toggleNews('news-crypto-0', this)">
-                            查看详情
-                        </button>
-                    </div>
-                </article>
-                
-                </div>
-            </section>
-            
-            <section id="ev" class="category-section">
-                <div class="category-header">
-                    <span class="category-icon">🚗</span>
-                    <h2 class="category-title">新能源汽车</h2>
-                </div>
-                <div class="news-grid">
-                    
-                <article class="news-card hot" data-search="比亚迪月销量突破50万辆，创历史新高 比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。 比亚迪 新能源 销量">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">比亚迪月销量突破50万辆，创历史新高</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">比亚迪</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">18:00</span>
-                        <span class="news-hot">🔥 91</span>
-                    </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-ev-0">
-                        <div class="news-full-content-inner">
-                            比亚迪今日公布最新销量数据，7月全系销量达到51.2万辆，再创历史新高，同比增长45%。<br><br><br><br>海外市场表现亮眼，当月海外销量突破10万辆，同比增长120%。比亚迪已进入全球60多个国家和地区。
-                        </div>
-                    </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">比亚迪</span><span class="tag">新能源</span><span class="tag">销量</span>
-                        </div>
-                        <button class="expand-btn" onclick="toggleNews('news-ev-0', this)">
-                            查看详情
-                        </button>
-                    </div>
-                </article>
-                
-                <article class="news-card hot" data-search="特斯拉FSD正式入华，自动驾驶行业加速 特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。 特斯拉 FSD 自动驾驶">
-                    <!-- 标题区 -->
-                    <h3 class="news-title">特斯拉FSD正式入华，自动驾驶行业加速</h3>
-                    
-                    <!-- 元信息：来源 时间 热度 -->
-                    <div class="news-meta">
-                        <span class="news-source">特斯拉</span>
-                        <span class="separator">·</span>
-                        <span class="news-time">11:00</span>
-                        <span class="news-hot">🔥 94</span>
-                    </div>
-                    
-                    <!-- 摘要 -->
-                    <p class="news-summary">特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。</p>
-                    
-                    <!-- 展开的完整内容 -->
-                    <div class="news-full-content" id="news-ev-1">
-                        <div class="news-full-content-inner">
-                            特斯拉中国今日宣布，FSD完全自动驾驶系统正式获得中国监管部门批准，将在国内逐步推送。<br><br><br><br>业内人士认为，FSD入华将加速中国自动驾驶行业标准制定，推动整个产业链快速发展。
-                        </div>
-                    </div>
-                    
-                    <!-- 底部：标签 + 按钮 -->
-                    <div class="news-footer">
-                        <div class="news-tags">
-                            <span class="tag">特斯拉</span><span class="tag">FSD</span><span class="tag">自动驾驶</span>
-                        </div>
-                        <button class="expand-btn" onclick="toggleNews('news-ev-1', this)">
-                            查看详情
-                        </button>
                     </div>
                 </article>
                 
@@ -1240,113 +971,84 @@
             </section>
             
 
-            <!-- 无搜索结果 -->
-            <div class="no-results" id="noResults">
-                <div style="font-size: 2.5em; margin-bottom: 12px;">🔍</div>
-                <div style="font-size: 1em;">没有找到相关新闻</div>
-            </div>
-        </main>
-
-        <!-- 右侧边栏 -->
-        <aside class="sidebar-right">
-            <div class="sidebar-card">
-                <div class="sidebar-title">📅 历史归档</div>
-                <div class="archive-list"><a href="#" class="archive-item">04月24日 <span>Fri</span></a><a href="#" class="archive-item">04月23日 <span>Thu</span></a><a href="#" class="archive-item">04月22日 <span>Wed</span></a><a href="#" class="archive-item">04月21日 <span>Tue</span></a><a href="#" class="archive-item">04月20日 <span>Mon</span></a><a href="#" class="archive-item">04月19日 <span>Sun</span></a><a href="#" class="archive-item">04月18日 <span>Sat</span></a><a href="#" class="archive-item">04月17日 <span>Fri</span></a><a href="#" class="archive-item">04月16日 <span>Thu</span></a><a href="#" class="archive-item">04月15日 <span>Wed</span></a><a href="#" class="archive-item">04月14日 <span>Tue</span></a><a href="#" class="archive-item">04月13日 <span>Mon</span></a><a href="#" class="archive-item">04月12日 <span>Sun</span></a><a href="#" class="archive-item">04月11日 <span>Sat</span></a><a href="#" class="archive-item">04月10日 <span>Fri</span></a></div>
-            </div>
-        </aside>
-    </div>
-
-    <!-- 移动端底部导航 -->
-    <nav class="mobile-nav">
-        <div class="mobile-nav-items">
-            <a href="#" class="mobile-nav-item active">
-                <span class="mobile-nav-icon">🏠</span>
-                <span>首页</span>
-            </a>
-            <a href="#domestic" class="mobile-nav-item">
-                <span class="mobile-nav-icon">🇨🇳</span>
-                <span>国内</span>
-            </a>
-            <a href="#ai-tech" class="mobile-nav-item">
-                <span class="mobile-nav-icon">🤖</span>
-                <span>AI</span>
-            </a>
-            <a href="#crypto" class="mobile-nav-item">
-                <span class="mobile-nav-icon">💰</span>
-                <span>加密</span>
-            </a>
-            <a href="#ev" class="mobile-nav-item">
-                <span class="mobile-nav-icon">🚗</span>
-                <span>电车</span>
-            </a>
-        </div>
-    </nav>
-
-    <footer class="footer">
-        <p>⚠️ 免责声明：内容仅供参考，不构成投资建议</p>
-        <p>📰 全球财经新闻 · 2026年04月24日 · Powered by AI</p>
+    <!-- 报纸底部 -->
+    <footer class="newspaper-footer">
+        <p>⚠️ 免责声明：本报由占卜课教授监制，预言仅供参考，不构成投资建议</p>
+        <p>📰 预言家财经日报 · 魔法部认证 · 第 1868 期</p>
+        <p class="magic-quote">✨ "当你真正想要做一件事的时候，整个宇宙都会联合起来帮你完成" — 保罗·科艾略</p>
     </footer>
 
-    <script>
-        // 展开/收起新闻详情
-        function toggleNews(newsId, btn) {
-            const content = document.getElementById(newsId);
-            const card = content.closest('.news-card');
+    <!-- 悬浮导航 -->
+    <nav class="floating-nav">
+        <a href="#" class="nav-item active">🏠 首页</a>
+        
+            <a href="#domestic" class="nav-item" data-category="domestic">
+                🇨🇳 国内财经
+            </a>
             
+            <a href="#international" class="nav-item" data-category="international">
+                🌍 国际财经
+            </a>
+            
+            <a href="#ai-tech" class="nav-item" data-category="ai-tech">
+                ✨ 魔法科技
+            </a>
+            
+            <a href="#internet" class="nav-item" data-category="internet">
+                💻 互联网
+            </a>
+            
+            <a href="#semiconductor" class="nav-item" data-category="semiconductor">
+                🔮 魔晶工业
+            </a>
+            
+            <a href="#crypto" class="nav-item" data-category="crypto">
+                🪙 加密金币
+            </a>
+            
+            <a href="#ev" class="nav-item" data-category="ev">
+                🧹 魔法飞毯
+            </a>
+            
+    </nav>
+
+    <script>
+        // 生成魔法粒子
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (2 + Math.random() * 2) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // 魔法展开新闻
+        function toggleMagicNews(newsId, btn) {
+            const content = document.getElementById(newsId);
             content.classList.toggle('open');
-            card.classList.toggle('expanded');
             
             if (content.classList.contains('open')) {
-                btn.textContent = '收起详情';
+                btn.textContent = '📜 收起';
+                // 魔法音效可以在这里加
             } else {
-                btn.textContent = '查看详情';
+                btn.textContent = '✨ 继续阅读';
             }
         }
 
-        // 搜索功能
-        const searchInput = document.getElementById('searchInput');
-        const allNewsCards = document.querySelectorAll('.news-card');
-        const noResults = document.getElementById('noResults');
-
-        searchInput.addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
-            let hasResults = false;
-            
-            allNewsCards.forEach(card => {
-                const searchText = card.getAttribute('data-search').toLowerCase();
-                if (query === '' || searchText.includes(query)) {
-                    card.style.display = '';
-                    hasResults = true;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            document.querySelectorAll('.category-section').forEach(section => {
-                const visibleCards = section.querySelectorAll('.news-card:not([style*="display: none"])');
-                section.style.display = (visibleCards.length === 0 && query !== '') ? 'none' : '';
-            });
-
-            noResults.style.display = hasResults ? 'none' : 'block';
-        });
-
-        // 标签点击筛选
-        document.querySelectorAll('.tag').forEach(tag => {
-            tag.addEventListener('click', function() {
-                searchInput.value = this.textContent.trim();
-                searchInput.dispatchEvent(new Event('input'));
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-
-        // 导航高亮 - PC端
+        // 滚动时导航高亮
         const navItems = document.querySelectorAll('.nav-item');
-        const sections = document.querySelectorAll('.category-section');
+        const sections = document.querySelectorAll('.news-section');
 
         window.addEventListener('scroll', function() {
             let current = '';
             sections.forEach(section => {
-                if (window.scrollY >= section.offsetTop - 120) {
+                if (window.scrollY >= section.offsetTop - 200) {
                     current = section.getAttribute('id');
                 }
             });
@@ -1358,16 +1060,8 @@
             });
         });
 
-        // 移动端导航点击
-        document.querySelectorAll('.mobile-nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        console.log('📰 全球财经新闻平台 v4.2 已加载');
-        console.log('✅ 全新清爽排版设计');
+        console.log('✨ 预言家财经日报魔法加载完成！');
+        console.log('📰 哈利波特魔法报纸风格');
     </script>
 </body>
 </html>

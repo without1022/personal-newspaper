@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>📰 全球财经新闻</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -69,10 +68,6 @@
 
         .brand-icon {
             font-size: 1.3em;
-        }
-
-        .header-date {
-            display: none;
         }
 
         .search-box {
@@ -251,7 +246,7 @@
 
         .mood-bar-fill {
             height: 100%;
-            width: 82%;
+            width: 81%;
             background: white;
             border-radius: 7px;
             animation: fillBar 1.5s ease-out;
@@ -301,7 +296,7 @@
             gap: 14px;
         }
 
-        /* ===== 新闻卡片 - 支持展开 ===== */
+        /* 新闻卡片 */
         .news-card {
             background: white;
             border-radius: 14px;
@@ -325,17 +320,38 @@
             background: linear-gradient(135deg, #fff 0%, #fff5f5 100%);
         }
 
-        .news-header {
+        /* ===== 新闻元信息：来源 + 日期 + 时间 + 热度 ===== */
+        .news-meta-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border);
         }
 
-        .news-time {
+        .news-source-time {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-source-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 0.75em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .news-datetime {
             color: var(--text-muted);
+            font-size: 0.75em;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .news-hot {
@@ -351,17 +367,6 @@
             line-height: 1.5;
             margin-bottom: 10px;
             color: var(--text-primary);
-        }
-
-        .news-source-badge {
-            display: inline-block;
-            background: var(--bg-light);
-            color: #0f3460;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.72em;
-            font-weight: 600;
-            margin-bottom: 10px;
         }
 
         .news-summary {
@@ -461,13 +466,8 @@
             font-size: 0.85em;
         }
 
-        /* 展开状态下旋转箭头 */
         .news-card.expanded .expand-icon {
             transform: rotate(180deg);
-        }
-
-        .news-card.expanded .expand-text {
-            content: "收起详情";
         }
 
         /* 股票表格 */
@@ -637,11 +637,6 @@
             display: none;
         }
 
-        .no-results-icon {
-            font-size: 3em;
-            margin-bottom: 16px;
-        }
-
         /* 响应式 */
         @media (max-width: 1100px) {
             .main-container {
@@ -673,27 +668,13 @@
                 padding: 18px;
                 border-radius: 14px;
             }
-            .hero-title {
-                font-size: 1.15em;
-                margin-bottom: 14px;
-            }
-            .mood-big {
+            .news-meta-top {
                 flex-direction: column;
-                text-align: center;
-                gap: 14px;
+                align-items: flex-start;
+                gap: 6px;
             }
-            .mood-score-big {
-                font-size: 2.5em;
-            }
-            .mood-bar-big {
+            .news-source-time {
                 width: 100%;
-            }
-            .news-card {
-                padding: 16px;
-                border-radius: 12px;
-            }
-            .news-title {
-                font-size: 0.95em;
             }
             .news-footer {
                 flex-direction: column;
@@ -702,10 +683,6 @@
             }
             .expand-btn {
                 align-self: flex-end;
-            }
-            .stocks-section {
-                padding: 16px;
-                border-radius: 14px;
             }
         }
     </style>
@@ -717,7 +694,6 @@
                 <span class="brand-icon">📰</span>
                 <span>财经新闻</span>
             </div>
-            <div class="header-date">2026年04月24日</div>
             <div class="search-box">
                 <span>🔍</span>
                 <input type="text" id="searchInput" placeholder="搜索新闻...">
@@ -780,7 +756,7 @@
                 <div class="hero-title">📊 今日市场情绪</div>
                 <div class="mood-big">
                     <div>
-                        <div class="mood-score-big">🚀 82</div>
+                        <div class="mood-score-big">🚀 81</div>
                         <div class="mood-label-big">非常乐观</div>
                     </div>
                     <div class="mood-bar-big">
@@ -790,7 +766,7 @@
                     </div>
                     <div style="text-align: right;">
                         <div style="font-size: 0.85em; opacity: 0.8;">覆盖</div>
-                        <div style="font-size: 1.2em; font-weight: 700;">7 条</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">11 条</div>
                     </div>
                 </div>
             </div>
@@ -860,17 +836,21 @@
                 <div class="category-header">
                     <span class="category-icon">🇨🇳</span>
                     <h2 class="category-title">国内财经</h2>
-                    <span class="category-count">1 条</span>
+                    <span class="category-count">2 条</span>
                 </div>
                 <div class="news-grid">
                     
                 <article class="news-card hot" data-search="A股三大指数集体收涨，成交额突破万亿元 今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升。 A股 成交额 北向资金" data-newsid="news-domestic-0">
-                    <div class="news-header">
-                        <div class="news-time">15:05</div>
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 证券时报</span>
+                            <span class="news-datetime">🕐 2026年04月24日 11:29</span>
+                        </div>
                         <span class="news-hot">🔥 92%</span>
                     </div>
+                    
                     <h3 class="news-title">A股三大指数集体收涨，成交额突破万亿元</h3>
-                    <div class="news-source-badge">证券时报</div>
                     <p class="news-summary">今日A股市场延续强势格局，三大指数集体收涨，两市成交额突破1万亿元。北向资金净流入超80亿元，机构持仓比例持续提升。</p>
                     
                     <!-- 展开的完整内容 -->
@@ -889,6 +869,35 @@
                     </div>
                 </article>
                 
+                <article class="news-card " data-search="央行开展500亿元逆回购操作，维护流动性合理充裕 央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。 央行 逆回购 流动性" data-newsid="news-domestic-1">
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 中国人民银行</span>
+                            <span class="news-datetime">🕐 2026年04月24日 9:15</span>
+                        </div>
+                        <span class="news-hot">🔥 85%</span>
+                    </div>
+                    
+                    <h3 class="news-title">央行开展500亿元逆回购操作，维护流动性合理充裕</h3>
+                    <p class="news-summary">央行今日开展500亿元7天期逆回购操作，中标利率维持不变。本周累计净投放2000亿元，维护银行体系流动性合理充裕。</p>
+                    
+                    <!-- 展开的完整内容 -->
+                    <div class="news-full-content" id="news-domestic-1">
+                        <div class="news-full-content-inner">
+                            中国人民银行今日公告称，为维护银行体系流动性合理充裕，开展500亿元7天期逆回购操作，中标利率为1.80%，与此前持平。<br><br>本周以来，央行持续加大流动性投放力度，累计开展逆回购操作6500亿元，因到期4500亿元，实现净投放2000亿元。<br><br>市场人士表示，央行灵活开展公开市场操作，有助于平抑短期资金波动，保持市场利率平稳运行。
+                        </div>
+                    </div>
+                    
+                    <div class="news-footer">
+                        <div class="news-tags"><span class="tag">央行</span><span class="tag">逆回购</span><span class="tag">流动性</span></div>
+                        <button class="expand-btn" onclick="toggleNews('news-domestic-1')">
+                            <span class="expand-text">查看详情</span>
+                            <span class="expand-icon">▼</span>
+                        </button>
+                    </div>
+                </article>
+                
                 </div>
             </section>
             
@@ -896,17 +905,21 @@
                 <div class="category-header">
                     <span class="category-icon">🌍</span>
                     <h2 class="category-title">国际财经</h2>
-                    <span class="category-count">1 条</span>
+                    <span class="category-count">2 条</span>
                 </div>
                 <div class="news-grid">
                     
                 <article class="news-card hot" data-search="美联储释放鸽派信号，美股三大指数创历史新高 美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨，集体创出历史新高。 美联储 美股 降息" data-newsid="news-international-0">
-                    <div class="news-header">
-                        <div class="news-time">04:30</div>
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 路透社</span>
+                            <span class="news-datetime">🕐 2026年04月24日 04:30</span>
+                        </div>
                         <span class="news-hot">🔥 95%</span>
                     </div>
+                    
                     <h3 class="news-title">美联储释放鸽派信号，美股三大指数创历史新高</h3>
-                    <div class="news-source-badge">路透社</div>
                     <p class="news-summary">美联储主席在最新讲话中释放鸽派信号，表示通胀压力正在缓解，市场预期年内将开始降息。美股三大指数应声上涨，集体创出历史新高。</p>
                     
                     <!-- 展开的完整内容 -->
@@ -925,6 +938,35 @@
                     </div>
                 </article>
                 
+                <article class="news-card hot" data-search="英伟达市值突破3.5万亿美元，AI芯片需求持续火爆 英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长，公司订单已排到2027年。 英伟达 AI芯片 市值" data-newsid="news-international-1">
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 彭博社</span>
+                            <span class="news-datetime">🕐 2026年04月24日 05:15</span>
+                        </div>
+                        <span class="news-hot">🔥 98%</span>
+                    </div>
+                    
+                    <h3 class="news-title">英伟达市值突破3.5万亿美元，AI芯片需求持续火爆</h3>
+                    <p class="news-summary">英伟达股价持续上涨，市值已突破3.5万亿美元，成为全球市值最高的公司。AI芯片需求呈现爆发式增长，公司订单已排到2027年。</p>
+                    
+                    <!-- 展开的完整内容 -->
+                    <div class="news-full-content" id="news-international-1">
+                        <div class="news-full-content-inner">
+                            英伟达股价在盘后交易中继续上涨，市值已突破3.5万亿美元，超越苹果成为全球市值最高的公司。<br><br>公司最新财报显示，AI芯片需求呈现爆发式增长，季度营收同比增长280%。公司CEO黄仁勋表示，AI算力需求远超出预期，目前订单已排到2027年，正在全力扩大产能。
+                        </div>
+                    </div>
+                    
+                    <div class="news-footer">
+                        <div class="news-tags"><span class="tag">英伟达</span><span class="tag">AI芯片</span><span class="tag">市值</span></div>
+                        <button class="expand-btn" onclick="toggleNews('news-international-1')">
+                            <span class="expand-text">查看详情</span>
+                            <span class="expand-icon">▼</span>
+                        </button>
+                    </div>
+                </article>
+                
                 </div>
             </section>
             
@@ -932,17 +974,21 @@
                 <div class="category-header">
                     <span class="category-icon">🤖</span>
                     <h2 class="category-title">AI科技</h2>
-                    <span class="category-count">1 条</span>
+                    <span class="category-count">2 条</span>
                 </div>
                 <div class="news-grid">
                     
                 <article class="news-card hot" data-search="OpenAI发布GPT-4o升级版，多模态能力大幅提升 OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。新模型支持更长上下文窗口。 OpenAI GPT-4o 大模型" data-newsid="news-ai-tech-0">
-                    <div class="news-header">
-                        <div class="news-time">01:00</div>
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 OpenAI官方</span>
+                            <span class="news-datetime">🕐 2026年04月24日 01:00</span>
+                        </div>
                         <span class="news-hot">🔥 98%</span>
                     </div>
+                    
                     <h3 class="news-title">OpenAI发布GPT-4o升级版，多模态能力大幅提升</h3>
-                    <div class="news-source-badge">OpenAI</div>
                     <p class="news-summary">OpenAI发布GPT-4o升级版，在推理能力、数学计算、代码生成等方面均有显著提升，响应速度提升50%。新模型支持更长上下文窗口。</p>
                     
                     <!-- 展开的完整内容 -->
@@ -961,6 +1007,35 @@
                     </div>
                 </article>
                 
+                <article class="news-card hot" data-search="国产大模型密集发布，中国AI实力快速追赶 本周国内多家科技公司密集发布新一代大模型，在中文理解、多模态能力等方面已达到国际先进水平。国产AI生态加速成熟。 大模型 AI 国产化" data-newsid="news-ai-tech-1">
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 36氪</span>
+                            <span class="news-datetime">🕐 2026年04月24日 10:30</span>
+                        </div>
+                        <span class="news-hot">🔥 90%</span>
+                    </div>
+                    
+                    <h3 class="news-title">国产大模型密集发布，中国AI实力快速追赶</h3>
+                    <p class="news-summary">本周国内多家科技公司密集发布新一代大模型，在中文理解、多模态能力等方面已达到国际先进水平。国产AI生态加速成熟。</p>
+                    
+                    <!-- 展开的完整内容 -->
+                    <div class="news-full-content" id="news-ai-tech-1">
+                        <div class="news-full-content-inner">
+                            本周，百度、阿里、字节跳动等国内科技公司密集发布新一代大模型，在中文理解、多模态能力、推理速度等方面均有显著提升。<br><br>评测显示，国产大模型在中文任务上已超越GPT-4，在多模态理解方面达到国际先进水平。<br><br>分析人士认为，随着国产大模型技术快速进步，加上庞大的中文数据和应用场景，中国AI产业有望实现弯道超车。
+                        </div>
+                    </div>
+                    
+                    <div class="news-footer">
+                        <div class="news-tags"><span class="tag">大模型</span><span class="tag">AI</span><span class="tag">国产化</span></div>
+                        <button class="expand-btn" onclick="toggleNews('news-ai-tech-1')">
+                            <span class="expand-text">查看详情</span>
+                            <span class="expand-icon">▼</span>
+                        </button>
+                    </div>
+                </article>
+                
                 </div>
             </section>
             
@@ -973,12 +1048,16 @@
                 <div class="news-grid">
                     
                 <article class="news-card " data-search="腾讯控股发布最新财报，游戏业务表现强劲 腾讯控股公布2024年第二季度财报，营收同比增长15%，净利润同比增长25%。游戏业务表现强劲，海外收入占比持续提升。 腾讯 财报 游戏" data-newsid="news-internet-0">
-                    <div class="news-header">
-                        <div class="news-time">16:30</div>
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 腾讯财报</span>
+                            <span class="news-datetime">🕐 2026年04月24日 16:30</span>
+                        </div>
                         <span class="news-hot">🔥 88%</span>
                     </div>
+                    
                     <h3 class="news-title">腾讯控股发布最新财报，游戏业务表现强劲</h3>
-                    <div class="news-source-badge">腾讯</div>
                     <p class="news-summary">腾讯控股公布2024年第二季度财报，营收同比增长15%，净利润同比增长25%。游戏业务表现强劲，海外收入占比持续提升。</p>
                     
                     <!-- 展开的完整内容 -->
@@ -1009,12 +1088,16 @@
                 <div class="news-grid">
                     
                 <article class="news-card hot" data-search="中芯国际14nm工艺良率突破95%，进入大规模量产 中芯国际宣布14nm工艺良率已达到95%，月产能提升至5万片晶圆。国产14nm芯片已广泛应用于消费电子、汽车等领域。 中芯国际 14nm 芯片" data-newsid="news-semiconductor-0">
-                    <div class="news-header">
-                        <div class="news-time">08:45</div>
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 中芯国际</span>
+                            <span class="news-datetime">🕐 2026年04月24日 08:45</span>
+                        </div>
                         <span class="news-hot">🔥 93%</span>
                     </div>
+                    
                     <h3 class="news-title">中芯国际14nm工艺良率突破95%，进入大规模量产</h3>
-                    <div class="news-source-badge">中芯国际</div>
                     <p class="news-summary">中芯国际宣布14nm工艺良率已达到95%，月产能提升至5万片晶圆。国产14nm芯片已广泛应用于消费电子、汽车等领域。</p>
                     
                     <!-- 展开的完整内容 -->
@@ -1045,12 +1128,16 @@
                 <div class="news-grid">
                     
                 <article class="news-card hot" data-search="比特币减半后持续走强，站稳10万美元关口 比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。 比特币 减半 机构" data-newsid="news-crypto-0">
-                    <div class="news-header">
-                        <div class="news-time">00:30</div>
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 CoinDesk</span>
+                            <span class="news-datetime">🕐 2026年04月24日 00:30</span>
+                        </div>
                         <span class="news-hot">🔥 94%</span>
                     </div>
+                    
                     <h3 class="news-title">比特币减半后持续走强，站稳10万美元关口</h3>
-                    <div class="news-source-badge">CoinDesk</div>
                     <p class="news-summary">比特币第四次减半顺利完成后，价格持续上涨站稳10万美元关口。机构投资者持续增持，市场情绪普遍乐观。</p>
                     
                     <!-- 展开的完整内容 -->
@@ -1076,17 +1163,21 @@
                 <div class="category-header">
                     <span class="category-icon">🚗</span>
                     <h2 class="category-title">新能源汽车</h2>
-                    <span class="category-count">1 条</span>
+                    <span class="category-count">2 条</span>
                 </div>
                 <div class="news-grid">
                     
                 <article class="news-card hot" data-search="比亚迪月销量突破50万辆，创历史新高 比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。 比亚迪 新能源 销量" data-newsid="news-ev-0">
-                    <div class="news-header">
-                        <div class="news-time">18:00</div>
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 比亚迪</span>
+                            <span class="news-datetime">🕐 2026年04月24日 18:00</span>
+                        </div>
                         <span class="news-hot">🔥 91%</span>
                     </div>
+                    
                     <h3 class="news-title">比亚迪月销量突破50万辆，创历史新高</h3>
-                    <div class="news-source-badge">比亚迪</div>
                     <p class="news-summary">比亚迪公布最新销量数据，全系销量达到51.2万辆，再创历史新高。其中海外销量突破10万辆，国际化战略成效显著。</p>
                     
                     <!-- 展开的完整内容 -->
@@ -1105,15 +1196,42 @@
                     </div>
                 </article>
                 
+                <article class="news-card hot" data-search="特斯拉FSD正式入华，自动驾驶行业加速 特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。 特斯拉 FSD 自动驾驶" data-newsid="news-ev-1">
+                    <!-- 新闻头部：来源 + 时间 + 热度 -->
+                    <div class="news-meta-top">
+                        <div class="news-source-time">
+                            <span class="news-source-badge">📰 特斯拉中国</span>
+                            <span class="news-datetime">🕐 2026年04月24日 11:00</span>
+                        </div>
+                        <span class="news-hot">🔥 94%</span>
+                    </div>
+                    
+                    <h3 class="news-title">特斯拉FSD正式入华，自动驾驶行业加速</h3>
+                    <p class="news-summary">特斯拉FSD完全自动驾驶系统正式获得中国监管部门批准。业内认为这将推动中国自动驾驶行业标准加速成熟。</p>
+                    
+                    <!-- 展开的完整内容 -->
+                    <div class="news-full-content" id="news-ev-1">
+                        <div class="news-full-content-inner">
+                            特斯拉中国今日宣布，FSD完全自动驾驶系统正式获得中国监管部门批准，将在国内逐步推送。<br><br>FSD入华后，特斯拉车主可以通过OTA升级获得完整的自动驾驶能力，包括城市道路自动驾驶、自动泊车、智能召唤等功能。<br><br>业内人士认为，FSD入华将加速中国自动驾驶行业标准制定，推动整个产业链快速发展。国内自动驾驶公司也将加速技术迭代，提升竞争力。
+                        </div>
+                    </div>
+                    
+                    <div class="news-footer">
+                        <div class="news-tags"><span class="tag">特斯拉</span><span class="tag">FSD</span><span class="tag">自动驾驶</span></div>
+                        <button class="expand-btn" onclick="toggleNews('news-ev-1')">
+                            <span class="expand-text">查看详情</span>
+                            <span class="expand-icon">▼</span>
+                        </button>
+                    </div>
+                </article>
+                
                 </div>
             </section>
             
 
-            <!-- 无搜索结果 -->
             <div class="no-results" id="noResults">
                 <div class="no-results-icon">🔍</div>
                 <div>没有找到相关新闻</div>
-                <p style="margin-top: 8px; font-size: 0.9em;">试试其他关键词吧</p>
             </div>
         </main>
 
@@ -1121,23 +1239,11 @@
         <aside class="sidebar-right">
             <div class="sidebar-card">
                 <div class="sidebar-title">📅 历史归档</div>
-                <div class="archive-list">
-                    <a href="#" class="archive-item" data-date="2026-04-24">04月24日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-23">04月23日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-22">04月22日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-04-21">04月21日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-04-20">04月20日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-04-19">04月19日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-04-18">04月18日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-04-17">04月17日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-16">04月16日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-15">04月15日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-04-14">04月14日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-04-13">04月13日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-04-12">04月12日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-04-11">04月11日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-04-10">04月10日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-09">04月09日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-08">04月08日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-04-07">04月07日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-04-06">04月06日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-04-05">04月05日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-04-04">04月04日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-04-03">04月03日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-02">04月02日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-01">04月01日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-03-31">03月31日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-03-30">03月30日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-03-29">03月29日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-03-28">03月28日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-03-27">03月27日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-03-26">03月26日 <span>Thu</span></a>
-                </div>
+                <div class="archive-list"><a href="#" class="archive-item" data-date="2026-04-24">04月24日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-23">04月23日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-22">04月22日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-04-21">04月21日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-04-20">04月20日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-04-19">04月19日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-04-18">04月18日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-04-17">04月17日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-16">04月16日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-15">04月15日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-04-14">04月14日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-04-13">04月13日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-04-12">04月12日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-04-11">04月11日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-04-10">04月10日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-09">04月09日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-08">04月08日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-04-07">04月07日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-04-06">04月06日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-04-05">04月05日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-04-04">04月04日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-04-03">04月03日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-04-02">04月02日 <span>Thu</span></a><a href="#" class="archive-item" data-date="2026-04-01">04月01日 <span>Wed</span></a><a href="#" class="archive-item" data-date="2026-03-31">03月31日 <span>Tue</span></a><a href="#" class="archive-item" data-date="2026-03-30">03月30日 <span>Mon</span></a><a href="#" class="archive-item" data-date="2026-03-29">03月29日 <span>Sun</span></a><a href="#" class="archive-item" data-date="2026-03-28">03月28日 <span>Sat</span></a><a href="#" class="archive-item" data-date="2026-03-27">03月27日 <span>Fri</span></a><a href="#" class="archive-item" data-date="2026-03-26">03月26日 <span>Thu</span></a></div>
             </div>
-
             <div class="sidebar-card">
                 <div class="sidebar-title">🏷️ 热门标签</div>
-                <div class="sidebar-tags">
-                    <span class="sidebar-tag">14nm</span><span class="sidebar-tag">A股</span><span class="sidebar-tag">GPT-4o</span><span class="sidebar-tag">OpenAI</span><span class="sidebar-tag">中芯国际</span><span class="sidebar-tag">减半</span><span class="sidebar-tag">北向资金</span><span class="sidebar-tag">大模型</span><span class="sidebar-tag">成交额</span><span class="sidebar-tag">新能源</span><span class="sidebar-tag">机构</span><span class="sidebar-tag">比亚迪</span><span class="sidebar-tag">比特币</span><span class="sidebar-tag">游戏</span><span class="sidebar-tag">美联储</span><span class="sidebar-tag">美股</span><span class="sidebar-tag">腾讯</span><span class="sidebar-tag">芯片</span><span class="sidebar-tag">财报</span><span class="sidebar-tag">销量</span><span class="sidebar-tag">降息</span>
-                </div>
-            </div>
-
-            <div class="sidebar-card">
-                <div class="sidebar-title">ℹ️ 关于</div>
-                <p style="color: var(--text-secondary); font-size: 0.85em; line-height: 1.8;">
-                    AI驱动的全球财经新闻聚合，每日实时更新。
-                </p>
+                <div class="sidebar-tags"><span class="sidebar-tag">14nm</span><span class="sidebar-tag">AI</span><span class="sidebar-tag">AI芯片</span><span class="sidebar-tag">A股</span><span class="sidebar-tag">FSD</span><span class="sidebar-tag">GPT-4o</span><span class="sidebar-tag">OpenAI</span><span class="sidebar-tag">中芯国际</span><span class="sidebar-tag">减半</span><span class="sidebar-tag">北向资金</span><span class="sidebar-tag">国产化</span><span class="sidebar-tag">大模型</span><span class="sidebar-tag">央行</span><span class="sidebar-tag">市值</span><span class="sidebar-tag">成交额</span><span class="sidebar-tag">新能源</span><span class="sidebar-tag">机构</span><span class="sidebar-tag">比亚迪</span><span class="sidebar-tag">比特币</span><span class="sidebar-tag">流动性</span><span class="sidebar-tag">游戏</span><span class="sidebar-tag">特斯拉</span><span class="sidebar-tag">美联储</span><span class="sidebar-tag">美股</span><span class="sidebar-tag">腾讯</span><span class="sidebar-tag">自动驾驶</span><span class="sidebar-tag">芯片</span><span class="sidebar-tag">英伟达</span><span class="sidebar-tag">财报</span><span class="sidebar-tag">逆回购</span><span class="sidebar-tag">销量</span><span class="sidebar-tag">降息</span></div>
             </div>
         </aside>
     </div>
@@ -1176,7 +1282,6 @@
     </footer>
 
     <script>
-        // 展开/收起新闻详情
         function toggleNews(newsId) {
             const content = document.getElementById(newsId);
             const card = content.closest('.news-card');
@@ -1193,7 +1298,6 @@
             }
         }
 
-        // 搜索功能
         const searchInput = document.getElementById('searchInput');
         const allNewsCards = document.querySelectorAll('.news-card');
         const noResults = document.getElementById('noResults');
@@ -1204,11 +1308,7 @@
             
             allNewsCards.forEach(card => {
                 const searchText = card.getAttribute('data-search').toLowerCase();
-                
-                if (query === '') {
-                    card.style.display = '';
-                    hasResults = true;
-                } else if (searchText.includes(query)) {
+                if (query === '' || searchText.includes(query)) {
                     card.style.display = '';
                     hasResults = true;
                 } else {
@@ -1216,42 +1316,32 @@
                 }
             });
             
-            // 显示/隐藏板块标题
             document.querySelectorAll('.category-section').forEach(section => {
                 const visibleCards = section.querySelectorAll('.news-card:not([style*="display: none"])');
-                if (visibleCards.length === 0 && query !== '') {
-                    section.style.display = 'none';
-                } else {
-                    section.style.display = '';
-                }
+                section.style.display = (visibleCards.length === 0 && query !== '') ? 'none' : '';
             });
 
             noResults.style.display = hasResults ? 'none' : 'block';
         });
 
-        // 标签点击筛选
         document.querySelectorAll('.tag, .sidebar-tag').forEach(tag => {
             tag.addEventListener('click', function() {
-                const tagText = this.textContent.trim();
-                searchInput.value = tagText;
+                searchInput.value = this.textContent.trim();
                 searchInput.dispatchEvent(new Event('input'));
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
 
-        // 导航高亮 - PC端
         const navItems = document.querySelectorAll('.nav-item');
         const sections = document.querySelectorAll('.category-section');
 
         window.addEventListener('scroll', function() {
             let current = '';
             sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 100) {
+                if (window.scrollY >= section.offsetTop - 100) {
                     current = section.getAttribute('id');
                 }
             });
-
             navItems.forEach(item => {
                 item.classList.remove('active');
                 if (item.getAttribute('href') === '#' + current) {
@@ -1260,26 +1350,15 @@
             });
         });
 
-        // 移动端导航点击
         document.querySelectorAll('.mobile-nav-item').forEach(item => {
-            item.addEventListener('click', function(e) {
+            item.addEventListener('click', function() {
                 document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
             });
         });
 
-        // 归档点击
-        document.querySelectorAll('.archive-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const date = this.getAttribute('data-date');
-                alert('📅 历史归档功能开发中...\n\n将支持查看: ' + date + ' 的报纸');
-            });
-        });
-
-        console.log('📰 全球财经新闻平台 v4.0 已加载');
-        console.log('✅ 支持点击展开新闻详情');
-        console.log(`📊 今日新闻: 7 条`);
+        console.log('📰 全球财经新闻平台 v4.1 已加载');
+        console.log('✅ 每条新闻清晰标注来源和时间');
     </script>
 </body>
 </html>

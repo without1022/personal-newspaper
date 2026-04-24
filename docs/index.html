@@ -9,194 +9,390 @@
     <style>
         * { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif; }
         
-        @keyframes crystalGlow {
-            0%, 100% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.5), 0 0 15px rgba(59, 130, 246, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.4); }
+        /* ==================== 高级特效 CSS ==================== */
+        
+        /* 渐变动画背景 */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e3a5f);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
         }
         
-        @keyframes newsReveal {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* 预言卡片发光 */
+        @keyframes prophecyGlow {
+            0%, 100% { 
+                box-shadow: 0 0 5px rgba(139, 92, 246, 0.3), 
+                            0 0 15px rgba(59, 130, 246, 0.2),
+                            0 0 30px rgba(139, 92, 246, 0.1);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.6), 
+                            0 0 40px rgba(59, 130, 246, 0.4),
+                            0 0 60px rgba(139, 92, 246, 0.2);
+            }
         }
         
         .prophecy-card {
-            animation: crystalGlow 3s ease-in-out infinite;
+            animation: prophecyGlow 4s ease-in-out infinite;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .prophecy-badge {
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+        .prophecy-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            animation: none;
+            box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.4);
         }
         
+        /* 3D 卡片倾斜效果 */
+        .card-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.3s ease;
+        }
+        
+        /* 粒子背景 Canvas */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* 鼠标跟随星尘 */
+        .stardust {
+            position: fixed;
+            pointer-events: none;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.8), transparent);
+            border-radius: 50%;
+            z-index: 9999;
+            mix-blend-mode: screen;
+        }
+        
+        /* 文字发光效果 */
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.4); }
+        }
+        
+        .glow-text {
+            animation: textGlow 3s ease-in-out infinite;
+        }
+        
+        /* 滚动渐入动画 */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 预言概率条流光 */
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .shimmer-bar {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shimmer-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        /* 水晶球 3D 旋转 */
+        @keyframes floatRotate {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            25% { transform: translateY(-10px) rotateY(90deg); }
+            50% { transform: translateY(-5px) rotateY(180deg); }
+            75% { transform: translateY(-15px) rotateY(270deg); }
+        }
+        
+        .crystal-3d {
+            animation: floatRotate 8s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+        
+        /* 魔法波纹效果 */
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent);
+            animation: ripple 1s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        /* 数字计数动画 */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 预言验证成功/失败的粒子爆炸 */
+        @keyframes explode {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(1) rotate(180deg); opacity: 0; }
+        }
+        
+        .explosion-particle {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: explode 1s ease-out forwards;
+        }
+        
+        /* 毛玻璃效果 */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 分类按钮 hover 效果 */
+        .category-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .category-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* 新闻卡片悬浮 */
         .news-card {
-            animation: newsReveal 0.5s ease-out;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .news-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
         }
         
-        .hero-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        /* 模态框弹出动画 */
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         
-        .category-btn.active {
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            color: white;
+        .modal-animate {
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
-        .prediction-meter {
-            background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e);
-        }
-        
-        /* 彩蛋游戏按钮 */
+        /* 水晶球彩蛋按钮 */
         .easter-egg {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
             z-index: 100;
-            opacity: 0.3;
-            transition: all 0.3s;
-        }
-        .easter-egg:hover {
-            opacity: 1;
-            transform: scale(1.1);
+            opacity: 0.4;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
         }
         
-        /* 预言成真/失败动画 */
+        .easter-egg:hover {
+            opacity: 1;
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        /* 预测成真/失败动画 */
         @keyframes truePrediction {
             0% { background: white; }
-            50% { background: rgba(34, 197, 94, 0.3); }
+            25% { background: rgba(34, 197, 94, 0.4); }
+            50% { background: rgba(34, 197, 94, 0.2); }
+            75% { background: rgba(34, 197, 94, 0.3); }
             100% { background: white; }
         }
+        
         @keyframes falsePrediction {
             0% { background: white; }
-            50% { background: rgba(239, 68, 68, 0.3); }
+            25% { background: rgba(239, 68, 68, 0.4); }
+            50% { background: rgba(239, 68, 68, 0.2); }
+            75% { background: rgba(239, 68, 68, 0.3); }
             100% { background: white; }
         }
+        
         .prediction-true {
-            animation: truePrediction 1s ease-out;
+            animation: truePrediction 1.5s ease-out;
         }
+        
         .prediction-false {
-            animation: falsePrediction 1s ease-out;
+            animation: falsePrediction 1.5s ease-out;
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 relative overflow-x-hidden">
+    <!-- 星空背景 Canvas -->
+    <canvas id="starfield"></canvas>
+    
     <!-- 顶部导航 -->
-    <header class="hero-gradient text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between py-4">
-                <div class="flex items-center gap-3">
-                    <div class="text-3xl" style="animation: float 3s ease-in-out infinite">🔮</div>
+    <header class="animated-gradient text-white shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 relative">
+            <!-- 光晕装饰 -->
+            <div class="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute top-0 right-1/4 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex items-center justify-between py-5 relative">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl crystal-3d">🔮</div>
                     <div>
-                        <h1 class="text-2xl font-bold tracking-wide">星象日报</h1>
-                        <p class="text-xs text-gray-300">ASTRO DAILY · 预见未来的新闻</p>
+                        <h1 class="text-2xl font-bold tracking-wide glow-text">星象日报</h1>
+                        <p class="text-xs text-gray-300">ASTRO DAILY · 用数据预见未来</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-6">
-                    <div class="text-sm text-gray-300 hidden md:block">
+                    <div class="text-sm text-gray-300 hidden md:block glass rounded-full px-4 py-2">
                         <span>📅 2024年12月20日</span>
                         <span class="mx-3">|</span>
                         <span>🔮 预言准确率: <strong class="text-green-400">87.3%</strong></span>
                     </div>
                     <div class="relative">
-                        <input type="text" placeholder="搜索新闻..." class="bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-gray-400">
+                        <input type="text" placeholder="搜索新闻..." class="glass text-white border-none rounded-full px-5 py-2.5 text-sm w-56 focus:outline-none focus:ring-2 focus:ring-purple-400/50 placeholder-gray-400">
                     </div>
                 </div>
             </div>
             <!-- 分类导航 -->
-            <nav class="flex gap-2 pb-3 overflow-x-auto">
-                <button class="category-btn active px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap" onclick="filterNews('all')">全部</button>
-                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('tech')">💻 科技</button>
-                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('finance')">💰 金融</button>
-                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('ai')">🤖 AI</button>
-                <button class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('prophecy')">✨ 预言</button>
+            <nav class="flex gap-3 pb-4 overflow-x-auto">
+                <button class="category-btn active px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg" onclick="filterNews('all')">全部</button>
+                <button class="category-btn px-5 py-2.5 rounded-full text-sm font-medium glass hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('tech')">💻 科技</button>
+                <button class="category-btn px-5 py-2.5 rounded-full text-sm font-medium glass hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('finance')">💰 金融</button>
+                <button class="category-btn px-5 py-2.5 rounded-full text-sm font-medium glass hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('ai')">🤖 AI</button>
+                <button class="category-btn px-5 py-2.5 rounded-full text-sm font-medium glass hover:bg-white/20 transition-all whitespace-nowrap" onclick="filterNews('prophecy')">✨ 预言</button>
             </nav>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-7xl mx-auto px-4 py-10 relative z-10">
         <!-- 头条区域 -->
-        <section class="mb-10">
+        <section class="mb-12 reveal">
             <div class="grid md:grid-cols-2 gap-6">
-                <!-- 主头条 -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer prophecy-card" onclick="openProphecy('nvidia')">
-                    <div class="h-56 bg-gradient-to-br from-purple-600 to-blue-600 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center text-8xl opacity-30">🚀</div>
-                        <div class="absolute top-4 left-4">
-                            <span class="prophecy-badge text-white text-xs px-3 py-1 rounded-full font-medium">✨ 预言新闻</span>
+                <!-- 主头条 - 预言新闻 -->
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden news-card card-3d prophecy-card cursor-pointer" onclick="openProphecy('nvidia')">
+                    <div class="h-64 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 relative overflow-hidden">
+                        <!-- 动态波纹背景 -->
+                        <div class="absolute inset-0">
+                            <div class="absolute w-96 h-96 -top-20 -left-20 bg-white/10 rounded-full blur-3xl"></div>
+                            <div class="absolute w-64 h-64 bottom-0 right-0 bg-purple-400/20 rounded-full blur-2xl"></div>
                         </div>
-                        <div class="absolute bottom-4 right-4 bg-white/20 backdrop-blur rounded-lg px-3 py-2">
-                            <div class="text-xs text-white mb-1">成真概率</div>
-                            <div class="h-2 w-32 bg-white/30 rounded-full overflow-hidden">
-                                <div class="prediction-meter h-full rounded-full" style="width: 92%"></div>
+                        <div class="absolute inset-0 flex items-center justify-center text-9xl opacity-20" style="animation: floatRotate 10s linear infinite">🚀</div>
+                        <div class="absolute top-6 left-6">
+                            <span class="bg-gradient-to-r from-purple-400 to-blue-400 text-white text-sm px-4 py-1.5 rounded-full font-medium shadow-lg">✨ 预言新闻</span>
+                        </div>
+                        <div class="absolute bottom-6 right-6 glass rounded-2xl px-4 py-3">
+                            <div class="text-xs text-white mb-2 font-medium">成真概率</div>
+                            <div class="h-3 w-40 bg-white/30 rounded-full overflow-hidden shimmer-bar">
+                                <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 92%"></div>
                             </div>
-                            <div class="text-right text-white text-xs mt-1 font-bold">92%</div>
+                            <div class="text-right text-white text-sm mt-1 font-bold">92%</div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-3 leading-tight">
+                    <div class="p-7">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 leading-tight">
                             预言：英伟达市值将在2025年突破5万亿美元，AI芯片需求持续爆发
                         </h2>
-                        <p class="text-gray-600 text-sm mb-4">
-                            据星象研究院预测，随着AI大模型训练需求持续增长，英伟达GPU订单已排至2027年。分析师普遍看好其增长前景...
+                        <p class="text-gray-600 mb-5 leading-relaxed">
+                            据星象研究院预测，随着AI大模型训练需求持续增长，英伟达GPU订单已排至2027年。分析师普遍看好其增长前景，认为AI硬件革命才刚刚开始...
                         </p>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">📊 星象金融组 · 3小时前</span>
-                            <span class="text-purple-600 font-medium hover:underline">点击验证预言 →</span>
+                            <span class="text-gray-500">📊 星象金融分析组 · 3小时前</span>
+                            <span class="text-purple-600 font-semibold hover:underline flex items-center gap-1">
+                                点击验证预言 
+                                <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 次头条 -->
-                <div class="space-y-4">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openNews('openai')">
+                <div class="space-y-5">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openNews('openai')">
                         <div class="flex">
-                            <div class="w-32 h-32 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center text-5xl">
+                            <div class="w-36 h-36 bg-gradient-to-br from-green-500 via-teal-500 to-emerald-600 flex items-center justify-center text-6xl relative overflow-hidden">
+                                <div class="absolute inset-0 bg-white/10 rounded-full blur-xl scale-150"></div>
                                 🧠
                             </div>
-                            <div class="p-4 flex-1">
-                                <h3 class="font-bold text-gray-900 mb-2">OpenAI GPT-5 即将发布，推理能力突破人类水平</h3>
-                                <p class="text-gray-600 text-sm line-clamp-2">最新泄露的测试数据显示，GPT-5在多项推理测试中已超越普通人类...</p>
-                                <p class="text-gray-400 text-xs mt-2">💻 科技 · 2小时前</p>
+                            <div class="p-5 flex-1">
+                                <h3 class="font-bold text-gray-900 mb-2 text-lg">OpenAI GPT-5 即将发布，推理能力突破人类水平</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">最新泄露的测试数据显示，GPT-5在多项推理测试中已超越普通人类水平，AGI里程碑渐近...</p>
+                                <p class="text-gray-400 text-xs mt-3">💻 科技 · 2小时前</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer prophecy-card" onclick="openProphecy('btc')">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card card-3d prophecy-card cursor-pointer reveal" onclick="openProphecy('btc')" id="card-btc">
                         <div class="flex">
-                            <div class="w-32 h-32 bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center text-5xl relative">
-                                <span>₿</span>
-                                <span class="absolute top-2 right-2 text-xs bg-white/30 px-2 py-0.5 rounded-full">✨</span>
+                            <div class="w-36 h-36 bg-gradient-to-br from-orange-500 via-amber-400 to-yellow-500 flex items-center justify-center text-6xl relative overflow-hidden">
+                                <div class="absolute inset-0 bg-white/10 rounded-full blur-xl scale-150"></div>
+                                ₿
+                                <span class="absolute top-3 right-3 text-sm bg-white/40 backdrop-blur px-2 py-0.5 rounded-full">✨</span>
                             </div>
-                            <div class="p-4 flex-1">
-                                <h3 class="font-bold text-gray-900 mb-2">预言：比特币将在2025年Q2突破20万美元大关</h3>
-                                <p class="text-gray-600 text-sm line-clamp-2">减半效应+ETF资金持续流入，星象模型预测上涨概率达78%...</p>
-                                <div class="flex items-center gap-2 mt-2">
-                                    <div class="h-1.5 w-24 bg-gray-200 rounded-full overflow-hidden">
-                                        <div class="prediction-meter h-full rounded-full" style="width: 78%"></div>
+                            <div class="p-5 flex-1">
+                                <h3 class="font-bold text-gray-900 mb-2 text-lg">预言：比特币将在2025年Q2突破20万美元大关</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">减半效应+ETF资金持续流入，星象模型预测上涨概率达78%，机构增持趋势明显...</p>
+                                <div class="flex items-center gap-3 mt-3">
+                                    <div class="h-2.5 w-28 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
+                                        <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 78%"></div>
                                     </div>
-                                    <span class="text-xs text-gray-500">78% 概率</span>
+                                    <span class="text-xs text-gray-500 font-medium">78% 概率</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openNews('tesla')">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openNews('tesla')">
                         <div class="flex">
-                            <div class="w-32 h-32 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center text-5xl">
+                            <div class="w-36 h-36 bg-gradient-to-br from-red-500 via-rose-500 to-pink-600 flex items-center justify-center text-6xl relative overflow-hidden">
+                                <div class="absolute inset-0 bg-white/10 rounded-full blur-xl scale-150"></div>
                                 🚗
                             </div>
-                            <div class="p-4 flex-1">
-                                <h3 class="font-bold text-gray-900 mb-2">特斯拉全自动驾驶FSD V13全球推送，事故率降低90%</h3>
-                                <p class="text-gray-600 text-sm line-clamp-2">最新数据显示，FSD V13的驾驶安全性已远超人类驾驶员...</p>
-                                <p class="text-gray-400 text-xs mt-2">💰 金融 · 5小时前</p>
+                            <div class="p-5 flex-1">
+                                <h3 class="font-bold text-gray-900 mb-2 text-lg">特斯拉全自动驾驶FSD V13全球推送，事故率降低90%</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">最新数据显示，FSD V13的驾驶安全性已远超人类驾驶员，全球数百万车主已更新...</p>
+                                <p class="text-gray-400 text-xs mt-3">💰 金融 · 5小时前</p>
                             </div>
                         </div>
                     </div>
@@ -205,75 +401,73 @@
         </section>
 
         <!-- 预言新闻专区 -->
-        <section class="mb-10">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <span class="text-2xl">✨</span> 今日预言
-                    <span class="text-sm font-normal text-gray-500 ml-2">点击验证预言是否成真</span>
+        <section class="mb-12 reveal">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <span class="text-3xl" style="animation: floatRotate 6s ease-in-out infinite">✨</span> 
+                    今日预言
+                    <span class="text-sm font-normal text-gray-500 ml-2 bg-purple-100 text-purple-600 px-3 py-1 rounded-full">点击验证</span>
                 </h2>
-                <span class="text-sm text-purple-600 cursor-pointer hover:underline">查看全部预言 →</span>
+                <span class="text-sm text-purple-600 cursor-pointer hover:underline font-medium">查看全部预言 →</span>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-5">
-                <!-- 预言卡片1 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openProphecy('apple')" id="card-apple">
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-3">
-                            <span class="text-4xl">🍎</span>
-                            <span class="prophecy-badge text-white text-xs px-2 py-1 rounded-full">预言</span>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openProphecy('apple')" id="card-apple">
+                    <div class="p-7">
+                        <div class="flex items-start justify-between mb-5">
+                            <span class="text-5xl">🍎</span>
+                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">预言</span>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-2">苹果Vision Pro 2销量破千万，空间计算时代到来</h3>
-                        <p class="text-gray-600 text-sm mb-4">第二代Vision Pro价格下探至$1999，普通消费者购买力被激活...</p>
+                        <h3 class="font-bold text-gray-900 mb-3 text-lg">Vision Pro 2销量破千万，空间计算时代正式到来</h3>
+                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">第二代Vision Pro价格下探至$1999，普通消费者购买力被激活，内容生态爆发...</p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <div class="h-2 w-20 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="prediction-meter h-full rounded-full" style="width: 65%"></div>
+                                <div class="h-2.5 w-24 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 65%"></div>
                                 </div>
-                                <span class="text-xs text-gray-500">65%</span>
+                                <span class="text-sm font-bold text-gray-600">65%</span>
                             </div>
-                            <span class="text-xs text-purple-600">点击验证 →</span>
+                            <span class="text-sm text-purple-600 font-medium flex items-center gap-1">验证 →</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 预言卡片2 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openProphecy('china')" id="card-china">
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-3">
-                            <span class="text-4xl">🇨🇳</span>
-                            <span class="prophecy-badge text-white text-xs px-2 py-1 rounded-full">预言</span>
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openProphecy('china')" id="card-china">
+                    <div class="p-7">
+                        <div class="flex items-start justify-between mb-5">
+                            <span class="text-5xl">🇨🇳</span>
+                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">预言</span>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-2">中国GDP总量将在2028年超越美国，成为世界第一大经济体</h3>
-                        <p class="text-gray-600 text-sm mb-4">高端制造产业升级持续推进，内需市场稳步扩大...</p>
+                        <h3 class="font-bold text-gray-900 mb-3 text-lg">中国GDP总量将在2028年超越美国，成为世界第一大经济体</h3>
+                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">高端制造产业升级持续推进，内需市场稳步扩大，科技创新投入逐年增长...</p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <div class="h-2 w-20 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="prediction-meter h-full rounded-full" style="width: 58%"></div>
+                                <div class="h-2.5 w-24 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 58%"></div>
                                 </div>
-                                <span class="text-xs text-gray-500">58%</span>
+                                <span class="text-sm font-bold text-gray-600">58%</span>
                             </div>
-                            <span class="text-xs text-purple-600">点击验证 →</span>
+                            <span class="text-sm text-purple-600 font-medium flex items-center gap-1">验证 →</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 预言卡片3 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden news-card transition-all cursor-pointer" onclick="openProphecy('mars')" id="card-mars">
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-3">
-                            <span class="text-4xl">🔴</span>
-                            <span class="prophecy-badge text-white text-xs px-2 py-1 rounded-full">预言</span>
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden news-card card-3d cursor-pointer reveal" onclick="openProphecy('mars')" id="card-mars">
+                    <div class="p-7">
+                        <div class="flex items-start justify-between mb-5">
+                            <span class="text-5xl">🔴</span>
+                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md">预言</span>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-2">SpaceX星舰2030年前实现载人登陆火星，首批100名殖民者</h3>
-                        <p class="text-gray-600 text-sm mb-4">星舰原型机测试顺利，猛禽发动机已达到设计推力...</p>
+                        <h3 class="font-bold text-gray-900 mb-3 text-lg">SpaceX星舰2030年前实现载人登陆火星，首批100名殖民者</h3>
+                        <p class="text-gray-600 text-sm mb-5 leading-relaxed">星舰原型机测试顺利，猛禽发动机已达到设计推力，火星基地规划已启动...</p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <div class="h-2 w-20 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="prediction-meter h-full rounded-full" style="width: 42%"></div>
+                                <div class="h-2.5 w-24 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500" style="width: 42%"></div>
                                 </div>
-                                <span class="text-xs text-gray-500">42%</span>
+                                <span class="text-sm font-bold text-gray-600">42%</span>
                             </div>
-                            <span class="text-xs text-purple-600">点击验证 →</span>
+                            <span class="text-sm text-purple-600 font-medium flex items-center gap-1">验证 →</span>
                         </div>
                     </div>
                 </div>
@@ -281,64 +475,68 @@
         </section>
 
         <!-- 普通新闻流 -->
-        <section class="mb-10">
-            <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <span class="text-2xl">📰</span> 最新资讯
+        <section class="mb-12 reveal">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                <span class="text-3xl">📰</span> 最新资讯
             </h2>
             
-            <div class="grid md:grid-cols-2 gap-5">
-                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
-                    <div class="flex gap-4">
-                        <div class="w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
+                    <div class="flex gap-5">
+                        <div class="w-28 h-28 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
                             💊
                         </div>
-                        <div>
-                            <span class="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded">科技</span>
-                            <h3 class="font-bold text-gray-900 mt-2 mb-1">AI药物发现平台发现新型抗生素，可对抗超级细菌</h3>
+                        <div class="flex-1">
+                            <span class="text-xs text-blue-600 bg-blue-100 px-3 py-1 rounded-full font-medium">科技</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">AI药物发现平台发现新型抗生素，可对抗超级细菌</h3>
                             <p class="text-gray-600 text-sm line-clamp-2">DeepMind团队利用AlphaFold发现全新分子结构，对耐药性细菌有效率达98%</p>
-                            <p class="text-gray-400 text-xs mt-2">昨天 18:32</p>
+                            <p class="text-gray-400 text-xs mt-3">昨天 18:32</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
-                    <div class="flex gap-4">
-                        <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
+                    <div class="flex gap-5">
+                        <div class="w-28 h-28 bg-gradient-to-br from-green-400 via-green-500 to-green-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
                             ⚡
                         </div>
-                        <div>
-                            <span class="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded">能源</span>
-                            <h3 class="font-bold text-gray-900 mt-2 mb-1">可控核聚变突破：Q值达到50，商业化进程加速</h3>
+                        <div class="flex-1">
+                            <span class="text-xs text-green-600 bg-green-100 px-3 py-1 rounded-full font-medium">能源</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">可控核聚变突破：Q值达到50，商业化进程加速</h3>
                             <p class="text-gray-600 text-sm line-clamp-2">美国能源部宣布国家点火装置实现重大突破，能量增益达到历史新高</p>
-                            <p class="text-gray-400 text-xs mt-2">昨天 14:15</p>
+                            <p class="text-gray-400 text-xs mt-3">昨天 14:15</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
-                    <div class="flex gap-4">
-                        <div class="w-24 h-24 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
+                    <div class="flex gap-5">
+                        <div class="w-28 h-28 bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
                             🧬
                         </div>
-                        <div>
-                            <span class="text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded">医疗</span>
-                            <h3 class="font-bold text-gray-900 mt-2 mb-1">CRISPR基因编辑治愈镰刀型贫血症，首批患者已停药3年</h3>
+                        <div class="flex-1">
+                            <span class="text-xs text-purple-600 bg-purple-100 px-3 py-1 rounded-full font-medium">医疗</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">CRISPR基因编辑治愈镰刀型贫血症，首批患者已停药3年</h3>
                             <p class="text-gray-600 text-sm line-clamp-2">基因疗法长期效果确认，一次性治疗永久治愈遗传性疾病成为可能</p>
-                            <p class="text-gray-400 text-xs mt-2">昨天 11:08</p>
+                            <p class="text-gray-400 text-xs mt-3">昨天 11:08</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-md p-5 news-card transition-all cursor-pointer">
-                    <div class="flex gap-4">
-                        <div class="w-24 h-24 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
+                <div class="bg-white rounded-2xl shadow-lg p-6 news-card card-3d cursor-pointer reveal">
+                    <div class="flex gap-5">
+                        <div class="w-28 h-28 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-4xl flex-shrink-0 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-white/10 rounded-full blur-lg"></div>
                             🤖
                         </div>
-                        <div>
-                            <span class="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded">AI</span>
-                            <h3 class="font-bold text-gray-900 mt-2 mb-1">人形机器人成本降至2万美元以下，2025年开始量产</h3>
+                        <div class="flex-1">
+                            <span class="text-xs text-orange-600 bg-orange-100 px-3 py-1 rounded-full font-medium">AI</span>
+                            <h3 class="font-bold text-gray-900 mt-3 mb-2 text-lg">人形机器人成本降至2万美元以下，2025年开始量产</h3>
                             <p class="text-gray-600 text-sm line-clamp-2">特斯拉Optimus、波士顿动力等多家厂商宣布成本大幅下降，工厂应用加速</p>
-                            <p class="text-gray-400 text-xs mt-2">今天 09:45</p>
+                            <p class="text-gray-400 text-xs mt-3">今天 09:45</p>
                         </div>
                     </div>
                 </div>
@@ -346,26 +544,30 @@
         </section>
 
         <!-- 数据统计区 -->
-        <section class="mb-10">
-            <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
-                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-                    <span>📊</span> 星象预言统计
+        <section class="mb-12 reveal">
+            <div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-3xl p-10 text-white relative overflow-hidden">
+                <!-- 背景装饰 -->
+                <div class="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+                <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+                
+                <h2 class="text-2xl font-bold mb-8 flex items-center gap-3 relative z-10">
+                    <span class="text-3xl">📊</span> 星象预言统计
                 </h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                    <div>
-                        <div class="text-3xl font-bold">1,247</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
+                    <div class="glass rounded-2xl p-6">
+                        <div class="text-4xl font-bold mb-2 counter" data-target="1247">0</div>
                         <div class="text-white/70 text-sm">总预言数</div>
                     </div>
-                    <div>
-                        <div class="text-3xl font-bold text-green-300">87.3%</div>
+                    <div class="glass rounded-2xl p-6">
+                        <div class="text-4xl font-bold mb-2 text-green-300 counter" data-target="87.3" data-suffix="%">0</div>
                         <div class="text-white/70 text-sm">准确率</div>
                     </div>
-                    <div>
-                        <div class="text-3xl font-bold">6</div>
+                    <div class="glass rounded-2xl p-6">
+                        <div class="text-4xl font-bold mb-2 counter" data-target="6">0</div>
                         <div class="text-white/70 text-sm">预言已验证</div>
                     </div>
-                    <div>
-                        <div class="text-3xl font-bold">142</div>
+                    <div class="glass rounded-2xl p-6">
+                        <div class="text-4xl font-bold mb-2 counter" data-target="142">0</div>
                         <div class="text-white/70 text-sm">待验证预言</div>
                     </div>
                 </div>
@@ -374,62 +576,273 @@
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-gray-900 text-white py-10">
+    <footer class="bg-gray-900 text-white py-12 relative z-10">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl">🔮</span>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-4">
+                    <span class="text-4xl crystal-3d">🔮</span>
                     <div>
-                        <h3 class="font-bold text-lg">星象日报</h3>
+                        <h3 class="font-bold text-xl glow-text">星象日报</h3>
                         <p class="text-gray-400 text-sm">ASTRO DAILY · 用数据预见未来</p>
                     </div>
                 </div>
-                <div class="flex gap-6 text-sm text-gray-400">
-                    <a href="#" class="hover:text-white transition-colors">关于我们</a>
-                    <a href="#" class="hover:text-white transition-colors">预言方法</a>
-                    <a href="#" class="hover:text-white transition-colors">数据来源</a>
-                    <a href="#" class="hover:text-white transition-colors">联系方式</a>
+                <div class="flex gap-8 text-sm text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors duration-300">关于我们</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300">预言方法</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300">数据来源</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300">联系方式</a>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+            <div class="border-t border-gray-800 mt-10 pt-8 text-center text-gray-500 text-sm">
                 <p>© 2024 星象日报 Astro Daily. 所有预言仅供参考，不构成投资建议。</p>
-                <p class="mt-2">✨ 发现隐藏的水晶球彩蛋，体验更多互动功能</p>
+                <p class="mt-3">✨ 发现右下角隐藏的水晶球彩蛋，获取你的私人预言</p>
             </div>
         </div>
     </footer>
 
-    <!-- 彩蛋：水晶球游戏（隐藏在右下角） -->
+    <!-- 水晶球彩蛋 -->
     <div class="easter-egg" onclick="openCrystalBall()">
-        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-2xl shadow-lg">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500 rounded-full flex items-center justify-center text-3xl shadow-2xl crystal-3d">
             🔮
         </div>
     </div>
 
     <!-- 预言验证模态框 -->
-    <div id="prophecy-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-2xl">
-            <div class="p-6" id="prophecy-content">
+    <div id="prophecy-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl modal-animate relative" id="prophecy-container">
+            <div class="p-8" id="prophecy-content">
                 <!-- 动态内容 -->
             </div>
         </div>
     </div>
 
     <!-- 水晶球游戏模态框 -->
-    <div id="crystal-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-gradient-to-br from-purple-900 to-blue-900 rounded-2xl max-w-md w-full shadow-2xl p-6 text-white text-center">
-            <div class="text-6xl mb-4" style="animation: float 3s ease-in-out infinite">🔮</div>
-            <h3 class="text-xl font-bold mb-4">神秘水晶球</h3>
-            <p class="text-white/80 mb-6">在心中默念一个是否问题，然后点击水晶球获取答案</p>
-            <button onclick="askCrystal()" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 py-3 rounded-xl font-medium hover:opacity-90 transition-all">
+    <div id="crystal-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 rounded-3xl max-w-md w-full shadow-2xl p-10 text-white text-center modal-animate relative overflow-hidden">
+            <!-- 魔法背景 -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
+            
+            <div class="text-7xl mb-6 crystal-3d relative z-10">🔮</div>
+            <h3 class="text-2xl font-bold mb-5 relative z-10">神秘水晶球</h3>
+            <p class="text-white/80 mb-8 relative z-10 leading-relaxed">在心中默念一个是否问题，然后点击水晶球获取你的专属预言</p>
+            <button onclick="askCrystal()" class="w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 py-4 rounded-2xl font-semibold hover:opacity-90 transition-all shadow-xl text-lg relative z-10">
                 ✨ 获取预言
             </button>
-            <div id="crystal-answer" class="mt-6 text-lg font-medium min-h-[3rem]"></div>
-            <button onclick="document.getElementById('crystal-modal').classList.add('hidden')" class="mt-4 text-white/60 text-sm hover:text-white">关闭</button>
+            <div id="crystal-answer" class="mt-8 text-xl font-semibold min-h-[4rem] flex items-center justify-center relative z-10"></div>
+            <button onclick="document.getElementById('crystal-modal').classList.add('hidden')" class="mt-6 text-white/60 text-sm hover:text-white transition-colors relative z-10">关闭</button>
         </div>
     </div>
 
     <script>
-        // 预言数据
+        // ==================== 高级 JS 特效 ====================
+        
+        // 1. Canvas 星空粒子背景
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        }
+        
+        function initStars() {
+            stars = [];
+            const starCount = Math.floor((canvas.width * canvas.height) / 8000);
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 0.5,
+                    opacity: Math.random() * 0.8 + 0.2,
+                    speedX: (Math.random() - 0.5) * 0.3,
+                    speedY: (Math.random() - 0.5) * 0.3,
+                    twinkleSpeed: Math.random() * 0.02 + 0.01,
+                    twinklePhase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+        
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            stars.forEach(star => {
+                star.twinklePhase += star.twinkleSpeed;
+                const twinkleOpacity = star.opacity * (0.5 + 0.5 * Math.sin(star.twinklePhase));
+                
+                // 鼠标引力效果
+                const dx = mouseX - star.x;
+                const dy = mouseY - star.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 150) {
+                    star.x += dx * 0.002;
+                    star.y += dy * 0.002;
+                }
+                
+                star.x += star.speedX;
+                star.y += star.speedY;
+                
+                // 边界循环
+                if (star.x < 0) star.x = canvas.width;
+                if (star.x > canvas.width) star.x = 0;
+                if (star.y < 0) star.y = canvas.height;
+                if (star.y > canvas.height) star.y = 0;
+                
+                // 绘制星星
+                const gradient = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.radius * 3);
+                gradient.addColorStop(0, `rgba(139, 92, 246, ${twinkleOpacity})`);
+                gradient.addColorStop(0.5, `rgba(139, 92, 246, ${twinkleOpacity * 0.5})`);
+                gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+                
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius * 3, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${twinkleOpacity})`;
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(animateStars);
+        }
+        
+        // 2. 鼠标跟随星尘效果
+        let dustParticles = [];
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // 创建星尘粒子
+            if (Math.random() < 0.3) {
+                createDustParticle(e.clientX, e.clientY);
+            }
+        });
+        
+        function createDustParticle(x, y) {
+            const dust = document.createElement('div');
+            dust.className = 'stardust';
+            dust.style.left = x + 'px';
+            dust.style.top = y + 'px';
+            dust.style.transform = `scale(${Math.random() * 2 + 0.5})`;
+            document.body.appendChild(dust);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 2 + 1;
+            let opacity = 1;
+            
+            const animate = () => {
+                x += Math.cos(angle) * speed;
+                y += Math.sin(angle) * speed - 0.5;
+                opacity -= 0.02;
+                
+                dust.style.left = x + 'px';
+                dust.style.top = y + 'px';
+                dust.style.opacity = opacity;
+                
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    dust.remove();
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // 3. 3D 卡片倾斜效果
+        document.querySelectorAll('.card-3d').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 15;
+                const rotateY = (centerX - x) / 15;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+            });
+        });
+        
+        // 4. 滚动渐入动画 (Intersection Observer)
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        
+        // 5. 数字计数动画
+        function animateCounter(el) {
+            const target = parseFloat(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            const duration = 2000;
+            const start = 0;
+            const startTime = performance.now();
+            
+            const update = (currentTime) => {
+                const progress = Math.min((currentTime - startTime) / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = start + (target - start) * easeOut;
+                
+                if (Number.isInteger(target)) {
+                    el.textContent = Math.floor(current).toLocaleString();
+                } else {
+                    el.textContent = current.toFixed(1) + suffix;
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            };
+            
+            requestAnimationFrame(update);
+        }
+        
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+        
+        // 6. 按钮点击波纹效果
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const rect = button.getBoundingClientRect();
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple-effect';
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                ripple.style.width = ripple.style.height = '10px';
+                button.style.position = 'relative';
+                button.style.overflow = 'hidden';
+                button.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 1000);
+            });
+        });
+        
+        // ==================== 业务逻辑 ====================
+        
         const prophecies = {
             nvidia: {
                 title: '英伟达市值将在2025年突破5万亿美元',
@@ -497,19 +910,22 @@
                 ]
             }
         };
-
-        // 已验证的预言
+        
         let verifiedProphecies = JSON.parse(localStorage.getItem('verified') || '{}');
-
+        
         function filterNews(category) {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-gradient-to-r', 'from-purple-500', 'to-blue-500', 'shadow-lg');
+                btn.classList.add('glass');
+            });
+            event.target.classList.add('active', 'bg-gradient-to-r', 'from-purple-500', 'to-blue-500', 'shadow-lg');
+            event.target.classList.remove('glass');
         }
-
+        
         function openNews(id) {
-            alert('这是普通新闻，点击查看详细内容');
+            alert('这是普通新闻，详细内容页开发中...');
         }
-
+        
         function openProphecy(id) {
             const prophecy = prophecies[id];
             const isVerified = verifiedProphecies[id];
@@ -517,64 +933,65 @@
             const content = document.getElementById('prophecy-content');
             
             let factorsHTML = prophecy.factors.map(f => `
-                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-                    <span class="text-sm">${f.positive ? '✅' : '❌'} ${f.name}</span>
-                    <span class="text-sm font-medium ${f.positive ? 'text-green-600' : 'text-red-500'}">${f.weight}%</span>
+                <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                    <span class="text-base">${f.positive ? '✅' : '❌'} ${f.name}</span>
+                    <span class="text-base font-semibold ${f.positive ? 'text-green-600' : 'text-red-500'}">${f.weight}%</span>
                 </div>
             `).join('');
 
             content.innerHTML = `
-                <div class="text-center mb-6">
-                    <div class="text-5xl mb-3">${prophecy.icon}</div>
-                    <h3 class="text-xl font-bold text-gray-900">${prophecy.title}</h3>
-                    <p class="text-gray-600 text-sm mt-2">${prophecy.description}</p>
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">${prophecy.icon}</div>
+                    <h3 class="text-2xl font-bold text-gray-900">${prophecy.title}</h3>
+                    <p class="text-gray-600 mt-3 leading-relaxed">${prophecy.description}</p>
                 </div>
                 
-                <div class="mb-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-medium text-gray-700">预言成真概率</span>
-                        <span class="text-lg font-bold ${prophecy.probability > 70 ? 'text-green-600' : prophecy.probability > 50 ? 'text-yellow-600' : 'text-red-500'}">${prophecy.probability}%</span>
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-base font-semibold text-gray-700">预言成真概率</span>
+                        <span class="text-2xl font-bold ${prophecy.probability > 70 ? 'text-green-600' : prophecy.probability > 50 ? 'text-yellow-600' : 'text-red-500'}">${prophecy.probability}%</span>
                     </div>
-                    <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
-                        <div class="prediction-meter h-full rounded-full transition-all duration-1000" style="width: ${prophecy.probability}%"></div>
+                    <div class="h-5 bg-gray-200 rounded-full overflow-hidden shimmer-bar">
+                        <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500 transition-all duration-1500" style="width: ${prophecy.probability}%"></div>
                     </div>
                 </div>
 
-                <div class="mb-6">
-                    <h4 class="font-medium text-gray-900 mb-3">📊 影响因素分析</h4>
+                <div class="mb-8">
+                    <h4 class="font-semibold text-gray-900 mb-4 text-lg">📊 影响因素分析</h4>
                     ${factorsHTML}
                 </div>
 
                 ${isVerified ? `
-                    <div class="p-4 rounded-xl ${isVerified.result ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}">
+                    <div class="p-6 rounded-2xl ${isVerified.result ? 'bg-green-50 border-2 border-green-200' : 'bg-red-50 border-2 border-red-200'}">
                         <div class="text-center">
-                            <div class="text-3xl mb-2">${isVerified.result ? '✅' : '❌'}</div>
-                            <div class="font-medium ${isVerified.result ? 'text-green-700' : 'text-red-700'}">
+                            <div class="text-4xl mb-3">${isVerified.result ? '✅' : '❌'}</div>
+                            <div class="text-xl font-semibold ${isVerified.result ? 'text-green-700' : 'text-red-700'}">
                                 预言${isVerified.result ? '成真' : '失败'}
                             </div>
-                            <div class="text-sm text-gray-500 mt-1">你选择了：${isVerified.choice}</div>
+                            <div class="text-gray-500 mt-2">你选择了：${isVerified.choice}</div>
+                            <div class="text-sm text-gray-400 mt-1">${isVerified.correct ? '🎉 你的判断正确！' : '😅 这次没猜对...'}</div>
                         </div>
                     </div>
                 ` : `
-                    <div class="flex gap-3">
-                        <button onclick="verifyProphecy('${id}', true)" class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-medium hover:opacity-90 transition-all">
+                    <div class="flex gap-4">
+                        <button onclick="verifyProphecy('${id}', true)" class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-2xl font-semibold hover:opacity-90 transition-all shadow-lg text-lg">
                             ✅ 预言会成真
                         </button>
-                        <button onclick="verifyProphecy('${id}', false)" class="flex-1 bg-gradient-to-r from-red-500 to-rose-600 text-white py-3 rounded-xl font-medium hover:opacity-90 transition-all">
+                        <button onclick="verifyProphecy('${id}', false)" class="flex-1 bg-gradient-to-r from-red-500 to-rose-600 text-white py-4 rounded-2xl font-semibold hover:opacity-90 transition-all shadow-lg text-lg">
                             ❌ 预言会失败
                         </button>
                     </div>
-                    <p class="text-center text-xs text-gray-400 mt-3">选择你的判断，结果将永久记录</p>
+                    <p class="text-center text-xs text-gray-400 mt-4">选择你的判断，结果将永久记录</p>
                 `}
 
-                <button onclick="document.getElementById('prophecy-modal').classList.add('hidden')" class="w-full mt-4 py-2 text-gray-500 hover:text-gray-700 text-sm">
+                <button onclick="document.getElementById('prophecy-modal').classList.add('hidden')" class="w-full mt-6 py-3 text-gray-500 hover:text-gray-700 text-base transition-colors">
                     关闭
                 </button>
             `;
 
             modal.classList.remove('hidden');
         }
-
+        
         function verifyProphecy(id, choice) {
             const prophecy = prophecies[id];
             const actualResult = Math.random() * 100 < prophecy.probability;
@@ -592,12 +1009,41 @@
             const card = document.getElementById('card-' + id);
             if (card) {
                 card.classList.add(actualResult ? 'prediction-true' : 'prediction-false');
+                
+                createExplosion(card, actualResult ? '✨' : '💫', 8);
             }
             
             openProphecy(id);
         }
-
-        // 水晶球彩蛋游戏
+        
+        function createExplosion(element, emoji, count) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'explosion-particle';
+                particle.textContent = emoji;
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                document.body.appendChild(particle);
+                
+                const angle = (i / count) * Math.PI * 2;
+                const distance = 80 + Math.random() * 60;
+                const targetX = centerX + Math.cos(angle) * distance;
+                const targetY = centerY + Math.sin(angle) * distance - 50;
+                
+                particle.animate([
+                    { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(1.5) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: 1000,
+                    easing: 'cubic-bezier(0, 0.5, 0.5, 1)'
+                }).onfinish = () => particle.remove();
+            }
+        }
+        
         function openCrystalBall() {
             document.getElementById('crystal-modal').classList.remove('hidden');
             document.getElementById('crystal-answer').textContent = '';
@@ -611,23 +1057,26 @@
                 '🤔 迹象表明，但还需等待',
                 '🌫️ 现在迷雾重重，稍后再问',
                 '❌ 不要抱太大期望',
-                '💫  Concentrate and ask again',
+                '💫 集中精神再问一次',
                 '⚡ 非常有可能！',
                 '🌙 答案在梦中，今晚留意',
-                '✨ 命运掌握在你手中'
+                '✨ 命运掌握在你手中',
+                '🎯 答案是肯定的，大胆去做',
+                '🌊 顺其自然，水到渠成'
             ];
             
             const answerEl = document.getElementById('crystal-answer');
             answerEl.style.opacity = '0';
+            answerEl.style.transform = 'translateY(20px)';
+            answerEl.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
             
             setTimeout(() => {
                 answerEl.textContent = answers[Math.floor(Math.random() * answers.length)];
                 answerEl.style.opacity = '1';
-                answerEl.style.transition = 'opacity 0.5s';
-            }, 500);
+                answerEl.style.transform = 'translateY(0)';
+            }, 600);
         }
-
-        // 关闭模态框
+        
         document.getElementById('prophecy-modal').addEventListener('click', (e) => {
             if (e.target.id === 'prophecy-modal') {
                 e.target.classList.add('hidden');
@@ -639,17 +1088,19 @@
                 e.target.classList.add('hidden');
             }
         });
-
-        // 键盘快捷键
+        
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 document.getElementById('prophecy-modal').classList.add('hidden');
                 document.getElementById('crystal-modal').classList.add('hidden');
             }
         });
-
-        // 加载统计
-        console.log('🔮 星象日报已加载');
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animateStars();
+        
+        console.log('🔮 星象日报高级特效版已加载！');
         console.log(`✨ 已验证预言: ${Object.keys(verifiedProphecies).length} 个`);
     </script>
 </body>
